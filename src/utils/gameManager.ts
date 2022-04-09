@@ -1,9 +1,9 @@
 import * as PIXI from "pixi.js";
 import { AbstractRenderer } from "pixi.js";
 import GameTicker from "./gameTicker";
-import Pacman from "./objects/pacman";
-import Playing from "./scenes/playing";
-import IScene from "./interfaces/iScene";
+import Pacman from "../game_objects/pacman";
+import Playing from "../scenes/playing";
+import IScene from "../interfaces/iScene";
 
 export default class GameManager {
   scene: IScene;

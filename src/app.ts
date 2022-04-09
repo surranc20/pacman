@@ -1,5 +1,5 @@
 import { autoDetectRenderer } from "pixi.js";
-import GameManager from "./gameManager";
+import GameManager from "./utils/gameManager";
 
 // Setup Pixi
 const renderer = autoDetectRenderer({ width: 224, height: 288 });

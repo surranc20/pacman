@@ -22,12 +22,12 @@ module.exports = {
     new HtmlWebpackPlugin({
       title: "Pacman",
       filename: "index.html",
-      template: "src/index.html",
+      template: "public/index.html",
     }),
     new CopyPlugin({
       patterns: [
         {
-          from: "./src/assets",
+          from: "./public/assets",
           to: "./assets",
         },
       ],
