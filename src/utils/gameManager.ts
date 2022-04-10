@@ -19,7 +19,6 @@ export default class GameManager {
   }
 
   update = (elapsedTime: number) => {
-    console.log(elapsedTime);
     this.scene.update(elapsedTime);
   };
 
