@@ -24,7 +24,7 @@ export default class GameManager {
 
   loadGame() {
     const loader = PIXI.Loader.shared;
-    loader.add("pacman_eat", "/assets/img/pacman_right.json");
+    loader.add("pacman_eat", "/assets/img/pacman/pacman_right.json");
 
     loader.load((_, resources) => {
       const sheet = resources.pacman_eat?.spritesheet;
