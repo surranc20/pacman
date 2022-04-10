@@ -1,4 +1,5 @@
 import { AbstractRenderer, Loader } from "pixi.js";
+import Keyboard from "pixi.js-keyboard";
 import GameTicker from "./gameTicker";
 import Playing from "../scenes/playing";
 import IScene from "../interfaces/iScene";
@@ -6,6 +7,7 @@ import IScene from "../interfaces/iScene";
 export default class GameManager {
   scene: IScene;
   gameTicker: GameTicker;
+  keyboard: any;
 
   constructor(renderer: AbstractRenderer) {
     this.scene = new Playing();
@@ -13,10 +15,12 @@ export default class GameManager {
       renderer.render(this.scene.stage);
       this.update(elapsedTime);
     });
+    this.keyboard = Keyboard;
   }
 
   update = (elapsedTime: number) => {
     this.scene.update(elapsedTime);
+    this.keyboard.update();
   };
 
   loadGame() {
