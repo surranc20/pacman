@@ -9,6 +9,6 @@ export default class Pacman extends Animatable {
 
   update(elapsedTime: number) {
     super.update(elapsedTime);
-    this.x += 1;
+    this.x += 1.33;
   }
 }
