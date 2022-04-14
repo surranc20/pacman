@@ -19,7 +19,7 @@ export default class Playing implements IScene {
   }
 
   addAssetsToLoader(loader: Loader) {
-    loader.add("pacman_eat", "/assets/img/pacman/pacman_eat.json");
+    loader.add("spritesheet", "/assets/spritesheet.json");
     loader.add("stage", "/assets/img/stage.png");
   }
 
@@ -29,8 +29,12 @@ export default class Playing implements IScene {
     this.stage.addChild(stage);
 
     // Create Pacman
-    const sheet = resources.pacman_eat?.spritesheet;
-    const pacman = new Pacman(sheet?.animations.pacman_eat, 108, 205);
+    const sheet = resources["spritesheet"].spritesheet;
+    const pacman = new Pacman(
+      sheet?.animations["pacman_eat/pacman_eat"],
+      108,
+      205
+    );
     this.stage.addChild(pacman);
 
     this.gameState = new GameState(pacman);
