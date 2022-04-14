@@ -9,5 +9,6 @@ document.body.appendChild(renderer.view);
 const gameManager = new GameManager(renderer);
 gameManager.loadGame();
 
-renderer.resize(448, 576);
-gameManager.scene.stage.scale.set(2);
+const scale = 2;
+renderer.resize(224 * scale, 288 * scale);
+gameManager.scene.stage.scale.set(scale);
