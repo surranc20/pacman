@@ -1,18 +1,11 @@
 import { Container, Loader } from "pixi.js";
-import Pacman from "../game_objects/pacman";
 import Stage from "../game_objects/stage";
 import IScene from "../interfaces/iScene";
 import GameState from "../models/gameState";
-import MazeModel from "../models/mazeModel";
 
 export default class Playing implements IScene {
   stage = new Container();
-  mazeModel: MazeModel;
   gameState!: GameState;
-
-  constructor() {
-    this.mazeModel = new MazeModel();
-  }
 
   update(elapsedTime: number) {
     this.gameState.update(elapsedTime);
@@ -27,16 +20,7 @@ export default class Playing implements IScene {
     // Create Stage
     const stage = new Stage(0, 24, resources.stage.texture);
     this.stage.addChild(stage);
-
-    // Create Pacman
-    const sheet = resources["spritesheet"].spritesheet;
-    const pacman = new Pacman(
-      sheet?.animations["pacman_eat/pacman_eat"],
-      108,
-      205
-    );
-    this.stage.addChild(pacman);
-
-    this.gameState = new GameState(pacman);
+    this.gameState = new GameState();
+    this.stage.addChild(this.gameState.container);
   }
 }
