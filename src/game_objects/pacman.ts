@@ -1,4 +1,4 @@
-import { Texture } from "pixi.js";
+import { Loader } from "pixi.js";
 import Animatable from "../abstract/animatable";
 import PlayerAgent from "../agents/playerAgent";
 import IMoveable from "../interfaces/iMoveable";
@@ -8,8 +8,9 @@ import { Cardinal } from "../enums/cardinal";
 export default class Pacman extends Animatable implements IMoveable {
   agent: PlayerAgent;
   facing: Cardinal;
-  constructor(textures: Texture[], x: number, y: number) {
-    super(textures, x, y);
+  constructor(x: number, y: number) {
+    const sheet = Loader.shared.resources.spritesheet.spritesheet;
+    super(sheet!.animations["pacman_eat/pacman_eat"], x, y);
     this.fps = 10;
     this.agent = new PlayerAgent();
     this.facing = Cardinal.EAST;
