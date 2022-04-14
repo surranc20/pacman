@@ -16,10 +16,10 @@ export default class LifeCounter {
     this.container = new Container();
     if (lifeTexture) {
       for (let x = 0; x < lives - 1; x++) {
-        this.container.addChild(new PacmanLifeDrawable(x * 12, 0, lifeTexture));
+        this.container.addChild(new PacmanLifeDrawable(x * 16, 0, lifeTexture));
       }
     }
-    this.container.position.set(16, 275);
+    this.container.position.set(19, 275);
   }
 }
 
