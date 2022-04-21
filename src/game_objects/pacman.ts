@@ -37,7 +37,6 @@ export default class Pacman extends Animatable {
   }
 
   update(elapsedTime: number) {
-    //console.log(this.x, this.y);
     if (this.moveFrameDelay) {
       this.moveFrameDelay -= 1;
       return;
@@ -58,6 +57,8 @@ export default class Pacman extends Animatable {
         case Cardinal.NORTH:
           if (this.facing === Cardinal.SOUTH) break;
           this.y -= Math.abs(this.centerX - this.mazeNode.center[0]);
+          this.x = this._getPosFromCenter()[0];
+          break;
         case Cardinal.SOUTH:
           if (this.facing === Cardinal.NORTH) break;
           this.y += Math.abs(this.centerX - this.mazeNode.center[0]);
@@ -66,6 +67,8 @@ export default class Pacman extends Animatable {
         case Cardinal.EAST:
           if (this.facing === Cardinal.WEST) break;
           this.x += Math.abs(this.centerY - this.mazeNode.center[1]);
+          this.y = this._getPosFromCenter()[1];
+          break;
         case Cardinal.WEST:
           if (this.facing === Cardinal.EAST) break;
           this.x -= Math.abs(this.centerY - this.mazeNode.center[1]);
@@ -76,7 +79,6 @@ export default class Pacman extends Animatable {
       this._getUpdatedMazeNode();
       return true;
     }
-
     return false;
   }
 
@@ -150,7 +152,7 @@ export default class Pacman extends Animatable {
 
   _getPosFromCenter() {
     let [x, y] = this.mazeNode.center;
-    return [x - Math.ceil(this.width / 2), y - Math.ceil(this.height / 2) - 1];
+    return [x - Math.ceil(this.width / 2), y - Math.ceil(this.height / 2)];
   }
 
   _getUpdatedMazeNode() {
