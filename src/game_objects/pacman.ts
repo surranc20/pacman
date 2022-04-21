@@ -32,7 +32,12 @@ export default class Pacman extends Animatable {
     return this.y + 7;
   }
 
+  inputMove(maze: MazeModel) {
+    this.queuedMove = this.agent.getMove(maze, this.facing);
+  }
+
   update(elapsedTime: number) {
+    //console.log(this.x, this.y);
     if (this.moveFrameDelay) {
       this.moveFrameDelay -= 1;
       return;
@@ -44,37 +49,40 @@ export default class Pacman extends Animatable {
     this._continueInCurrentDir();
   }
 
-  inputMove(maze: MazeModel) {
-    this.queuedMove = this.agent.getMove(maze, this.facing);
-  }
-
   _corneringCase() {
     if (
       this.queuedMove !== this.facing &&
       this.mazeNode[this.queuedMove]?.validPath
     ) {
-      console.log("cornering");
-      this.facing = this.queuedMove;
-      switch (this.facing) {
+      switch (this.queuedMove) {
         case Cardinal.NORTH:
+          if (this.facing === Cardinal.SOUTH) break;
+          this.y -= Math.abs(this.centerX - this.mazeNode.center[0]);
         case Cardinal.SOUTH:
+          if (this.facing === Cardinal.NORTH) break;
+          this.y += Math.abs(this.centerX - this.mazeNode.center[0]);
           this.x = this._getPosFromCenter()[0];
           break;
         case Cardinal.EAST:
+          if (this.facing === Cardinal.WEST) break;
+          this.x += Math.abs(this.centerY - this.mazeNode.center[1]);
         case Cardinal.WEST:
+          if (this.facing === Cardinal.EAST) break;
+          this.x -= Math.abs(this.centerY - this.mazeNode.center[1]);
           this.y = this._getPosFromCenter()[1];
           break;
       }
       // posibly update mazeTile
+      this.facing = this.queuedMove;
       return true;
     }
+
     return false;
   }
 
   _hitWall() {
-    // Hit wall in current direction
     let hitWall = false;
-    console.log(this.facing);
+
     switch (this.facing) {
       case Cardinal.EAST:
         if (
@@ -113,7 +121,6 @@ export default class Pacman extends Animatable {
       this.endAnimation();
       this.currentFrame = 0;
       this.getTexture();
-      console.log("hitting");
     }
     return hitWall;
   }
@@ -144,6 +151,6 @@ export default class Pacman extends Animatable {
 
   _getPosFromCenter() {
     let [x, y] = this.mazeNode.center;
-    return [x - this.width / 2, y - this.height / 2 - 1];
+    return [x - Math.ceil(this.width / 2), y - Math.ceil(this.height / 2) - 1];
   }
 }
