@@ -72,8 +72,8 @@ export default class Pacman extends Animatable {
           this.y = this._getPosFromCenter()[1];
           break;
       }
-      // posibly update mazeTile
       this.facing = this.queuedMove;
+      this._getUpdatedMazeNode();
       return true;
     }
 
@@ -145,12 +145,16 @@ export default class Pacman extends Animatable {
         this.angle = 90;
         break;
     }
-    const newNode = !this.mazeNode.centerInNode(this.centerX, this.centerY);
-    if (newNode) this.mazeNode = this.mazeNode[this.facing];
+    this._getUpdatedMazeNode();
   }
 
   _getPosFromCenter() {
     let [x, y] = this.mazeNode.center;
     return [x - Math.ceil(this.width / 2), y - Math.ceil(this.height / 2) - 1];
+  }
+
+  _getUpdatedMazeNode() {
+    const newNode = !this.mazeNode.centerInNode(this.centerX, this.centerY);
+    if (newNode) this.mazeNode = this.mazeNode[this.facing];
   }
 }
