@@ -2,9 +2,10 @@ import { Container, Loader } from "pixi.js";
 import Drawable from "../abstract/drawable";
 
 export default class LifeCounter {
-  container!: Container;
+  container: Container;
 
   constructor(lives: number) {
+    this.container = new Container();
     this.setLives(lives);
   }
 
@@ -13,7 +14,7 @@ export default class LifeCounter {
       Loader.shared.resources.spritesheet.spritesheet?.textures[
         "pacman_life.png"
       ];
-    this.container = new Container();
+    this.container.removeChildren();
     if (lifeTexture) {
       for (let x = 0; x < lives - 1; x++) {
         this.container.addChild(new PacmanLifeDrawable(x * 16, 0, lifeTexture));
