@@ -42,7 +42,6 @@ export default class Pacman extends Animatable {
       return;
     }
     super.update(elapsedTime);
-
     if (this._corneringCase()) return;
     if (this._hitWall()) return;
     this._continueInCurrentDir();
@@ -115,7 +114,10 @@ export default class Pacman extends Animatable {
         this.angle = 90;
         break;
     }
+
+    const old_node = this.mazeNode;
     this._getUpdatedMazeNode();
+    this._handleWarpScenario(old_node);
   }
 
   _getPosFromCenter() {
@@ -138,6 +140,19 @@ export default class Pacman extends Animatable {
         return this.centerY < this.mazeNode.center[1] - 2;
       default:
         return this.centerY > this.mazeNode.center[1];
+    }
+  }
+
+  _handleWarpScenario(old_node: MazeNode) {
+    if (old_node.warp && this.mazeNode.warp && old_node !== this.mazeNode) {
+      switch (this.facing) {
+        case Cardinal.WEST:
+          this.x = 224;
+          break;
+        default:
+          this.x = 0;
+          break;
+      }
     }
   }
 }

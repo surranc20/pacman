@@ -8,7 +8,7 @@ export default class MazeModel {
 
   constructor(pacman: Pacman) {
     this.nodes = new Map<string, MazeNode>();
-    this.populateNodes();
+    this.setupMazeNodes();
 
     this.pacman = pacman;
     this.pacman.mazeNode = this.nodes.get([14, 23].toString())!;
@@ -25,7 +25,7 @@ export default class MazeModel {
     this.pacman.update(elapsedTime);
   }
 
-  populateNodes() {
+  setupMazeNodes() {
     // Get map valid path from json file
     const map = mapJson.map;
 
@@ -53,5 +53,22 @@ export default class MazeModel {
         }
       }
     }
+
+    for (const node of this.nodes.values()) {
+      node.setupCardinalDirectionHelpers();
+    }
+
+    // Setup the two warp nodes
+    const warpOne = this.nodes.get([0, 14].toString())!;
+    const warpTwo = this.nodes.get([27, 14].toString())!;
+
+    warpOne.connections.push(warpTwo);
+    warpTwo.connections.push(warpOne);
+
+    warpOne.west = warpTwo;
+    warpTwo.east = warpOne;
+
+    warpOne.warp = true;
+    warpTwo.warp = true;
   }
 }

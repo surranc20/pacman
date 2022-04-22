@@ -6,6 +6,11 @@ export default class MazeNode {
   validPath: any;
   connections: MazeNode[];
   gameObject: Pacman | any;
+  east!: MazeNode;
+  south!: MazeNode;
+  north!: MazeNode;
+  west!: MazeNode;
+  warp: boolean;
 
   constructor(x: number, y: number, validPath: boolean) {
     this.x = x;
@@ -13,22 +18,14 @@ export default class MazeNode {
     this.validPath = validPath;
     this.connections = [];
     this.gameObject = null;
+    this.warp = false;
   }
 
-  get east() {
-    return this.connections.filter((el) => el.x > this.x)[0];
-  }
-
-  get south() {
-    return this.connections.filter((el) => el.y > this.y)[0];
-  }
-
-  get north() {
-    return this.connections.filter((el) => this.y > el.y)[0];
-  }
-
-  get west() {
-    return this.connections.filter((el) => this.x > el.x)[0];
+  setupCardinalDirectionHelpers() {
+    this.east = this.connections.filter((el) => el.x > this.x)[0];
+    this.south = this.connections.filter((el) => el.y > this.y)[0];
+    this.north = this.connections.filter((el) => this.y > el.y)[0];
+    this.west = this.connections.filter((el) => this.x > el.x)[0];
   }
 
   centerInNode(centerX: number, centerY: number) {
