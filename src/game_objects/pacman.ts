@@ -83,48 +83,16 @@ export default class Pacman extends Animatable {
   }
 
   _hitWall() {
-    let hitWall = false;
-
-    switch (this.facing) {
-      case Cardinal.EAST:
-        if (
-          !this.mazeNode.east?.validPath &&
-          this.centerX > this.mazeNode.center[0]
-        ) {
-          hitWall = true;
-        }
-        break;
-      case Cardinal.WEST:
-        if (
-          !this.mazeNode.west?.validPath &&
-          this.centerX < this.mazeNode.center[0]
-        ) {
-          hitWall = true;
-        }
-        break;
-      case Cardinal.NORTH:
-        if (
-          !this.mazeNode.north?.validPath &&
-          this.centerY < this.mazeNode.center[1] - 2
-        ) {
-          hitWall = true;
-        }
-        break;
-      case Cardinal.SOUTH:
-        if (
-          !this.mazeNode.south?.validPath &&
-          this.centerY > this.mazeNode.center[1]
-        ) {
-          hitWall = true;
-        }
-        break;
-    }
-    if (hitWall) {
+    if (
+      !this.mazeNode[this.facing]?.validPath &&
+      this._pacmanPastNodeCenter()
+    ) {
       this.endAnimation();
       this.currentFrame = 0;
       this.getTexture();
+      return true;
     }
-    return hitWall;
+    return false;
   }
 
   _continueInCurrentDir() {
@@ -158,5 +126,18 @@ export default class Pacman extends Animatable {
   _getUpdatedMazeNode() {
     const newNode = !this.mazeNode.centerInNode(this.centerX, this.centerY);
     if (newNode) this.mazeNode = this.mazeNode[this.facing];
+  }
+
+  _pacmanPastNodeCenter() {
+    switch (this.facing) {
+      case Cardinal.EAST:
+        return this.centerX > this.mazeNode.center[0];
+      case Cardinal.WEST:
+        return this.centerX < this.mazeNode.center[0];
+      case Cardinal.NORTH:
+        return this.centerY < this.mazeNode.center[1] - 2;
+      default:
+        return this.centerY > this.mazeNode.center[1];
+    }
   }
 }
