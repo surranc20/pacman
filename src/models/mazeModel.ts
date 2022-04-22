@@ -1,13 +1,28 @@
 import MazeNode from "./mazeNode";
 import mapJson from "./map.json";
+import Pacman from "../game_objects/pacman";
 
 export default class MazeModel {
   nodes: Map<string, MazeNode>;
+  pacman: Pacman;
 
-  constructor() {
+  constructor(pacman: Pacman) {
     this.nodes = new Map<string, MazeNode>();
     this.populateNodes();
-    console.log(this.nodes);
+
+    this.pacman = pacman;
+    this.pacman.mazeNode = this.nodes.get([14, 23].toString())!;
+    console.log(
+      this.pacman.mazeNode.centerInNode(
+        this.pacman.centerX,
+        this.pacman.centerY
+      )
+    );
+  }
+
+  update(elapsedTime: number) {
+    this.pacman.inputMove(this);
+    this.pacman.update(elapsedTime);
   }
 
   populateNodes() {

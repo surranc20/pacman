@@ -1,6 +1,6 @@
 import { Cardinal } from "../enums/cardinal";
-import GameState from "../models/gameState";
+import MazeModel from "../models/mazeModel";
 
 export default interface IAgent {
-  getMove: (state: GameState, previousDir: Cardinal) => Cardinal;
+  getMove: (maze: MazeModel, previousDir: Cardinal) => Cardinal;
 }
