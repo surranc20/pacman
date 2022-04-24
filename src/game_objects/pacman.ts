@@ -24,14 +24,6 @@ export default class Pacman extends Animatable {
     this.moveFrameDelay = 0;
   }
 
-  get centerX() {
-    return this.x + 7;
-  }
-
-  get centerY() {
-    return this.y + 7;
-  }
-
   inputMove(maze: MazeModel) {
     this.queuedMove = this.agent.getMove(maze, this.facing);
   }
@@ -55,23 +47,23 @@ export default class Pacman extends Animatable {
       switch (this.queuedMove) {
         case Cardinal.NORTH:
           if (this.facing === Cardinal.SOUTH) break;
-          this.y -= Math.abs(this.centerX - this.mazeNode.center[0]);
-          this.x = this._getPosFromCenter()[0];
+          this.y -= Math.abs(this.x - this.mazeNode.center[0]);
+          this.x = this.mazeNode.center[0];
           break;
         case Cardinal.SOUTH:
           if (this.facing === Cardinal.NORTH) break;
-          this.y += Math.abs(this.centerX - this.mazeNode.center[0]);
-          this.x = this._getPosFromCenter()[0];
+          this.y += Math.abs(this.x - this.mazeNode.center[0]);
+          this.x = this.mazeNode.center[0];
           break;
         case Cardinal.EAST:
           if (this.facing === Cardinal.WEST) break;
-          this.x += Math.abs(this.centerY - this.mazeNode.center[1]);
-          this.y = this._getPosFromCenter()[1];
+          this.x += Math.abs(this.y - this.mazeNode.center[1]);
+          this.y = this.mazeNode.center[1];
           break;
         case Cardinal.WEST:
           if (this.facing === Cardinal.EAST) break;
-          this.x -= Math.abs(this.centerY - this.mazeNode.center[1]);
-          this.y = this._getPosFromCenter()[1];
+          this.x -= Math.abs(this.y - this.mazeNode.center[1]);
+          this.y = this.mazeNode.center[1];
           break;
       }
       this.facing = this.queuedMove;
@@ -120,26 +112,21 @@ export default class Pacman extends Animatable {
     this._handleWarpScenario(old_node);
   }
 
-  _getPosFromCenter() {
-    let [x, y] = this.mazeNode.center;
-    return [x - Math.ceil(this.width / 2), y - Math.ceil(this.height / 2)];
-  }
-
   _getUpdatedMazeNode() {
-    const newNode = !this.mazeNode.centerInNode(this.centerX, this.centerY);
+    const newNode = !this.mazeNode.centerInNode(this.x, this.y);
     if (newNode) this.mazeNode = this.mazeNode[this.facing];
   }
 
   _pacmanPastNodeCenter() {
     switch (this.facing) {
       case Cardinal.EAST:
-        return this.centerX > this.mazeNode.center[0];
+        return this.x > this.mazeNode.center[0];
       case Cardinal.WEST:
-        return this.centerX < this.mazeNode.center[0];
+        return this.x < this.mazeNode.center[0];
       case Cardinal.NORTH:
-        return this.centerY < this.mazeNode.center[1] - 2;
+        return this.y < this.mazeNode.center[1] - 2;
       default:
-        return this.centerY > this.mazeNode.center[1];
+        return this.y > this.mazeNode.center[1];
     }
   }
 

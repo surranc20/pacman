@@ -12,12 +12,6 @@ export default class MazeModel {
 
     this.pacman = pacman;
     this.pacman.mazeNode = this.nodes.get([14, 23].toString())!;
-    console.log(
-      this.pacman.mazeNode.centerInNode(
-        this.pacman.centerX,
-        this.pacman.centerY
-      )
-    );
   }
 
   update(elapsedTime: number) {
