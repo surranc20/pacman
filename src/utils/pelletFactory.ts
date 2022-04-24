@@ -11,7 +11,7 @@ export default class PelletFactory {
     ) {
       return null;
     }
-    const newPellet = new Pellet(mazeNode.center[0], mazeNode.center[1]);
+    const newPellet = new Pellet(mazeNode.center[0], mazeNode.center[1] - 1);
     pelletContainer.addChild(newPellet);
     return newPellet;
   }
