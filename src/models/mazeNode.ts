@@ -1,4 +1,5 @@
 import Pacman from "../game_objects/pacman";
+import Pellet from "../game_objects/pellet";
 
 export default class MazeNode {
   x: number;
@@ -6,6 +7,7 @@ export default class MazeNode {
   validPath: any;
   connections: MazeNode[];
   gameObject: Pacman | any;
+  pellet: Pellet | null;
   east!: MazeNode;
   south!: MazeNode;
   north!: MazeNode;
@@ -19,6 +21,7 @@ export default class MazeNode {
     this.connections = [];
     this.gameObject = null;
     this.warp = false;
+    this.pellet = null;
   }
 
   setupCardinalDirectionHelpers() {

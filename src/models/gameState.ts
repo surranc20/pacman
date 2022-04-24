@@ -9,17 +9,21 @@ export default class GameState {
   lifeCounter: LifeCounter;
   mazeModel: MazeModel;
   container: Container;
+  pelletContainer: Container;
   scoreBoard: ScoreBoard;
   highScore: HighScore;
 
   constructor() {
     this.container = new Container();
+    this.pelletContainer = new Container();
+
     const pacman = new Pacman(114, 212);
     this.lifeCounter = new LifeCounter(3);
     this.scoreBoard = new ScoreBoard();
     this.highScore = new HighScore();
-    this.mazeModel = new MazeModel(pacman);
+    this.mazeModel = new MazeModel(pacman, this.pelletContainer);
     this.container.addChild(pacman);
+    this.container.addChild(this.pelletContainer);
     this.container.addChild(this.lifeCounter.container);
     this.container.addChild(this.scoreBoard.container);
     this.container.addChild(this.highScore.container);
