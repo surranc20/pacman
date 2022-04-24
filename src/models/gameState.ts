@@ -28,5 +28,7 @@ export default class GameState {
   update(elapsedTime: number) {
     this.mazeModel.update(elapsedTime);
     this.scoreBoard.update(elapsedTime);
+    this.scoreBoard.updateScoreBoard(111);
+    this.highScore.updateScoreBoard(1);
   }
 }
