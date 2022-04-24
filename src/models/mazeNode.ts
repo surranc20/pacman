@@ -29,7 +29,7 @@ export default class MazeNode {
   }
 
   centerInNode(centerX: number, centerY: number) {
-    const [minX, minY] = [(this.x + 1) * 8, (1 + this.y) * 8 + 24];
+    const [minX, minY] = [this.x * 8, this.y * 8 + 24];
     const [maxX, maxY] = [minX + 7, minY + 7];
 
     if (!(minX <= centerX && centerX <= maxX)) {
@@ -42,6 +42,6 @@ export default class MazeNode {
   }
 
   get center() {
-    return [(this.x + 1) * 8 + 3, (this.y + 1) * 8 + 28];
+    return [this.x * 8 + 3, this.y * 8 + 28];
   }
 }
