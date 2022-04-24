@@ -1,13 +1,17 @@
 import { Container } from "pixi.js";
 import Pellet from "../game_objects/pellet";
 import MazeNode from "../models/mazeNode";
+import pelletJson from "./pellets.json";
 
 export default class PelletFactory {
-  static noPelletTiles = new Set<string>([]);
+  static noPelletTilesSet = new Set(
+    pelletJson.noPellets.map((pos) => pos.toString())
+  );
+
   createPelletForMazeNode(mazeNode: MazeNode, pelletContainer: Container) {
     if (
       !mazeNode.validPath ||
-      PelletFactory.noPelletTiles.has([mazeNode.x, mazeNode.y].toString())
+      PelletFactory.noPelletTilesSet.has([mazeNode.x, mazeNode.y].toString())
     ) {
       return null;
     }
