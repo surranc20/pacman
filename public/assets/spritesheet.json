@@ -296,7 +296,7 @@
 	"spriteSourceSize": {"x":0,"y":0,"w":8,"h":8},
 	"sourceSize": {"w":8,"h":8}
 },
-"White Letters/letters_white_gpng.png":
+"White Letters/letters_white_g.png":
 {
 	"frame": {"x":20,"y":240,"w":8,"h":8},
 	"rotated": false,
