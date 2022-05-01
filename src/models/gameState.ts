@@ -34,6 +34,11 @@ export default class GameState {
     this.container.addChild(this.lifeCounter.container);
     this.container.addChild(this.scoreBoard.container);
     this.container.addChild(this.highScore.container);
+
+    pacman.addPointsCallback = (points) => {
+      this.scoreBoard.updateScoreBoard(points);
+      this.highScore.updateScoreBoard(points);
+    };
   }
 
   update(elapsedTime: number) {

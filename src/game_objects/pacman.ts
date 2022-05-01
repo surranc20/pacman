@@ -11,11 +11,12 @@ export default class Pacman extends Animatable {
   mazeNode!: MazeNode;
   queuedMove: Cardinal;
   moveFrameDelay: number;
+  addPointsCallback!: (points: number) => void;
 
   constructor(x: number, y: number) {
     const sheet = Loader.shared.resources.spritesheet.spritesheet;
     super(sheet!.animations["pacman_eat/pacman_eat"], x, y);
-    this.fps = 10;
+    this.fps = 15;
     this.anchor.set(0.5);
 
     this.agent = new PlayerAgent();
@@ -34,6 +35,13 @@ export default class Pacman extends Animatable {
       return;
     }
     super.update(elapsedTime);
+
+    if (this.mazeNode.pellet) {
+      this.mazeNode.pellet.visible = false;
+      this.mazeNode.pellet = null;
+      this.moveFrameDelay += 1;
+      this.addPointsCallback(10);
+    }
     if (this._corneringCase()) return;
     if (this._hitWall()) return;
     this._continueInCurrentDir();
