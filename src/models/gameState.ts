@@ -4,6 +4,7 @@ import MazeModel from "./mazeModel";
 import { Container } from "pixi.js";
 import ScoreBoard from "../game_objects/scoreBoard";
 import HighScore from "../game_objects/highScore";
+import Ghost from "../game_objects/ghost";
 
 export default class GameState {
   lifeCounter: LifeCounter;
@@ -12,10 +13,15 @@ export default class GameState {
   pelletContainer: Container;
   scoreBoard: ScoreBoard;
   highScore: HighScore;
+  ghostContainer: Container;
+  redGhost: any;
 
   constructor() {
     this.container = new Container();
     this.pelletContainer = new Container();
+    this.ghostContainer = new Container();
+    this.redGhost = new Ghost(30, 50);
+    this.ghostContainer.addChild(this.redGhost);
 
     const pacman = new Pacman(114, 212);
     this.lifeCounter = new LifeCounter(3);
@@ -24,6 +30,7 @@ export default class GameState {
     this.mazeModel = new MazeModel(pacman, this.pelletContainer);
     this.container.addChild(pacman);
     this.container.addChild(this.pelletContainer);
+    this.container.addChild(this.ghostContainer);
     this.container.addChild(this.lifeCounter.container);
     this.container.addChild(this.scoreBoard.container);
     this.container.addChild(this.highScore.container);
@@ -34,5 +41,7 @@ export default class GameState {
     this.scoreBoard.update(elapsedTime);
     this.scoreBoard.updateScoreBoard(111);
     this.highScore.updateScoreBoard(1);
+
+    this.redGhost.update(elapsedTime);
   }
 }

@@ -75,7 +75,3 @@ export default class MazeModel {
     warpTwo.warp = true;
   }
 }
-
-/* Add dots to maze, kill dot when pac eats it (set invisible),
-remove allChildren from container on new level, reset pellets on
-new level */
