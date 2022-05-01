@@ -20,7 +20,7 @@ export default class GameState {
     this.container = new Container();
     this.pelletContainer = new Container();
     this.ghostContainer = new Container();
-    this.redGhost = new Ghost(30, 50);
+    this.redGhost = new Ghost(13 * 8 + 2, 11 * 8 + 24 + 4);
     this.ghostContainer.addChild(this.redGhost);
 
     const pacman = new Pacman(114, 212);
