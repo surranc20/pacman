@@ -2,12 +2,13 @@ import { Cardinal } from "../enums/cardinal";
 import IAgent from "../interfaces/iAgent";
 import Keyboard from "pixi.js-keyboard";
 import MazeModel from "../models/mazeModel";
+import MazeNode from "../models/mazeNode";
 
 export default class PlayerAgent implements IAgent {
   keyboard = Keyboard;
   queuedMove = Cardinal.WEST;
 
-  getMove(_maze: MazeModel, previousDir: Cardinal) {
+  getMove(_maze: MazeModel, previousDir: Cardinal, _mazeNode: MazeNode) {
     let move = previousDir;
 
     if (this.keyboard.isKeyDown("KeyW", "ArrowUp")) move = Cardinal.NORTH;

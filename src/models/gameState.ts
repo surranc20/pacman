@@ -20,14 +20,16 @@ export default class GameState {
     this.container = new Container();
     this.pelletContainer = new Container();
     this.ghostContainer = new Container();
-    this.redGhost = new Ghost(13 * 8 + 2, 11 * 8 + 24 + 4);
-    this.ghostContainer.addChild(this.redGhost);
 
     const pacman = new Pacman(114, 212);
     this.lifeCounter = new LifeCounter(3);
     this.scoreBoard = new ScoreBoard();
     this.highScore = new HighScore();
     this.mazeModel = new MazeModel(pacman, this.pelletContainer);
+
+    this.redGhost = new Ghost(13 * 8 + 2, 11 * 8 + 24 + 4, this.mazeModel);
+    this.ghostContainer.addChild(this.redGhost);
+
     this.container.addChild(pacman);
     this.container.addChild(this.pelletContainer);
     this.container.addChild(this.ghostContainer);
@@ -39,6 +41,7 @@ export default class GameState {
       this.scoreBoard.updateScoreBoard(points);
       this.highScore.updateScoreBoard(points);
     };
+    this.redGhost.mazeNode = this.mazeModel.nodes.get([13, 11].toString());
   }
 
   update(elapsedTime: number) {

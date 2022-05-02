@@ -2,7 +2,6 @@ import { Loader } from "pixi.js";
 import PlayerAgent from "../agents/playerAgent";
 import { Cardinal } from "../enums/cardinal";
 import MazeNode from "../models/mazeNode";
-import MazeModel from "../models/mazeModel";
 import Moveable from "../abstract/moveable";
 
 export default class Pacman extends Moveable {
@@ -23,10 +22,6 @@ export default class Pacman extends Moveable {
     this.facing = Cardinal.EAST;
     this.queuedMove = Cardinal.EAST;
     this.moveFrameDelay = 0;
-  }
-
-  inputMove(maze: MazeModel) {
-    this.queuedMove = this.agent.getMove(maze, this.facing);
   }
 
   update(elapsedTime: number) {

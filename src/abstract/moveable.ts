@@ -12,7 +12,6 @@ export default abstract class Moveable extends Animatable implements IMoveable {
 
   abstract mazeNode: MazeNode;
 
-  abstract inputMove(maze: MazeModel): void;
   abstract _hitWall(): boolean;
 
   update(elapsedTime: number) {
@@ -20,6 +19,10 @@ export default abstract class Moveable extends Animatable implements IMoveable {
     if (this._corneringCase()) return;
     if (this._hitWall()) return;
     this._continueInCurrentDir();
+  }
+
+  inputMove(maze: MazeModel): void {
+    this.queuedMove = this.agent.getMove(maze, this.facing, this.mazeNode);
   }
 
   _continueInCurrentDir() {
