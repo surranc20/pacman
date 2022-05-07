@@ -22,6 +22,7 @@ export default class Pacman extends Moveable {
     this.facing = Cardinal.EAST;
     this.queuedMove = Cardinal.EAST;
     this.moveFrameDelay = 0;
+    this.speedBoostWhenTurning = true;
   }
 
   update(elapsedTime: number) {

@@ -13,6 +13,7 @@ export default abstract class Moveable extends Animatable implements IMoveable {
   abstract mazeNode: MazeNode;
 
   abstract _hitWall(): boolean;
+  speedBoostWhenTurning = false;
 
   update(elapsedTime: number) {
     super.update(elapsedTime);
@@ -55,33 +56,56 @@ export default abstract class Moveable extends Animatable implements IMoveable {
       this.queuedMove !== this.facing &&
       this.mazeNode[this.queuedMove]?.validPath
     ) {
-      switch (this.queuedMove) {
-        case Cardinal.NORTH:
-          if (this.facing === Cardinal.SOUTH) break;
-          this.y -= Math.abs(this.x - this.mazeNode.center[0]);
-          this.x = this.mazeNode.center[0];
-          break;
-        case Cardinal.SOUTH:
-          if (this.facing === Cardinal.NORTH) break;
-          this.y += Math.abs(this.x - this.mazeNode.center[0]);
-          this.x = this.mazeNode.center[0];
-          break;
-        case Cardinal.EAST:
-          if (this.facing === Cardinal.WEST) break;
-          this.x += Math.abs(this.y - this.mazeNode.center[1]);
-          this.y = this.mazeNode.center[1];
-          break;
-        case Cardinal.WEST:
-          if (this.facing === Cardinal.EAST) break;
-          this.x -= Math.abs(this.y - this.mazeNode.center[1]);
-          this.y = this.mazeNode.center[1];
-          break;
+      if (this.speedBoostWhenTurning) {
+        this._applySkip();
       }
+      this._centerAfterTurning();
       this.facing = this.queuedMove;
       this._getUpdatedMazeNode();
       return true;
     }
     return false;
+  }
+
+  _applySkip() {
+    console.log();
+    console.log([this.x, this.y]);
+    switch (this.queuedMove) {
+      case Cardinal.NORTH:
+        this.y -= Math.abs(this.x - this.mazeNode.center[0]);
+        break;
+      case Cardinal.SOUTH:
+        this.y += Math.abs(this.x - this.mazeNode.center[0]);
+        break;
+      case Cardinal.EAST:
+        this.x += Math.abs(this.y - this.mazeNode.center[1]);
+        break;
+      case Cardinal.WEST:
+        this.x -= Math.abs(this.y - this.mazeNode.center[1]);
+        break;
+    }
+    console.log([this.x, this.y]);
+  }
+
+  _centerAfterTurning() {
+    switch (this.queuedMove) {
+      case Cardinal.NORTH:
+        if (this.facing === Cardinal.SOUTH) break;
+        this.x = this.mazeNode.center[0];
+        break;
+      case Cardinal.SOUTH:
+        if (this.facing === Cardinal.NORTH) break;
+        this.x = this.mazeNode.center[0];
+        break;
+      case Cardinal.EAST:
+        if (this.facing === Cardinal.WEST) break;
+        this.y = this.mazeNode.center[1];
+        break;
+      case Cardinal.WEST:
+        if (this.facing === Cardinal.EAST) break;
+        this.y = this.mazeNode.center[1];
+        break;
+    }
   }
 
   _getUpdatedMazeNode() {
