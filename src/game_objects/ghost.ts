@@ -1,13 +1,13 @@
 import { Loader } from "pixi.js";
 import Moveable from "../abstract/moveable";
-import GhostAgent from "../agents/ghostAgent";
 import { Cardinal } from "../enums/cardinal";
-import IAgent from "../interfaces/iAgent";
+import { Color } from "../enums/color";
+import IGhostAgent from "../interfaces/iGhostAgent";
 import MazeModel from "../models/mazeModel";
 import mazeNode from "../models/mazeNode";
 
 export default class Ghost extends Moveable {
-  agent: IAgent;
+  agent!: IGhostAgent;
   facing: Cardinal;
   queuedMove: Cardinal;
   mazeNode!: mazeNode;
@@ -16,21 +16,25 @@ export default class Ghost extends Moveable {
   downTexture: any;
   sideTexture: any;
 
-  constructor(x: number, y: number, mazeModel: MazeModel) {
+  constructor(x: number, y: number, mazeModel: MazeModel, color: Color) {
     const sheet = Loader.shared.resources.spritesheet.spritesheet;
-    super(sheet!.animations["Ghosts/red_ghost_side/red_ghost_side"], x, y);
+    console.log(`Ghosts/${color}_ghost_east/${color}_ghost_east`);
+    super(
+      sheet!.animations[`Ghosts/${color}_ghost_east/${color}_ghost_east`],
+      x,
+      y
+    );
     this.fps = 10;
     this.anchor.set(0.5);
     this.facing = Cardinal.EAST;
     this.queuedMove = this.facing;
-    this.agent = new GhostAgent();
     this.mazeModel = mazeModel;
     this.upTexture =
-      sheet!.animations["Ghosts/red_ghost_north/red_ghost_north"];
+      sheet!.animations[`Ghosts/${color}_ghost_north/${color}_ghost_north`];
     this.downTexture =
-      sheet!.animations["Ghosts/red_ghost_south/red_ghost_south"];
+      sheet!.animations[`Ghosts/${color}_ghost_south/${color}_ghost_south`];
     this.sideTexture =
-      sheet!.animations["Ghosts/red_ghost_side/red_ghost_side"];
+      sheet!.animations[`Ghosts/${color}_ghost_east/${color}_ghost_east`];
   }
 
   update(elapsedTime: number) {
@@ -43,7 +47,7 @@ export default class Ghost extends Moveable {
   }
 
   _continueInCurrentDir() {
-    this.scale.x = 1;
+    this.scale.x = 1; // Used for flipping side textures
     switch (this.facing) {
       case Cardinal.EAST:
         this.x += 1;

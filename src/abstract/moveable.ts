@@ -23,7 +23,7 @@ export default abstract class Moveable extends Animatable implements IMoveable {
   }
 
   inputMove(maze: MazeModel): void {
-    this.queuedMove = this.agent.getMove(maze, this.facing, this.mazeNode);
+    this.queuedMove = this.agent.getMove(maze, this);
   }
 
   _continueInCurrentDir() {
@@ -57,7 +57,7 @@ export default abstract class Moveable extends Animatable implements IMoveable {
       this.mazeNode[this.queuedMove]?.validPath
     ) {
       if (this.speedBoostWhenTurning) {
-        this._applySkip();
+        this._applyBoost();
       }
       this._centerAfterTurning();
       this.facing = this.queuedMove;
@@ -67,9 +67,7 @@ export default abstract class Moveable extends Animatable implements IMoveable {
     return false;
   }
 
-  _applySkip() {
-    console.log();
-    console.log([this.x, this.y]);
+  _applyBoost() {
     switch (this.queuedMove) {
       case Cardinal.NORTH:
         this.y -= Math.abs(this.x - this.mazeNode.center[0]);
@@ -84,7 +82,6 @@ export default abstract class Moveable extends Animatable implements IMoveable {
         this.x -= Math.abs(this.y - this.mazeNode.center[1]);
         break;
     }
-    console.log([this.x, this.y]);
   }
 
   _centerAfterTurning() {

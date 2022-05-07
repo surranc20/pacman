@@ -3,11 +3,16 @@ import mapJson from "./map.json";
 import Pacman from "../game_objects/pacman";
 import PelletFactory from "../utils/pelletFactory";
 import { Container } from "pixi.js";
+import Ghost from "../game_objects/ghost";
 
 export default class MazeModel {
   nodes: Map<string, MazeNode>;
   pacman: Pacman;
   pelletContainer: Container;
+  red!: Ghost;
+  pink!: Ghost;
+  blue!: Ghost;
+  orange!: Ghost;
 
   constructor(pacman: Pacman, pelletContainer: Container) {
     this.nodes = new Map<string, MazeNode>();
@@ -20,6 +25,10 @@ export default class MazeModel {
   update(elapsedTime: number) {
     this.pacman.inputMove(this);
     this.pacman.update(elapsedTime);
+    this.red.update(elapsedTime);
+    this.blue.update(elapsedTime);
+    this.orange.update(elapsedTime);
+    this.pink.update(elapsedTime);
   }
 
   setupMazeNodes() {

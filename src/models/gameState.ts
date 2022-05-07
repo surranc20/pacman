@@ -4,7 +4,8 @@ import MazeModel from "./mazeModel";
 import { Container } from "pixi.js";
 import ScoreBoard from "../game_objects/scoreBoard";
 import HighScore from "../game_objects/highScore";
-import Ghost from "../game_objects/ghost";
+import { Color } from "../enums/color";
+import GhostFactory from "../utils/ghostFactory";
 
 export default class GameState {
   lifeCounter: LifeCounter;
@@ -27,8 +28,18 @@ export default class GameState {
     this.highScore = new HighScore();
     this.mazeModel = new MazeModel(pacman, this.pelletContainer);
 
-    this.redGhost = new Ghost(13 * 8 + 2, 11 * 8 + 24 + 4, this.mazeModel);
-    this.ghostContainer.addChild(this.redGhost);
+    // Create Ghosts
+    const ghostFactory = new GhostFactory();
+    for (const color of Object.values(Color)) {
+      if (isNaN(Number(color))) {
+        const ghost = ghostFactory.createGhostFromColor(
+          color as Color,
+          this.mazeModel
+        );
+        this.ghostContainer.addChild(ghost);
+        this.mazeModel[color] = ghost;
+      }
+    }
 
     this.container.addChild(pacman);
     this.container.addChild(this.pelletContainer);
@@ -41,13 +52,10 @@ export default class GameState {
       this.scoreBoard.updateScoreBoard(points);
       this.highScore.updateScoreBoard(points);
     };
-    this.redGhost.mazeNode = this.mazeModel.nodes.get([13, 11].toString());
   }
 
   update(elapsedTime: number) {
     this.mazeModel.update(elapsedTime);
     this.scoreBoard.update(elapsedTime);
-
-    this.redGhost.update(elapsedTime);
   }
 }
