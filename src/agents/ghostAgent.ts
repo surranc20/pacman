@@ -23,13 +23,13 @@ export default class GhostAgent implements IAgent {
     }
 
     const [tarX, tarY] = [targetNode.x, targetNode.y];
-    let bestDir = previousDir;
+    let bestDir = new Set<Cardinal>([previousDir]);
     let bestDist = Infinity;
     for (const node of currentNode.connections) {
       const [x, y] = [node.x, node.y];
       const distanceToTarget = this.euclideanDistance(x, tarX, y, tarY);
 
-      if (distanceToTarget < bestDist) {
+      if (distanceToTarget <= bestDist) {
         let dir = null;
         switch (true) {
           case node == currentNode.east:
@@ -47,12 +47,16 @@ export default class GhostAgent implements IAgent {
         }
 
         if (CardinalOpposites.get(dir) !== previousDir) {
+          if (distanceToTarget === bestDist) {
+            bestDir.add(dir);
+          } else {
+            bestDir = new Set([dir]);
+          }
           bestDist = distanceToTarget;
-          bestDir = dir;
         }
       }
     }
-    return bestDir;
+    return this._handleTies(bestDir);
   }
 
   getTargetBlinky(maze: MazeModel) {
@@ -133,6 +137,15 @@ export default class GhostAgent implements IAgent {
 
     return [x, y];
   }
-}
 
-// TODO: Handle ties when two possible moves have the same distance
+  //TODO: Can optimize the need for set creation away if needed
+  _handleTies(directions: any) {
+    if (directions.length === 1) {
+      return directions[0];
+    }
+    if (directions.has(Cardinal.NORTH)) return Cardinal.NORTH;
+    if (directions.has(Cardinal.WEST)) return Cardinal.WEST;
+    if (directions.has(Cardinal.SOUTH)) return Cardinal.SOUTH;
+    return Cardinal.EAST;
+  }
+}
