@@ -14,6 +14,7 @@ export default abstract class Moveable extends Animatable implements IMoveable {
 
   abstract _hitWall(): boolean;
   speedBoostWhenTurning = false;
+  speedModifier = 1;
 
   update(elapsedTime: number) {
     super.update(elapsedTime);
@@ -29,19 +30,19 @@ export default abstract class Moveable extends Animatable implements IMoveable {
   _continueInCurrentDir() {
     switch (this.facing) {
       case Cardinal.EAST:
-        this.x += 1;
+        this.x += 1 * this.speedModifier;
         this.angle = 0;
         break;
       case Cardinal.WEST:
-        this.x -= 1;
+        this.x -= 1 * this.speedModifier;
         this.angle = 180;
         break;
       case Cardinal.NORTH:
-        this.y -= 1;
+        this.y -= 1 * this.speedModifier;
         this.angle = 270;
         break;
       default:
-        this.y += 1;
+        this.y += 1 * this.speedModifier;
         this.angle = 90;
         break;
     }
@@ -70,16 +71,16 @@ export default abstract class Moveable extends Animatable implements IMoveable {
   _applyBoost() {
     switch (this.queuedMove) {
       case Cardinal.NORTH:
-        this.y -= Math.abs(this.x - this.mazeNode.center[0]);
+        this.y -= Math.abs(Math.floor(this.x) - this.mazeNode.center[0]);
         break;
       case Cardinal.SOUTH:
-        this.y += Math.abs(this.x - this.mazeNode.center[0]);
+        this.y += Math.abs(Math.floor(this.x) - this.mazeNode.center[0]);
         break;
       case Cardinal.EAST:
-        this.x += Math.abs(this.y - this.mazeNode.center[1]);
+        this.x += Math.abs(Math.floor(this.y) - this.mazeNode.center[1]);
         break;
       case Cardinal.WEST:
-        this.x -= Math.abs(this.y - this.mazeNode.center[1]);
+        this.x -= Math.abs(Math.floor(this.y) - this.mazeNode.center[1]);
         break;
     }
   }
@@ -106,8 +107,13 @@ export default abstract class Moveable extends Animatable implements IMoveable {
   }
 
   _getUpdatedMazeNode() {
-    const newNode = !this.mazeNode.centerInNode(this.x, this.y);
-    if (newNode) this.mazeNode = this.mazeNode[this.facing];
+    const newNode = !this.mazeNode.centerInNode(
+      Math.floor(this.x),
+      Math.floor(this.y)
+    );
+    if (newNode) {
+      this.mazeNode = this.mazeNode[this.facing];
+    }
   }
 
   _handleWarpScenario(old_node: MazeNode) {

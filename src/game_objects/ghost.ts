@@ -25,6 +25,7 @@ export default class Ghost extends Moveable {
       y
     );
     this.fps = 10;
+    this.speedModifier = 0.8;
     this.anchor.set(0.5);
     this.facing = Cardinal.EAST;
     this.queuedMove = this.facing;
@@ -48,28 +49,31 @@ export default class Ghost extends Moveable {
 
   _continueInCurrentDir() {
     this.scale.x = 1; // Used for flipping side textures
+    console.log();
+    console.log(this.x, this.y);
     switch (this.facing) {
       case Cardinal.EAST:
-        this.x += 1;
+        this.x += this.speedModifier;
         this.frames = this.sideTexture;
         this.angle = 0;
         break;
       case Cardinal.WEST:
-        this.x -= 1;
+        this.x -= this.speedModifier;
         this.frames = this.sideTexture;
         this.scale.x = -1;
         break;
       case Cardinal.NORTH:
-        this.y -= 1;
+        this.y -= this.speedModifier;
         this.angle = 0;
         this.frames = this.upTexture;
         break;
       default:
-        this.y += 1;
+        this.y += this.speedModifier;
         this.angle = 0;
         this.frames = this.downTexture;
         break;
     }
+    console.log(this.x, this.y);
 
     const old_node = this.mazeNode;
     this._getUpdatedMazeNode();
