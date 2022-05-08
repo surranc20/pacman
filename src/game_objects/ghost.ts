@@ -49,8 +49,6 @@ export default class Ghost extends Moveable {
 
   _continueInCurrentDir() {
     this.scale.x = 1; // Used for flipping side textures
-    console.log();
-    console.log(this.x, this.y);
     switch (this.facing) {
       case Cardinal.EAST:
         this.x += this.speedModifier;
@@ -73,7 +71,6 @@ export default class Ghost extends Moveable {
         this.frames = this.downTexture;
         break;
     }
-    console.log(this.x, this.y);
 
     const old_node = this.mazeNode;
     this._getUpdatedMazeNode();
