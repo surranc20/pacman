@@ -40,6 +40,9 @@ export default class GameState {
         this.mazeModel[color] = ghost;
       }
     }
+    this.mazeModel.ghostJail.addGhost(this.mazeModel.blue);
+    this.mazeModel.ghostJail.addGhost(this.mazeModel.orange);
+    this.mazeModel.ghostJail.addGhost(this.mazeModel.pink);
 
     this.container.addChild(pacman);
     this.container.addChild(this.pelletContainer);

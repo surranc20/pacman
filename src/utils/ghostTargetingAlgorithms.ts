@@ -3,6 +3,8 @@ import { Cardinal } from "../enums/cardinal";
 import MazeModel from "../models/mazeModel";
 import MazeNode from "../models/mazeNode";
 
+export function getTargetGoToJail() {}
+
 export function getTargetBlinky(maze: MazeModel, _gameObj: Moveable) {
   return maze.pacman.mazeNode;
 }

@@ -4,6 +4,7 @@ import Pacman from "../game_objects/pacman";
 import PelletFactory from "../utils/pelletFactory";
 import { Container } from "pixi.js";
 import Ghost from "../game_objects/ghost";
+import GhostJail from "./ghostJail";
 
 export default class MazeModel {
   nodes: Map<string, MazeNode>;
@@ -13,6 +14,7 @@ export default class MazeModel {
   pink!: Ghost;
   blue!: Ghost;
   orange!: Ghost;
+  ghostJail: GhostJail;
 
   constructor(pacman: Pacman, pelletContainer: Container) {
     this.nodes = new Map<string, MazeNode>();
@@ -20,6 +22,7 @@ export default class MazeModel {
     this.setupMazeNodes();
     this.pacman = pacman;
     this.pacman.mazeNode = this.nodes.get([14, 23].toString())!;
+    this.ghostJail = new GhostJail([]);
   }
 
   update(elapsedTime: number) {

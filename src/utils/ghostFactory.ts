@@ -29,7 +29,7 @@ export default class GhostFactory {
       case Color.RED:
         return [13, 11];
       case Color.BLUE:
-        return [1, 1];
+        return [1, 14];
       case Color.PINK:
         return [11, 1];
       default:
