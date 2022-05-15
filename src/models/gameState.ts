@@ -1,3 +1,5 @@
+import { sound } from "@pixi/sound";
+
 import Pacman from "../game_objects/pacman";
 import LifeCounter from "../game_objects/life_counter";
 import MazeModel from "./mazeModel";
@@ -16,6 +18,8 @@ export default class GameState {
   highScore: HighScore;
   ghostContainer: Container;
   redGhost: any;
+  sirenThresholds: Map<number, string>;
+  pelletsEaten: number;
 
   constructor() {
     this.container = new Container();
@@ -27,6 +31,7 @@ export default class GameState {
     this.scoreBoard = new ScoreBoard();
     this.highScore = new HighScore();
     this.mazeModel = new MazeModel(pacman, this.pelletContainer);
+    this.pelletsEaten = 0;
 
     // Create Ghosts
     const ghostFactory = new GhostFactory();
@@ -55,11 +60,35 @@ export default class GameState {
       this.scoreBoard.updateScoreBoard(10);
       this.highScore.updateScoreBoard(10);
       this.mazeModel.ghostJail.dotEaten();
+      this.pelletsEaten += 1;
+      this.adjustSiren();
     };
+
+    this.sirenThresholds = new Map([
+      [48, "2"],
+      [96, "3"],
+      [144, "4"],
+      [196, "5"],
+    ]);
+
+    for (let x = 1; x < 6; x++) {
+      sound.add(`siren_${x}`, `/assets/sounds/siren_${x}.mp3`);
+    }
+    sound.play("siren_1", { loop: true });
   }
 
   update(elapsedTime: number) {
     this.mazeModel.update(elapsedTime);
     this.scoreBoard.update(elapsedTime);
+  }
+
+  adjustSiren() {
+    if (this.sirenThresholds.has(this.pelletsEaten)) {
+      const sirenNo = this.sirenThresholds.get(
+        this.pelletsEaten
+      )! as unknown as number;
+      sound.stop(`siren_${sirenNo - 1}`);
+      sound.play(`siren_${sirenNo}`, { loop: true });
+    }
   }
 }

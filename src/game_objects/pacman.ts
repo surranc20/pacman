@@ -1,4 +1,5 @@
 import { Loader } from "pixi.js";
+import { sound } from "@pixi/sound";
 import PlayerAgent from "../agents/playerAgent";
 import { Cardinal } from "../enums/cardinal";
 import MazeNode from "../models/mazeNode";
@@ -11,6 +12,7 @@ export default class Pacman extends Moveable {
   queuedMove: Cardinal;
   moveFrameDelay: number;
   pelletEatenCallback!: () => void;
+  munchNumber: number;
 
   constructor(x: number, y: number) {
     const sheet = Loader.shared.resources.spritesheet.spritesheet;
@@ -23,6 +25,10 @@ export default class Pacman extends Moveable {
     this.queuedMove = Cardinal.EAST;
     this.moveFrameDelay = 0;
     this.speedBoostWhenTurning = true;
+
+    this.munchNumber = 0;
+    sound.add("munch0", "/assets/sounds/munch_1.mp3");
+    sound.add("munch1", "/assets/sounds/munch_2.mp3");
   }
 
   update(elapsedTime: number) {
@@ -36,6 +42,10 @@ export default class Pacman extends Moveable {
       this.mazeNode.pellet = null;
       this.moveFrameDelay += 1;
       this.pelletEatenCallback();
+
+      this.munchNumber += 1;
+      this.munchNumber %= 2;
+      sound.play(`munch${this.munchNumber}`);
     }
     super.update(elapsedTime);
   }
