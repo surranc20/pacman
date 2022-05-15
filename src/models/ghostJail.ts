@@ -11,6 +11,8 @@ export default class GhostJail {
   globalCounter = 0;
   globalCounterActivated = false;
   globalDotThresholds: Map<number, Color>;
+  defaultTimer: number;
+  timer: number;
 
   constructor(ghosts: Array<Ghost>) {
     this.ghosts = new Set();
@@ -26,6 +28,9 @@ export default class GhostJail {
       [32, Color.ORANGE],
     ]);
     ghosts.map((ghost) => this.addGhost(ghost));
+
+    this.defaultTimer = 5;
+    this.timer = 5;
   }
 
   addGhost(ghost: Ghost) {
@@ -57,9 +62,23 @@ export default class GhostJail {
     ghost.releasingFromJail = ReleasingFromJailState.Y_LEVELING;
   }
 
-  update(_elapsedTime: number) {}
+  update(elapsedTime: number) {
+    console.log(this.timer);
+    this.timer -= elapsedTime;
+    if (this.timer < 0) {
+      for (const color of this.globalDotThresholds.values()) {
+        const ghost = this.mapColorToGhost(color);
+        if (ghost) {
+          this.releaseGhost(ghost);
+          this.timer = this.defaultTimer;
+          return;
+        }
+      }
+    }
+  }
 
   dotEaten() {
+    this.timer = this.defaultTimer;
     // Flow when global counter is activated (after pacman dies)
     if (this.globalCounterActivated) {
       this.globalCounter += 1;

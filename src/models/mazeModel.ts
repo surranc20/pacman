@@ -32,6 +32,7 @@ export default class MazeModel {
     this.blue.update(elapsedTime);
     this.orange.update(elapsedTime);
     this.pink.update(elapsedTime);
+    this.ghostJail.update(elapsedTime);
   }
 
   setupMazeNodes() {
