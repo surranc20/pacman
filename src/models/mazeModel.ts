@@ -38,7 +38,7 @@ export default class MazeModel {
 
     this.ghostJail.update(elapsedTime);
 
-    if (Keyboard.isKeyDown("KeyP")) this.ghostJail.sendToJail(this.red);
+    if (Keyboard.isKeyDown("KeyP")) this.ghostJail.sendToJail(this.blue);
   }
 
   setupMazeNodes() {

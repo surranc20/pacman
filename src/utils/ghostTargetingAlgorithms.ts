@@ -1,9 +1,15 @@
 import Moveable from "../abstract/moveable";
 import { Cardinal } from "../enums/cardinal";
+import { GoingToJailState } from "../enums/goingToJail";
+import Ghost from "../game_objects/ghost";
 import MazeModel from "../models/mazeModel";
 import MazeNode from "../models/mazeNode";
 
-export function getTargetGoToJail(maze: MazeModel, _gameObj: Moveable) {
+export function getTargetGoToJail(maze: MazeModel, gameObj: Moveable) {
+  if (gameObj.mazeNode.x === 13 && gameObj.mazeNode.y === 11) {
+    const ghost = gameObj as Ghost;
+    ghost.goingToJailState = GoingToJailState.X_CENTERING;
+  }
   return maze.getNode(13, 11);
 }
 
