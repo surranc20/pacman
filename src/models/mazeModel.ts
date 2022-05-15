@@ -28,9 +28,9 @@ export default class MazeModel {
   update(elapsedTime: number) {
     this.pacman.inputMove(this);
     this.pacman.update(elapsedTime);
-    //this.red.update(elapsedTime);
-    //this.blue.update(elapsedTime);
-    //this.orange.update(elapsedTime);
+    this.red.update(elapsedTime);
+    this.blue.update(elapsedTime);
+    this.orange.update(elapsedTime);
     this.pink.update(elapsedTime);
   }
 

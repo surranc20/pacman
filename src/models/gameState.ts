@@ -41,8 +41,8 @@ export default class GameState {
       }
     }
     this.mazeModel.ghostJail.addGhost(this.mazeModel.blue);
-    this.mazeModel.ghostJail.addGhost(this.mazeModel.orange);
     this.mazeModel.ghostJail.addGhost(this.mazeModel.pink);
+    this.mazeModel.ghostJail.addGhost(this.mazeModel.orange);
 
     this.container.addChild(pacman);
     this.container.addChild(this.pelletContainer);
