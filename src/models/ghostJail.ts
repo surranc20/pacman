@@ -1,7 +1,9 @@
 import { Cardinal } from "../enums/cardinal";
 import { Color } from "../enums/color";
+import { GoingToJailState } from "../enums/goingToJail";
 import { ReleasingFromJailState } from "../enums/releasingFromJail";
 import Ghost from "../game_objects/ghost";
+import { getTargetGoToJail } from "../utils/ghostTargetingAlgorithms";
 
 export default class GhostJail {
   ghosts: Set<Ghost>;
@@ -31,6 +33,12 @@ export default class GhostJail {
 
     this.defaultTimer = 5;
     this.timer = 5;
+  }
+
+  sendToJail(ghost: Ghost) {
+    ghost.speedModifier = 2;
+    ghost.agent.targetAI = getTargetGoToJail;
+    ghost.goingToJailState = GoingToJailState.TRAVELING_TO_JAIL;
   }
 
   addGhost(ghost: Ghost) {

@@ -10,9 +10,11 @@ export default class GhostAgent implements IAgent {
   keyboard = Keyboard;
   queuedMove = Cardinal.WEST;
   targetAI: (mazeModel: MazeModel, gameObj: Moveable) => MazeNode;
+  defaultTargetAI: (mazeModel: MazeModel, gameObj: Moveable) => MazeNode;
 
   constructor(targetAI: (MazeModel: MazeModel, gameObj: Moveable) => MazeNode) {
     this.targetAI = targetAI;
+    this.defaultTargetAI = this.targetAI;
   }
 
   getMove(maze: MazeModel, gameObj: Moveable) {

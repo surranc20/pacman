@@ -6,6 +6,8 @@ import { Container } from "pixi.js";
 import Ghost from "../game_objects/ghost";
 import GhostJail from "./ghostJail";
 
+import Keyboard from "pixi.js-keyboard";
+
 export default class MazeModel {
   nodes: Map<string, MazeNode>;
   pacman: Pacman;
@@ -35,6 +37,8 @@ export default class MazeModel {
     this.pink.update(elapsedTime);
 
     this.ghostJail.update(elapsedTime);
+
+    if (Keyboard.isKeyDown("KeyP")) this.ghostJail.sendToJail(this.blue);
   }
 
   setupMazeNodes() {

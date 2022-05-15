@@ -5,4 +5,5 @@ import IAgent from "./iAgent";
 
 export default interface IGhostAgent extends IAgent {
   targetAI: (mazeModel: MazeModel, gameObj: Moveable) => MazeNode;
+  defaultTargetAI: (mazeModel: MazeModel, gameObj: Moveable) => MazeNode;
 }
