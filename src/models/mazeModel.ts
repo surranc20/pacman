@@ -21,17 +21,19 @@ export default class MazeModel {
     this.pelletContainer = pelletContainer;
     this.setupMazeNodes();
     this.pacman = pacman;
-    this.pacman.mazeNode = this.nodes.get([14, 23].toString())!;
+    this.pacman.mazeNode = this.getNode(14, 23);
     this.ghostJail = new GhostJail([]);
   }
 
   update(elapsedTime: number) {
     this.pacman.inputMove(this);
     this.pacman.update(elapsedTime);
+
     this.red.update(elapsedTime);
     this.blue.update(elapsedTime);
     this.orange.update(elapsedTime);
     this.pink.update(elapsedTime);
+
     this.ghostJail.update(elapsedTime);
   }
 
@@ -62,7 +64,7 @@ export default class MazeModel {
     for (const node of this.nodes.values()) {
       for (const delta of directionDeltas) {
         const [newX, newY] = [node.x + delta[0], node.y + delta[1]];
-        const connection = this.nodes.get([newX, newY].toString());
+        const connection = this.getNode(newX, newY);
 
         if (connection?.validPath) {
           node.connections.push(connection);
@@ -75,8 +77,8 @@ export default class MazeModel {
     }
 
     // Setup the two warp nodes
-    const warpOne = this.nodes.get([0, 14].toString())!;
-    const warpTwo = this.nodes.get([27, 14].toString())!;
+    const warpOne = this.getNode(0, 14);
+    const warpTwo = this.getNode(27, 14);
 
     warpOne.connections.push(warpTwo);
     warpTwo.connections.push(warpOne);
@@ -86,18 +88,10 @@ export default class MazeModel {
 
     warpOne.warp = true;
     warpTwo.warp = true;
-
-    // Setup the jail door
-    const leftDoor = this.nodes.get([13, 13].toString())!;
-    const rightDoor = this.nodes.get([14, 13].toString())!;
-
-    leftDoor.connectionsReleasingFromJail.push(this.getNode(13, 12));
-    rightDoor.connectionsReleasingFromJail.push(this.getNode(14, 12));
   }
 
   getNode(x: number, y: number) {
     const node = this.nodes.get([x, y].toString())!;
-    console.log("node", node);
     return node;
   }
 }

@@ -12,7 +12,7 @@ export function getTargetBlinky(maze: MazeModel, _gameObj: Moveable) {
 export function getTargetPinky(maze: MazeModel, _gameObj: Moveable) {
   let [x, y] = [maze.pacman.mazeNode.x, maze.pacman.mazeNode.y];
   [x, y] = getGhostOffset(x, y, 4, maze.pacman.facing);
-  return maze.nodes.get([x, y].toString())!;
+  return maze.getNode(x, y);
 }
 
 export function getTargetClyde(maze: MazeModel, gameObj: Moveable) {
@@ -24,7 +24,7 @@ export function getTargetClyde(maze: MazeModel, gameObj: Moveable) {
   if (distanceToPacman >= 8) {
     return maze.pacman.mazeNode;
   }
-  return maze.nodes.get([0, 27].toString())!;
+  return maze.getNode(0, 27);
 }
 
 export function getTargetInky(maze: MazeModel, _gameObj: Moveable) {
@@ -40,7 +40,7 @@ export function getTargetInky(maze: MazeModel, _gameObj: Moveable) {
 
   const [vectorX, vectorY] = getVectorBetweenTwoNodes(
     blinkyNode,
-    maze.nodes.get([offsetX, offsetY].toString())!
+    maze.getNode(offsetX, offsetY)
   );
 
   let [x, y] = [offsetX + vectorX, offsetY + vectorY];
@@ -50,7 +50,7 @@ export function getTargetInky(maze: MazeModel, _gameObj: Moveable) {
   if (y < 0) y = 0;
   if (y > 30) y = 30;
 
-  return maze.nodes.get([x, y].toString())!;
+  return maze.getNode(x, y);
 }
 
 export function euclideanDistance(

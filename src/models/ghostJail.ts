@@ -38,7 +38,7 @@ export default class GhostJail {
     this.ghosts.add(ghost);
     ghost.jailed = true;
     const [xTile, yTile] = [10 + this.ghosts.size * 2, 14];
-    ghost.mazeNode = ghost.mazeModel.nodes.get([xTile, yTile].toString())!;
+    ghost.mazeNode = ghost.mazeModel.getNode(xTile, yTile);
     ghost.x = xTile * 8;
     ghost.y = yTile * 8 + 24 + 4;
 
@@ -49,24 +49,23 @@ export default class GhostJail {
       ghost.facing = Cardinal.NORTH;
     }
     ghost.queuedMove = ghost.facing;
-
     ghost.setCorrectSpriteSheet();
     ghost.getTexture();
 
+    // Ghosts slow down in jail
     ghost.speedModifier = 0.5;
   }
 
   releaseGhost(ghost: Ghost) {
     this.ghosts.delete(ghost);
     ghost.jailed = false;
-    ghost.releasingFromJail = ReleasingFromJailState.Y_LEVELING;
+    ghost.releasingFromJailState = ReleasingFromJailState.Y_LEVELING;
   }
 
   update(elapsedTime: number) {
-    console.log(this.timer);
     this.timer -= elapsedTime;
     if (this.timer < 0) {
-      for (const color of this.globalDotThresholds.values()) {
+      for (const color of this.priorityList) {
         const ghost = this.mapColorToGhost(color);
         if (ghost) {
           this.releaseGhost(ghost);
@@ -79,6 +78,7 @@ export default class GhostJail {
 
   dotEaten() {
     this.timer = this.defaultTimer;
+
     // Flow when global counter is activated (after pacman dies)
     if (this.globalCounterActivated) {
       this.globalCounter += 1;
@@ -98,9 +98,9 @@ export default class GhostJail {
       if (ghost) {
         const newVal = this.ghostDotCounter.get(color)! - 1;
         this.ghostDotCounter.set(color, newVal);
-
         if (newVal <= 0) {
           this.releaseGhost(ghost);
+          return;
         }
       }
     }

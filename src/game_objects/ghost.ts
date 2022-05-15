@@ -17,10 +17,11 @@ export default class Ghost extends Moveable {
   downTexture: any;
   sideTexture: any;
   color: Color;
+  jailed: boolean;
+  releasingFromJailState: ReleasingFromJailState;
 
   constructor(x: number, y: number, mazeModel: MazeModel, color: Color) {
     const sheet = Loader.shared.resources.spritesheet.spritesheet;
-    console.log(`Ghosts/${color}_ghost_east/${color}_ghost_east`);
     super(
       sheet!.animations[`Ghosts/${color}_ghost_east/${color}_ghost_east`],
       x,
@@ -40,11 +41,16 @@ export default class Ghost extends Moveable {
       sheet!.animations[`Ghosts/${color}_ghost_south/${color}_ghost_south`];
     this.sideTexture =
       sheet!.animations[`Ghosts/${color}_ghost_east/${color}_ghost_east`];
+
+    this.jailed = false;
+    this.releasingFromJailState = ReleasingFromJailState.NOT_ACTIVE;
   }
 
   update(elapsedTime: number) {
     const initialNode = this.mazeNode;
-    if (this.releasingFromJail !== ReleasingFromJailState.NOT_ACTIVE) {
+
+    // Ghosts behave differently when exiting jail
+    if (this.releasingFromJailState !== ReleasingFromJailState.NOT_ACTIVE) {
       super.update(elapsedTime);
       this._releasingFromJailUpdate();
       return;
@@ -53,7 +59,7 @@ export default class Ghost extends Moveable {
     super.update(elapsedTime);
     if (initialNode !== this.mazeNode) {
       if (this.jailed) {
-        this._jailUpdate();
+        this._jailedInputMove();
       } else {
         this.inputMove(this.mazeModel);
       }
@@ -108,50 +114,62 @@ export default class Ghost extends Moveable {
     return false;
   }
 
-  _jailUpdate() {
+  _jailedInputMove() {
     if ([13, 15].includes(this.mazeNode.y)) {
       this.queuedMove = CardinalOpposites.get(this.facing)!;
     }
   }
   _releasingFromJailUpdate() {
-    console.log(this.x);
-    switch (this.releasingFromJail) {
+    switch (this.releasingFromJailState) {
       case ReleasingFromJailState.Y_LEVELING:
-        const targetY = 14 * 8 + 8 * 3 + 4;
-        if (this.y < targetY) {
-          this.queuedMove = Cardinal.SOUTH;
-        } else if (this.y > targetY) {
-          this.queuedMove = Cardinal.NORTH;
-        } else {
-          this.releasingFromJail = ReleasingFromJailState.X_LEVELING;
-        }
+        this._releasingFromJailUpdateYLeveling();
         break;
+
       case ReleasingFromJailState.X_LEVELING:
-        const targetX = 14 * 8;
-
-        if (this.x < targetX) {
-          this.queuedMove = Cardinal.EAST;
-        } else if (this.x > targetX) {
-          this.queuedMove = Cardinal.WEST;
-        } else {
-          this.releasingFromJail = ReleasingFromJailState.LEAVING;
-          this.facing = Cardinal.NORTH;
-          this.queuedMove = Cardinal.NORTH;
-        }
+        this._releasingFromJailUpdateXLeveling();
         break;
 
-      default:
-        this.x = 112;
-        if (this.y === 11 * 8 + 24 + 4) {
-          this.releasingFromJail = ReleasingFromJailState.NOT_ACTIVE;
-          this.inputMove(this.mazeModel);
-          this.speedModifier = this.defaultSpeedModifier;
-        }
+      case ReleasingFromJailState.LEAVING:
+        this._releasingFromJailUpdateLeaving();
+        break;
+    }
+  }
+
+  _releasingFromJailUpdateYLeveling() {
+    const targetY = 14 * 8 + 8 * 3 + 4;
+    if (this.y < targetY) {
+      this.queuedMove = Cardinal.SOUTH;
+    } else if (this.y > targetY) {
+      this.queuedMove = Cardinal.NORTH;
+    } else {
+      this.releasingFromJailState = ReleasingFromJailState.X_LEVELING;
+    }
+  }
+
+  _releasingFromJailUpdateXLeveling() {
+    const targetX = 14 * 8;
+    if (this.x < targetX) {
+      this.queuedMove = Cardinal.EAST;
+    } else if (this.x > targetX) {
+      this.queuedMove = Cardinal.WEST;
+    } else {
+      this.releasingFromJailState = ReleasingFromJailState.LEAVING;
+      this.facing = Cardinal.NORTH;
+      this.queuedMove = Cardinal.NORTH;
+    }
+  }
+
+  _releasingFromJailUpdateLeaving() {
+    if (this.y === 11 * 8 + 24 + 4) {
+      this.releasingFromJailState = ReleasingFromJailState.NOT_ACTIVE;
+      this.inputMove(this.mazeModel);
+      this.speedModifier = this.defaultSpeedModifier;
     }
   }
 
   _getUpdatedMazeNode() {
-    if (this.releasingFromJail === ReleasingFromJailState.LEAVING) {
+    // Need this so ghost can faze through jail door when leaving jail
+    if (this.releasingFromJailState === ReleasingFromJailState.LEAVING) {
       const newNode = !this.mazeNode.centerInNode(
         Math.floor(this.x),
         Math.floor(this.y)

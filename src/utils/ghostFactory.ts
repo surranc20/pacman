@@ -18,8 +18,7 @@ export default class GhostFactory {
       maze,
       color
     );
-
-    ghost.mazeNode = maze.nodes.get([XTilePos, YTilePos].toString())!;
+    ghost.mazeNode = maze.getNode(XTilePos, YTilePos);
     this._setGhostAgent(color, ghost);
     return ghost;
   }

@@ -13,14 +13,12 @@ export default class MazeNode {
   north!: MazeNode;
   west!: MazeNode;
   warp: boolean;
-  connectionsReleasingFromJail: MazeNode[];
 
   constructor(x: number, y: number, validPath: boolean) {
     this.x = x;
     this.y = y;
     this.validPath = validPath;
     this.connections = [];
-    this.connectionsReleasingFromJail = [];
     this.gameObject = null;
     this.warp = false;
     this.pellet = null;
@@ -31,7 +29,6 @@ export default class MazeNode {
     this.south = this.connections.filter((el) => el.y > this.y)[0];
     this.north = this.connections.filter((el) => this.y > el.y)[0];
     this.west = this.connections.filter((el) => this.x > el.x)[0];
-    this.connectionsReleasingFromJail = Array.from(this.connections);
   }
 
   centerInNode(centerX: number, centerY: number) {
@@ -39,11 +36,9 @@ export default class MazeNode {
     const [maxX, maxY] = [minX + 7, minY + 7];
 
     if (!(minX <= centerX && centerX <= maxX)) {
-      console.log("x", minX, centerX, maxX);
       return false;
     }
     if (!(minY <= centerY && centerY <= maxY)) {
-      console.log("y", minY, centerY, maxY);
       return false;
     }
     return true;
