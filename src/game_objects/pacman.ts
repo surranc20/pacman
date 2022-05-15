@@ -10,7 +10,7 @@ export default class Pacman extends Moveable {
   mazeNode!: MazeNode;
   queuedMove: Cardinal;
   moveFrameDelay: number;
-  addPointsCallback!: (points: number) => void;
+  pelletEatenCallback!: () => void;
 
   constructor(x: number, y: number) {
     const sheet = Loader.shared.resources.spritesheet.spritesheet;
@@ -35,7 +35,7 @@ export default class Pacman extends Moveable {
       this.mazeNode.pellet.visible = false;
       this.mazeNode.pellet = null;
       this.moveFrameDelay += 1;
-      this.addPointsCallback(10);
+      this.pelletEatenCallback();
     }
     super.update(elapsedTime);
   }

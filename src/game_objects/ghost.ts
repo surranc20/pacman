@@ -2,6 +2,7 @@ import { Loader } from "pixi.js";
 import Moveable from "../abstract/moveable";
 import { Cardinal, CardinalOpposites } from "../enums/cardinal";
 import { Color } from "../enums/color";
+import { ReleasingFromJailState } from "../enums/releasingFromJail";
 import IGhostAgent from "../interfaces/iGhostAgent";
 import MazeModel from "../models/mazeModel";
 import mazeNode from "../models/mazeNode";
@@ -16,7 +17,6 @@ export default class Ghost extends Moveable {
   downTexture: any;
   sideTexture: any;
   color: Color;
-  jailed: boolean;
 
   constructor(x: number, y: number, mazeModel: MazeModel, color: Color) {
     const sheet = Loader.shared.resources.spritesheet.spritesheet;
@@ -27,6 +27,7 @@ export default class Ghost extends Moveable {
       y
     );
     this.fps = 10;
+    this.defaultSpeedModifier = 0.8;
     this.speedModifier = 0.8;
     this.anchor.set(0.5);
     this.facing = Cardinal.EAST;
@@ -39,14 +40,17 @@ export default class Ghost extends Moveable {
       sheet!.animations[`Ghosts/${color}_ghost_south/${color}_ghost_south`];
     this.sideTexture =
       sheet!.animations[`Ghosts/${color}_ghost_east/${color}_ghost_east`];
-
-    this.jailed = false;
   }
 
   update(elapsedTime: number) {
     const initialNode = this.mazeNode;
-    super.update(elapsedTime);
+    if (this.releasingFromJail !== ReleasingFromJailState.NOT_ACTIVE) {
+      super.update(elapsedTime);
+      this._releasingFromJailUpdate();
+      return;
+    }
 
+    super.update(elapsedTime);
     if (initialNode !== this.mazeNode) {
       if (this.jailed) {
         this._jailUpdate();
@@ -108,5 +112,55 @@ export default class Ghost extends Moveable {
     if ([13, 15].includes(this.mazeNode.y)) {
       this.queuedMove = CardinalOpposites.get(this.facing)!;
     }
+  }
+  _releasingFromJailUpdate() {
+    console.log(this.x);
+    switch (this.releasingFromJail) {
+      case ReleasingFromJailState.Y_LEVELING:
+        const targetY = 14 * 8 + 8 * 3 + 4;
+        if (this.y < targetY) {
+          this.queuedMove = Cardinal.SOUTH;
+        } else if (this.y > targetY) {
+          this.queuedMove = Cardinal.NORTH;
+        } else {
+          this.releasingFromJail = ReleasingFromJailState.X_LEVELING;
+        }
+        break;
+      case ReleasingFromJailState.X_LEVELING:
+        const targetX = 14 * 8;
+
+        if (this.x < targetX) {
+          this.queuedMove = Cardinal.EAST;
+        } else if (this.x > targetX) {
+          this.queuedMove = Cardinal.WEST;
+        } else {
+          this.releasingFromJail = ReleasingFromJailState.LEAVING;
+          this.facing = Cardinal.NORTH;
+          this.queuedMove = Cardinal.NORTH;
+        }
+        break;
+
+      default:
+        this.x = 112;
+        if (this.y === 11 * 8 + 24 + 4) {
+          this.releasingFromJail = ReleasingFromJailState.NOT_ACTIVE;
+          this.inputMove(this.mazeModel);
+          this.speedModifier = this.defaultSpeedModifier;
+        }
+    }
+  }
+
+  _getUpdatedMazeNode() {
+    if (this.releasingFromJail === ReleasingFromJailState.LEAVING) {
+      const newNode = !this.mazeNode.centerInNode(
+        Math.floor(this.x),
+        Math.floor(this.y)
+      );
+      if (newNode) {
+        this.mazeNode = this.mazeModel.getNode(14, this.mazeNode.y - 1);
+      }
+      return;
+    }
+    super._getUpdatedMazeNode();
   }
 }

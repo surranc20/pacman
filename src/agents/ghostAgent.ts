@@ -34,7 +34,9 @@ export default class GhostAgent implements IAgent {
     const [tarX, tarY] = [targetNode.x, targetNode.y];
     let bestDir = new Set<Cardinal>([previousDir]);
     let bestDist = Infinity;
-    for (const node of currentNode.connections) {
+    const connections = currentNode.connections;
+
+    for (const node of connections) {
       const [x, y] = [node.x, node.y];
       const distanceToTarget = euclideanDistance(x, tarX, y, tarY);
 

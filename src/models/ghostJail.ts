@@ -1,5 +1,6 @@
 import { Cardinal } from "../enums/cardinal";
 import { Color } from "../enums/color";
+import { ReleasingFromJailState } from "../enums/releasingFromJail";
 import Ghost from "../game_objects/ghost";
 
 export default class GhostJail {
@@ -50,22 +51,23 @@ export default class GhostJail {
     ghost.speedModifier = 0.5;
   }
 
-  releaseGhost(color: Color) {
-    // remove ghost from ghosts
-    // trigger leaving jail state
-    console.log("Release", color);
+  releaseGhost(ghost: Ghost) {
+    this.ghosts.delete(ghost);
+    ghost.jailed = false;
+    ghost.releasingFromJail = ReleasingFromJailState.Y_LEVELING;
   }
 
   update(_elapsedTime: number) {}
 
-  dotEatenCallback() {
+  dotEaten() {
     // Flow when global counter is activated (after pacman dies)
     if (this.globalCounterActivated) {
       this.globalCounter += 1;
-      if (
-        Array.from(this.globalDotThresholds.keys()).includes(this.globalCounter)
-      ) {
-        this.releaseGhost(this.globalDotThresholds.get(this.globalCounter)!);
+      if (this.globalDotThresholds.has(this.globalCounter)) {
+        const ghost = this.mapColorToGhost(
+          this.globalDotThresholds.get(this.globalCounter)!
+        )!;
+        this.releaseGhost(ghost);
       }
       return;
     }
@@ -75,9 +77,12 @@ export default class GhostJail {
     for (const color of this.priorityList) {
       const ghost = this.mapColorToGhost(color);
       if (ghost) {
-        const newVal = this.ghostDotCounter.get(color)! + 1;
+        const newVal = this.ghostDotCounter.get(color)! - 1;
         this.ghostDotCounter.set(color, newVal);
-        return;
+
+        if (newVal <= 0) {
+          this.releaseGhost(ghost);
+        }
       }
     }
   }

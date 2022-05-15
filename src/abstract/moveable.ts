@@ -1,4 +1,5 @@
 import { Cardinal } from "../enums/cardinal";
+import { ReleasingFromJailState } from "../enums/releasingFromJail";
 import iAgent from "../interfaces/iAgent";
 import IMoveable from "../interfaces/iMoveable";
 import MazeModel from "../models/mazeModel";
@@ -14,7 +15,10 @@ export default abstract class Moveable extends Animatable implements IMoveable {
 
   abstract _hitWall(): boolean;
   speedBoostWhenTurning = false;
-  speedModifier = 1;
+  defaultSpeedModifier = 1;
+  speedModifier = this.defaultSpeedModifier;
+  jailed = false;
+  releasingFromJail = ReleasingFromJailState.NOT_ACTIVE;
 
   update(elapsedTime: number) {
     super.update(elapsedTime);
