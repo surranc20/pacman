@@ -24,6 +24,7 @@
     "seed"
   ],
   "dependencies": {
+    "@pixi/sound": "^4.2.0",
     "pixi.js": "6.0.4",
     "pixi.js-keyboard": "^1.1.6"
   },
