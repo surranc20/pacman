@@ -19,6 +19,10 @@ export default class Ghost extends Moveable {
   color: Color;
   jailed: boolean;
   releasingFromJailState: ReleasingFromJailState;
+  eyessideTexture: any;
+  eyesupTexture: any;
+  eyesdownTexture: any;
+  goingToJail: boolean;
 
   constructor(x: number, y: number, mazeModel: MazeModel, color: Color) {
     const sheet = Loader.shared.resources.spritesheet.spritesheet;
@@ -42,8 +46,15 @@ export default class Ghost extends Moveable {
     this.sideTexture =
       sheet!.animations[`Ghosts/${color}_ghost_east/${color}_ghost_east`];
 
+    // Weird caps format to help dynamically create texture name in
+    // setCorrectSpriteSheet method
+    this.eyessideTexture = [sheet!.textures["Ghosts/eyes_east.png"]];
+    this.eyesupTexture = [sheet!.textures["Ghosts/eyes_north.png"]];
+    this.eyesdownTexture = [sheet!.textures["Ghosts/eyes_south.png"]];
+
     this.jailed = false;
     this.releasingFromJailState = ReleasingFromJailState.NOT_ACTIVE;
+    this.goingToJail = false;
   }
 
   update(elapsedTime: number) {
@@ -90,22 +101,23 @@ export default class Ghost extends Moveable {
   }
 
   setCorrectSpriteSheet() {
+    const eyesPrefix = this.goingToJail ? "eyes" : "";
     switch (this.facing) {
       case Cardinal.EAST:
-        this.frames = this.sideTexture;
+        this.frames = this[(eyesPrefix + "sideTexture") as keyof Ghost];
         this.angle = 0;
         break;
       case Cardinal.WEST:
-        this.frames = this.sideTexture;
+        this.frames = this[(eyesPrefix + "sideTexture") as keyof Ghost];
         this.scale.x = -1;
         break;
       case Cardinal.NORTH:
         this.angle = 0;
-        this.frames = this.upTexture;
+        this.frames = this[(eyesPrefix + "upTexture") as keyof Ghost];
         break;
       default:
         this.angle = 0;
-        this.frames = this.downTexture;
+        this.frames = this[(eyesPrefix + "downTexture") as keyof Ghost];
         break;
     }
   }
