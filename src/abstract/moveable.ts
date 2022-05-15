@@ -9,12 +9,13 @@ export default abstract class Moveable extends Animatable implements IMoveable {
   abstract agent: iAgent;
   abstract facing: Cardinal;
   abstract queuedMove: Cardinal;
-
   abstract mazeNode: MazeNode;
 
-  abstract _hitWall(): boolean;
   speedBoostWhenTurning = false;
-  speedModifier = 1;
+  defaultSpeedModifier = 1;
+  speedModifier = this.defaultSpeedModifier;
+
+  abstract _hitWall(): boolean;
 
   update(elapsedTime: number) {
     super.update(elapsedTime);

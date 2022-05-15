@@ -40,6 +40,9 @@ export default class GameState {
         this.mazeModel[color] = ghost;
       }
     }
+    this.mazeModel.ghostJail.addGhost(this.mazeModel.blue);
+    this.mazeModel.ghostJail.addGhost(this.mazeModel.pink);
+    this.mazeModel.ghostJail.addGhost(this.mazeModel.orange);
 
     this.container.addChild(pacman);
     this.container.addChild(this.pelletContainer);
@@ -48,9 +51,10 @@ export default class GameState {
     this.container.addChild(this.scoreBoard.container);
     this.container.addChild(this.highScore.container);
 
-    pacman.addPointsCallback = (points) => {
-      this.scoreBoard.updateScoreBoard(points);
-      this.highScore.updateScoreBoard(points);
+    pacman.pelletEatenCallback = () => {
+      this.scoreBoard.updateScoreBoard(10);
+      this.highScore.updateScoreBoard(10);
+      this.mazeModel.ghostJail.dotEaten();
     };
   }
 
