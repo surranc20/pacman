@@ -4,6 +4,7 @@ import PlayerAgent from "../agents/playerAgent";
 import { Cardinal } from "../enums/cardinal";
 import MazeNode from "../models/mazeNode";
 import Moveable from "../abstract/moveable";
+import Animatable from "../abstract/animatable";
 
 export default class Pacman extends Moveable {
   agent: PlayerAgent;
@@ -13,10 +14,16 @@ export default class Pacman extends Moveable {
   moveFrameDelay: number;
   pelletEatenCallback!: () => void;
   munchNumber: number;
+  eatFrames: any;
+  deathFrames: any;
+  dying: boolean;
+  startDeathCallback!: () => void;
+  endDeathCallback!: () => void;
 
   constructor(x: number, y: number) {
     const sheet = Loader.shared.resources.spritesheet.spritesheet;
-    super(sheet!.animations["pacman_eat/pacman_eat"], x, y);
+    const eatFrames = sheet!.animations["pacman_eat/pacman_eat"];
+    super(eatFrames, x, y);
     this.fps = 15;
     this.anchor.set(0.5);
 
@@ -29,9 +36,22 @@ export default class Pacman extends Moveable {
     this.munchNumber = 0;
     sound.add("munch0", "/assets/sounds/munch_1.mp3");
     sound.add("munch1", "/assets/sounds/munch_2.mp3");
+    this.eatFrames = eatFrames;
+
+    this.dying = false;
+    this.deathFrames = sheet!.animations["pacman_death/pacman_death"];
   }
 
   update(elapsedTime: number) {
+    if (this.dying) {
+      Animatable.prototype.update.call(this, elapsedTime);
+      if (this.currentFrame === this.frames.length - 1) {
+        this.dying = false;
+        this.endDeathCallback();
+      }
+
+      return;
+    }
     if (this.moveFrameDelay) {
       this.moveFrameDelay -= 1;
       return;
@@ -48,6 +68,17 @@ export default class Pacman extends Moveable {
       sound.play(`munch${this.munchNumber}`);
     }
     super.update(elapsedTime);
+  }
+
+  die() {
+    debugger;
+    this.dying = true;
+    this.animating = true;
+    this.angle = 0;
+    this.fps = 9;
+    this.frames = this.deathFrames;
+    this.currentFrame = 0;
+    this.startDeathCallback();
   }
 
   _hitWall() {

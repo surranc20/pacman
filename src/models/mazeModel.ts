@@ -5,7 +5,6 @@ import PelletFactory from "../utils/pelletFactory";
 import { Container } from "pixi.js";
 import Ghost from "../game_objects/ghost";
 import GhostJail from "./ghostJail";
-
 import Keyboard from "pixi.js-keyboard";
 
 export default class MazeModel {
@@ -38,7 +37,7 @@ export default class MazeModel {
 
     this.ghostJail.update(elapsedTime);
 
-    if (Keyboard.isKeyDown("KeyP")) this.ghostJail.sendToJail(this.blue);
+    if (Keyboard.isKeyPressed("KeyP")) this.pacman.die();
   }
 
   setupMazeNodes() {

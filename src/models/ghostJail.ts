@@ -121,4 +121,8 @@ export default class GhostJail {
       }
     }
   }
+
+  clearJail() {
+    this.ghosts = new Set();
+  }
 }
