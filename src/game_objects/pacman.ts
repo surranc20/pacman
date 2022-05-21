@@ -46,7 +46,6 @@ export default class Pacman extends Moveable {
     if (this.dying) {
       Animatable.prototype.update.call(this, elapsedTime);
       if (this.currentFrame === this.frames.length - 1) {
-        this.dying = false;
         this.endDeathCallback();
       }
 
@@ -71,7 +70,6 @@ export default class Pacman extends Moveable {
   }
 
   die() {
-    debugger;
     this.dying = true;
     this.animating = true;
     this.angle = 0;

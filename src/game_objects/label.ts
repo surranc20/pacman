@@ -15,7 +15,6 @@ export default class Label {
   private _createLabel(color: LabelColors) {
     let xPos = 0;
     for (const char of this.labelText.toLowerCase()) {
-      console.log(char);
       if (/[a-z]/.test(char) || char === "!") {
         let capColorName = color[0].toLocaleUpperCase() + color.substring(1);
         const charTexture =

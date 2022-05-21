@@ -59,6 +59,11 @@ export default class Ghost extends Moveable {
   }
 
   update(elapsedTime: number) {
+    // Check to see if the ghost collide with pacman
+    if (this.mazeModel.pacman.mazeNode === this.mazeNode) {
+      this.mazeModel.pacman.die();
+    }
+
     const initialNode = this.mazeNode;
 
     // Ghosts behave differently when exiting jail

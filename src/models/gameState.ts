@@ -139,6 +139,7 @@ export default class GameState {
     pacman.getTexture();
     pacman.frames = pacman.eatFrames;
     pacman.mazeNode = this.mazeModel.getNode(14, 23);
+    pacman.dying = false;
 
     this.mazeModel.red.agent.targetAI =
       this.mazeModel.red.agent.defaultTargetAI;
