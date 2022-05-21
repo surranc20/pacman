@@ -2,7 +2,7 @@ import { sound } from "@pixi/sound";
 import Pacman from "../game_objects/pacman";
 import LifeCounter from "../game_objects/life_counter";
 import MazeModel from "./mazeModel";
-import { Container } from "pixi.js";
+import { Container, Loader } from "pixi.js";
 import ScoreBoard from "../game_objects/scoreBoard";
 import HighScore from "../game_objects/highScore";
 import { Color } from "../enums/color";
@@ -11,6 +11,8 @@ import { Cardinal } from "../enums/cardinal";
 import Label from "../game_objects/label";
 import { LabelColors } from "../enums/label_colors";
 import { getTargetFreightened } from "../utils/ghostTargetingAlgorithms";
+import Drawable from "../abstract/drawable";
+import Ghost from "../game_objects/ghost";
 
 export default class GameState {
   lifeCounter: LifeCounter;
@@ -49,6 +51,7 @@ export default class GameState {
         );
         this.ghostContainer.addChild(ghost);
         this.mazeModel[color] = ghost;
+        ghost.ghostEatenCallback = this.ghostEatenCallback;
       }
     }
 
@@ -218,4 +221,22 @@ export default class GameState {
     }
     sound.stop("power_siren");
   }
+
+  ghostEatenCallback = (ghost: Ghost) => {
+    const pointsLabel = new GhostPointsLabel(
+      ghost.x,
+      ghost.y - 10,
+      Loader.shared.resources.spritesheet.spritesheet?.textures[
+        "Ghost Points/200.png"
+      ]!
+    );
+    this.container.addChild(pointsLabel);
+    this.scoreBoard.updateScoreBoard(200);
+    this.highScore.updateScoreBoard(200);
+    setTimeout(() => {
+      pointsLabel.visible = false;
+    }, 1000);
+  };
 }
+
+class GhostPointsLabel extends Drawable {}
