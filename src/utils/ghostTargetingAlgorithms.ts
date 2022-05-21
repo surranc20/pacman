@@ -5,6 +5,13 @@ import Ghost from "../game_objects/ghost";
 import MazeModel from "../models/mazeModel";
 import MazeNode from "../models/mazeNode";
 
+export function getTargetFreightened(_maze: MazeModel, gameObj: Moveable) {
+  const possibleNodes = gameObj.mazeNode.connections;
+  return possibleNodes[
+    Math.floor(Math.random() * (possibleNodes.length - 1 + 1))
+  ];
+}
+
 export function getTargetGoToJail(maze: MazeModel, gameObj: Moveable) {
   if (gameObj.mazeNode.x === 13 && gameObj.mazeNode.y === 11) {
     const ghost = gameObj as Ghost;
