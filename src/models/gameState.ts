@@ -10,6 +10,7 @@ import GhostFactory from "../utils/ghostFactory";
 import { Cardinal } from "../enums/cardinal";
 import Label from "../game_objects/label";
 import { LabelColors } from "../enums/label_colors";
+import { getTargetFreightened } from "../utils/ghostTargetingAlgorithms";
 
 export default class GameState {
   lifeCounter: LifeCounter;
@@ -22,7 +23,7 @@ export default class GameState {
   redGhost: any;
   sirenThresholds: Map<number, string>;
   pelletsEaten: number;
-  resetingLevel: boolean;
+  callbackTimerActive: boolean;
   currentSirenNo: string;
   readyLabel: Label;
 
@@ -60,19 +61,15 @@ export default class GameState {
     this.container.addChild(this.scoreBoard.container);
     this.container.addChild(this.highScore.container);
     this.readyLabel = new Label("Ready!", LabelColors.ORANGE);
+    this.readyLabel.container.visible = false;
     this.readyLabel.container.x = 90;
     this.readyLabel.container.y = 160;
     this.container.addChild(this.readyLabel.container);
 
-    pacman.pelletEatenCallback = () => {
-      this.scoreBoard.updateScoreBoard(10);
-      this.highScore.updateScoreBoard(10);
-      this.mazeModel.ghostJail.dotEaten();
-      this.pelletsEaten += 1;
-      this.adjustSiren();
-    };
+    pacman.pelletEatenCallback = this.pelletEatenCallback;
+    pacman.powerPelletEatenCallback = this.powerPelletEatenCallback;
 
-    this.resetingLevel = false;
+    this.callbackTimerActive = false;
     pacman.startDeathCallback = this.pacmanStartDeathCallback;
     pacman.endDeathCallback = this.pacmanEndDeathCallback;
     sound.add("pacman_dies", "/assets/sounds/pacman_dies.mp3");
@@ -85,6 +82,7 @@ export default class GameState {
       [196, "5"],
     ]);
 
+    sound.add("power_siren", "/assets/sounds/power_siren.mp3");
     for (let x = 1; x < 6; x++) {
       sound.add(`siren_${x}`, `/assets/sounds/siren_${x}.mp3`);
     }
@@ -92,7 +90,7 @@ export default class GameState {
   }
 
   update(elapsedTime: number) {
-    if (this.resetingLevel) return;
+    if (this.callbackTimerActive) return;
     this.mazeModel.update(elapsedTime);
     this.scoreBoard.update(elapsedTime);
   }
@@ -114,17 +112,35 @@ export default class GameState {
   pacmanEndDeathCallback = () => {
     this.lifeCounter.setLives(this.lifeCounter.lives - 1);
     this.mazeModel.pacman.animating = false;
-    this.resetingLevel = true;
+    this.callbackTimerActive = true;
     setTimeout(() => {
       this.resetLevel();
     }, 1000);
+  };
+
+  pelletEatenCallback = () => {
+    this.scoreBoard.updateScoreBoard(10);
+    this.highScore.updateScoreBoard(10);
+    this.mazeModel.ghostJail.dotEaten();
+    this.pelletsEaten += 1;
+    this.adjustSiren();
+  };
+
+  powerPelletEatenCallback = () => {
+    this.scoreBoard.updateScoreBoard(30);
+    this.highScore.updateScoreBoard(30);
+    this.mazeModel.ghostJail.dotEaten();
+    this.pelletsEaten += 1;
+    sound.stop(`siren_${this.currentSirenNo}`);
+    sound.play("power_siren", { loop: true });
+    this._enterFreightendMode();
   };
 
   resetLevel = () => {
     this._addGhostsToJail();
     this.mazeModel.ghostJail.globalCounterActivated = true;
     this.ghostContainer.visible = true;
-    this.resetingLevel = false;
+    this.callbackTimerActive = false;
 
     const redGhost = this.mazeModel.red;
     redGhost.x = 13 * 8 + 4;
@@ -141,16 +157,12 @@ export default class GameState {
     pacman.mazeNode = this.mazeModel.getNode(14, 23);
     pacman.dying = false;
 
-    this.mazeModel.red.agent.targetAI =
-      this.mazeModel.red.agent.defaultTargetAI;
-    this.mazeModel.orange.agent.targetAI =
-      this.mazeModel.orange.agent.defaultTargetAI;
-    this.mazeModel.blue.agent.targetAI =
-      this.mazeModel.blue.agent.defaultTargetAI;
-    this.mazeModel.pink.agent.targetAI =
-      this.mazeModel.pink.agent.defaultTargetAI;
-
+    const ghosts = this.mazeModel.getGhosts();
+    for (const ghost of ghosts) {
+      ghost.agent.targetAI = ghost.agent.defaultTargetAI;
+    }
     this.readyLabel.container.visible = false;
+    sound.play(`siren_${this.currentSirenNo}`, { loop: true });
   };
 
   _addGhostsToJail() {
@@ -158,5 +170,52 @@ export default class GameState {
     this.mazeModel.ghostJail.addGhost(this.mazeModel.blue);
     this.mazeModel.ghostJail.addGhost(this.mazeModel.pink);
     this.mazeModel.ghostJail.addGhost(this.mazeModel.orange);
+  }
+
+  _enterFreightendMode() {
+    for (const color of Object.values(Color)) {
+      if (isNaN(Number(color))) {
+        const ghost = this.mazeModel[color];
+        if (!ghost.jailed) {
+          ghost.agent.targetAI = getTargetFreightened;
+          ghost.speedModifier = 0.5;
+          ghost.setFreightendTexture();
+        }
+      }
+    }
+    setTimeout(() => {
+      this._freightenedAlmostDone();
+    }, 5000);
+  }
+
+  _freightenedAlmostDone() {
+    for (const color of Object.values(Color)) {
+      if (isNaN(Number(color))) {
+        const ghost = this.mazeModel[color];
+        if (!ghost.jailed && ghost.agent.targetAI === getTargetFreightened) {
+          ghost.setBlinkFreightendTexture();
+        }
+      }
+    }
+    setTimeout(() => {
+      this._endFreightened();
+    }, 1500);
+  }
+
+  _endFreightened() {
+    for (const color of Object.values(Color)) {
+      if (isNaN(Number(color))) {
+        const ghost = this.mazeModel[color];
+        if (!ghost.jailed) {
+          ghost.setDefaultTexture();
+
+          if (ghost.agent.targetAI === getTargetFreightened) {
+            ghost.speedModifier = ghost.defaultSpeedModifier;
+            ghost.agent.targetAI = ghost.agent.defaultTargetAI;
+          }
+        }
+      }
+    }
+    sound.stop("power_siren");
   }
 }

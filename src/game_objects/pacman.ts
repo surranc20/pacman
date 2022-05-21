@@ -13,6 +13,7 @@ export default class Pacman extends Moveable {
   queuedMove: Cardinal;
   moveFrameDelay: number;
   pelletEatenCallback!: () => void;
+  powerPelletEatenCallback!: () => void;
   munchNumber: number;
   eatFrames: any;
   deathFrames: any;
@@ -57,14 +58,18 @@ export default class Pacman extends Moveable {
     }
 
     if (this.mazeNode.pellet) {
-      this.mazeNode.pellet.visible = false;
-      this.mazeNode.pellet = null;
-      this.moveFrameDelay += 1;
-      this.pelletEatenCallback();
-
       this.munchNumber += 1;
       this.munchNumber %= 2;
+      if (this.mazeNode.pellet.powerPellet) {
+        this.moveFrameDelay += 3;
+        this.powerPelletEatenCallback();
+      } else {
+        this.moveFrameDelay += 1;
+        this.pelletEatenCallback();
+      }
       sound.play(`munch${this.munchNumber}`);
+      this.mazeNode.pellet.visible = false;
+      this.mazeNode.pellet = null;
     }
     super.update(elapsedTime);
   }

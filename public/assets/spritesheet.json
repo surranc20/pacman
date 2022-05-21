@@ -66,7 +66,7 @@
 },
 "Ghosts/blue_ghost_east/blue_ghost_east_0.png":
 {
-	"frame": {"x":15,"y":291,"w":14,"h":14},
+	"frame": {"x":16,"y":323,"w":14,"h":14},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":14,"h":14},
@@ -74,7 +74,7 @@
 },
 "Ghosts/blue_ghost_east/blue_ghost_east_1.png":
 {
-	"frame": {"x":0,"y":307,"w":14,"h":14},
+	"frame": {"x":0,"y":339,"w":14,"h":14},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":14,"h":14},
@@ -82,7 +82,7 @@
 },
 "Ghosts/blue_ghost_north/blue_ghost_north_0.png":
 {
-	"frame": {"x":16,"y":307,"w":14,"h":14},
+	"frame": {"x":16,"y":339,"w":14,"h":14},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":14,"h":14},
@@ -90,7 +90,7 @@
 },
 "Ghosts/blue_ghost_north/blue_ghost_north_1.png":
 {
-	"frame": {"x":0,"y":323,"w":14,"h":14},
+	"frame": {"x":0,"y":355,"w":14,"h":14},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":14,"h":14},
@@ -98,7 +98,7 @@
 },
 "Ghosts/blue_ghost_south/blue_ghost_south_0.png":
 {
-	"frame": {"x":16,"y":323,"w":14,"h":14},
+	"frame": {"x":16,"y":355,"w":14,"h":14},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":14,"h":14},
@@ -106,7 +106,7 @@
 },
 "Ghosts/blue_ghost_south/blue_ghost_south_1.png":
 {
-	"frame": {"x":0,"y":339,"w":14,"h":14},
+	"frame": {"x":0,"y":371,"w":14,"h":14},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":14,"h":14},
@@ -114,7 +114,7 @@
 },
 "Ghosts/eyes_east.png":
 {
-	"frame": {"x":16,"y":339,"w":14,"h":14},
+	"frame": {"x":16,"y":371,"w":14,"h":14},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":14,"h":14},
@@ -122,7 +122,7 @@
 },
 "Ghosts/eyes_north.png":
 {
-	"frame": {"x":0,"y":355,"w":14,"h":14},
+	"frame": {"x":0,"y":387,"w":14,"h":14},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":14,"h":14},
@@ -130,7 +130,39 @@
 },
 "Ghosts/eyes_south.png":
 {
-	"frame": {"x":16,"y":355,"w":14,"h":14},
+	"frame": {"x":16,"y":387,"w":14,"h":14},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":14,"h":14},
+	"sourceSize": {"w":14,"h":14}
+},
+"Ghosts/Ghost Freight/ghost_freight_blue_0.png":
+{
+	"frame": {"x":15,"y":291,"w":14,"h":14},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":14,"h":14},
+	"sourceSize": {"w":14,"h":14}
+},
+"Ghosts/Ghost Freight/ghost_freight_blue_1.png":
+{
+	"frame": {"x":0,"y":307,"w":14,"h":14},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":14,"h":14},
+	"sourceSize": {"w":14,"h":14}
+},
+"Ghosts/Ghost Freight/ghost_freight_white_0.png":
+{
+	"frame": {"x":16,"y":307,"w":14,"h":14},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":14,"h":14},
+	"sourceSize": {"w":14,"h":14}
+},
+"Ghosts/Ghost Freight/ghost_freight_white_1.png":
+{
+	"frame": {"x":0,"y":323,"w":14,"h":14},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":14,"h":14},
@@ -138,7 +170,7 @@
 },
 "Ghosts/orange_ghost_east/orange_ghost_east_0.png":
 {
-	"frame": {"x":0,"y":371,"w":14,"h":14},
+	"frame": {"x":0,"y":403,"w":14,"h":14},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":14,"h":14},
@@ -146,7 +178,7 @@
 },
 "Ghosts/orange_ghost_east/orange_ghost_east_1.png":
 {
-	"frame": {"x":16,"y":371,"w":14,"h":14},
+	"frame": {"x":16,"y":403,"w":14,"h":14},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":14,"h":14},
@@ -154,7 +186,7 @@
 },
 "Ghosts/orange_ghost_north/orange_ghost_north_0.png":
 {
-	"frame": {"x":0,"y":387,"w":14,"h":14},
+	"frame": {"x":0,"y":419,"w":14,"h":14},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":14,"h":14},
@@ -162,7 +194,7 @@
 },
 "Ghosts/orange_ghost_north/orange_ghost_north_1.png":
 {
-	"frame": {"x":16,"y":387,"w":14,"h":14},
+	"frame": {"x":16,"y":419,"w":14,"h":14},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":14,"h":14},
@@ -170,7 +202,7 @@
 },
 "Ghosts/orange_ghost_south/orange_ghost_south_0.png":
 {
-	"frame": {"x":0,"y":403,"w":14,"h":14},
+	"frame": {"x":0,"y":435,"w":14,"h":14},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":14,"h":14},
@@ -178,7 +210,7 @@
 },
 "Ghosts/orange_ghost_south/orange_ghost_south_1.png":
 {
-	"frame": {"x":16,"y":403,"w":14,"h":14},
+	"frame": {"x":16,"y":435,"w":14,"h":14},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":14,"h":14},
@@ -186,7 +218,7 @@
 },
 "Ghosts/pink_ghost_east/pink_ghost_east_0.png":
 {
-	"frame": {"x":0,"y":419,"w":14,"h":14},
+	"frame": {"x":0,"y":451,"w":14,"h":14},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":14,"h":14},
@@ -194,7 +226,7 @@
 },
 "Ghosts/pink_ghost_east/pink_ghost_east_1.png":
 {
-	"frame": {"x":16,"y":419,"w":14,"h":14},
+	"frame": {"x":16,"y":451,"w":14,"h":14},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":14,"h":14},
@@ -202,7 +234,7 @@
 },
 "Ghosts/pink_ghost_north/pink_ghost_north_0.png":
 {
-	"frame": {"x":0,"y":435,"w":14,"h":14},
+	"frame": {"x":0,"y":467,"w":14,"h":14},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":14,"h":14},
@@ -210,7 +242,7 @@
 },
 "Ghosts/pink_ghost_north/pink_ghost_north_1.png":
 {
-	"frame": {"x":16,"y":435,"w":14,"h":14},
+	"frame": {"x":16,"y":467,"w":14,"h":14},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":14,"h":14},
@@ -218,7 +250,7 @@
 },
 "Ghosts/pink_ghost_south/pink_ghost_south_0.png":
 {
-	"frame": {"x":0,"y":451,"w":14,"h":14},
+	"frame": {"x":0,"y":483,"w":14,"h":14},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":14,"h":14},
@@ -226,7 +258,7 @@
 },
 "Ghosts/pink_ghost_south/pink_ghost_south_1.png":
 {
-	"frame": {"x":16,"y":451,"w":14,"h":14},
+	"frame": {"x":16,"y":483,"w":14,"h":14},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":14,"h":14},
@@ -234,7 +266,7 @@
 },
 "Ghosts/red_ghost_east/red_ghost_east_0.png":
 {
-	"frame": {"x":0,"y":467,"w":14,"h":14},
+	"frame": {"x":0,"y":499,"w":14,"h":14},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":14,"h":14},
@@ -242,7 +274,7 @@
 },
 "Ghosts/red_ghost_east/red_ghost_east_1.png":
 {
-	"frame": {"x":16,"y":467,"w":14,"h":14},
+	"frame": {"x":16,"y":499,"w":14,"h":14},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":14,"h":14},
@@ -250,7 +282,7 @@
 },
 "Ghosts/red_ghost_north/red_ghost_north_0.png":
 {
-	"frame": {"x":0,"y":483,"w":14,"h":14},
+	"frame": {"x":0,"y":515,"w":14,"h":14},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":14,"h":14},
@@ -258,7 +290,7 @@
 },
 "Ghosts/red_ghost_north/red_ghost_north_1.png":
 {
-	"frame": {"x":16,"y":483,"w":14,"h":14},
+	"frame": {"x":16,"y":515,"w":14,"h":14},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":14,"h":14},
@@ -266,7 +298,7 @@
 },
 "Ghosts/red_ghost_south/red_ghost_south_0.png":
 {
-	"frame": {"x":0,"y":499,"w":14,"h":14},
+	"frame": {"x":0,"y":531,"w":14,"h":14},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":14,"h":14},
@@ -274,7 +306,7 @@
 },
 "Ghosts/red_ghost_south/red_ghost_south_1.png":
 {
-	"frame": {"x":16,"y":499,"w":14,"h":14},
+	"frame": {"x":16,"y":531,"w":14,"h":14},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":14,"h":14},
@@ -506,7 +538,7 @@
 },
 "pacman_death/pacman_death_00.png":
 {
-	"frame": {"x":0,"y":515,"w":15,"h":16},
+	"frame": {"x":0,"y":547,"w":15,"h":16},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":15,"h":16},
@@ -514,7 +546,7 @@
 },
 "pacman_death/pacman_death_01.png":
 {
-	"frame": {"x":17,"y":515,"w":15,"h":16},
+	"frame": {"x":17,"y":547,"w":15,"h":16},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":15,"h":16},
@@ -522,7 +554,7 @@
 },
 "pacman_death/pacman_death_02.png":
 {
-	"frame": {"x":0,"y":533,"w":15,"h":16},
+	"frame": {"x":0,"y":565,"w":15,"h":16},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":15,"h":16},
@@ -530,7 +562,7 @@
 },
 "pacman_death/pacman_death_03.png":
 {
-	"frame": {"x":17,"y":533,"w":15,"h":16},
+	"frame": {"x":17,"y":565,"w":15,"h":16},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":15,"h":16},
@@ -538,7 +570,7 @@
 },
 "pacman_death/pacman_death_04.png":
 {
-	"frame": {"x":0,"y":551,"w":15,"h":16},
+	"frame": {"x":0,"y":583,"w":15,"h":16},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":15,"h":16},
@@ -546,7 +578,7 @@
 },
 "pacman_death/pacman_death_05.png":
 {
-	"frame": {"x":17,"y":551,"w":15,"h":16},
+	"frame": {"x":17,"y":583,"w":15,"h":16},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":15,"h":16},
@@ -554,7 +586,7 @@
 },
 "pacman_death/pacman_death_06.png":
 {
-	"frame": {"x":0,"y":569,"w":15,"h":16},
+	"frame": {"x":0,"y":601,"w":15,"h":16},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":15,"h":16},
@@ -562,7 +594,7 @@
 },
 "pacman_death/pacman_death_07.png":
 {
-	"frame": {"x":17,"y":569,"w":15,"h":16},
+	"frame": {"x":17,"y":601,"w":15,"h":16},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":15,"h":16},
@@ -570,7 +602,7 @@
 },
 "pacman_death/pacman_death_08.png":
 {
-	"frame": {"x":0,"y":587,"w":15,"h":16},
+	"frame": {"x":0,"y":619,"w":15,"h":16},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":15,"h":16},
@@ -578,7 +610,7 @@
 },
 "pacman_death/pacman_death_09.png":
 {
-	"frame": {"x":17,"y":587,"w":15,"h":16},
+	"frame": {"x":17,"y":619,"w":15,"h":16},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":15,"h":16},
@@ -586,7 +618,7 @@
 },
 "pacman_death/pacman_death_10.png":
 {
-	"frame": {"x":0,"y":605,"w":15,"h":16},
+	"frame": {"x":0,"y":637,"w":15,"h":16},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":15,"h":16},
@@ -594,7 +626,7 @@
 },
 "pacman_death/pacman_death_11.png":
 {
-	"frame": {"x":17,"y":605,"w":15,"h":16},
+	"frame": {"x":17,"y":637,"w":15,"h":16},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":15,"h":16},
@@ -945,6 +977,8 @@
 	"sourceSize": {"w":8,"h":7}
 }},
 "animations": {
+	"Ghosts/Ghost Freight/ghost_freight_blue": ["Ghosts/Ghost Freight/ghost_freight_blue_0.png","Ghosts/Ghost Freight/ghost_freight_blue_1.png"],
+	"Ghosts/Ghost Freight/ghost_freight_white": ["Ghosts/Ghost Freight/ghost_freight_white_0.png","Ghosts/Ghost Freight/ghost_freight_white_1.png"],
 	"Ghosts/blue_ghost_east/blue_ghost_east": ["Ghosts/blue_ghost_east/blue_ghost_east_0.png","Ghosts/blue_ghost_east/blue_ghost_east_1.png"],
 	"Ghosts/blue_ghost_north/blue_ghost_north": ["Ghosts/blue_ghost_north/blue_ghost_north_0.png","Ghosts/blue_ghost_north/blue_ghost_north_1.png"],
 	"Ghosts/blue_ghost_south/blue_ghost_south": ["Ghosts/blue_ghost_south/blue_ghost_south_0.png","Ghosts/blue_ghost_south/blue_ghost_south_1.png"],
@@ -966,8 +1000,8 @@
 	"version": "1.0",
 	"image": "spritesheet.png",
 	"format": "RGBA8888",
-	"size": {"w":32,"h":621},
+	"size": {"w":32,"h":653},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:a06c2f709b7d62dc6361679a5307e22f:02fbd1e672b73b80e50a06a277b06d53:729adc6043343cfda41c447ce8f464d6$"
+	"smartupdate": "$TexturePacker:SmartUpdate:0fa8c006c9b1df488ce20bd06e543621:4562e3720c8d6fd7063f7f1a4e45278d:729adc6043343cfda41c447ce8f464d6$"
 }
 }
