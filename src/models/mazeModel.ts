@@ -99,4 +99,8 @@ export default class MazeModel {
     const node = this.nodes.get([x, y].toString())!;
     return node;
   }
+
+  getGhosts() {
+    return [this.blue, this.orange, this.red, this.pink];
+  }
 }

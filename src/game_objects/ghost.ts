@@ -1,4 +1,5 @@
 import { Loader } from "pixi.js";
+import { sound } from "@pixi/sound";
 import Moveable from "../abstract/moveable";
 import { Cardinal, CardinalOpposites } from "../enums/cardinal";
 import { Color } from "../enums/color";
@@ -7,6 +8,10 @@ import { ReleasingFromJailState } from "../enums/releasingFromJail";
 import IGhostAgent from "../interfaces/iGhostAgent";
 import MazeModel from "../models/mazeModel";
 import mazeNode from "../models/mazeNode";
+import {
+  getTargetFreightened,
+  getTargetGoToJail,
+} from "../utils/ghostTargetingAlgorithms";
 
 export default class Ghost extends Moveable {
   agent!: IGhostAgent;
@@ -24,6 +29,7 @@ export default class Ghost extends Moveable {
   eyesupTexture: any;
   eyesdownTexture: any;
   goingToJailState: GoingToJailState;
+  moveFrameDelay: number;
 
   constructor(x: number, y: number, mazeModel: MazeModel, color: Color) {
     const sheet = Loader.shared.resources.spritesheet.spritesheet;
@@ -35,17 +41,14 @@ export default class Ghost extends Moveable {
     this.fps = 10;
     this.defaultSpeedModifier = 0.8;
     this.speedModifier = 0.8;
+    this.moveFrameDelay = 0;
     this.anchor.set(0.5);
     this.facing = Cardinal.EAST;
     this.queuedMove = this.facing;
     this.mazeModel = mazeModel;
     this.color = color;
-    this.upTexture =
-      sheet!.animations[`Ghosts/${color}_ghost_north/${color}_ghost_north`];
-    this.downTexture =
-      sheet!.animations[`Ghosts/${color}_ghost_south/${color}_ghost_south`];
-    this.sideTexture =
-      sheet!.animations[`Ghosts/${color}_ghost_east/${color}_ghost_east`];
+
+    this.setDefaultTexture();
 
     // Weird caps format to help dynamically create texture name in
     // setCorrectSpriteSheet method
@@ -56,12 +59,30 @@ export default class Ghost extends Moveable {
     this.jailed = false;
     this.releasingFromJailState = ReleasingFromJailState.NOT_ACTIVE;
     this.goingToJailState = GoingToJailState.NOT_ACTIVE;
+
+    sound.add("eat_ghost", "/assets/sounds/eat_ghost.mp3");
   }
 
   update(elapsedTime: number) {
     // Check to see if the ghost collide with pacman
     if (this.mazeModel.pacman.mazeNode === this.mazeNode) {
-      this.mazeModel.pacman.die();
+      if (this.agent.targetAI === getTargetFreightened) {
+        sound.play("eat_ghost");
+        this.mazeModel.ghostJail.sendToJail(this);
+        this.mazeModel.pacman.moveFrameDelay += 30;
+
+        for (const ghost of this.mazeModel.getGhosts()) {
+          if (ghost !== this) {
+            ghost.moveFrameDelay += 30;
+          }
+        }
+      } else if (this.agent.targetAI !== getTargetGoToJail) {
+        this.mazeModel.pacman.die();
+      }
+    }
+    if (this.moveFrameDelay) {
+      this.moveFrameDelay -= 1;
+      return;
     }
 
     const initialNode = this.mazeNode;
@@ -251,5 +272,44 @@ export default class Ghost extends Moveable {
       return;
     }
     super._getUpdatedMazeNode();
+  }
+
+  setDefaultTexture() {
+    const sheet = Loader.shared.resources.spritesheet.spritesheet;
+    this.upTexture =
+      sheet!.animations[
+        `Ghosts/${this.color}_ghost_north/${this.color}_ghost_north`
+      ];
+    this.downTexture =
+      sheet!.animations[
+        `Ghosts/${this.color}_ghost_south/${this.color}_ghost_south`
+      ];
+    this.sideTexture =
+      sheet!.animations[
+        `Ghosts/${this.color}_ghost_east/${this.color}_ghost_east`
+      ];
+  }
+
+  setFreightendTexture() {
+    const animations =
+      Loader.shared.resources.spritesheet.spritesheet!.animations;
+    this.upTexture = animations[`Ghosts/Ghost Freight/ghost_freight_blue`];
+    this.downTexture = animations[`Ghosts/Ghost Freight/ghost_freight_blue`];
+    this.sideTexture = animations[`Ghosts/Ghost Freight/ghost_freight_blue`];
+  }
+
+  setBlinkFreightendTexture() {
+    const animations =
+      Loader.shared.resources.spritesheet.spritesheet!.animations;
+
+    this.upTexture = this.upTexture.concat(
+      animations[`Ghosts/Ghost Freight/ghost_freight_white`]
+    );
+    this.downTexture = this.downTexture.concat(
+      animations[`Ghosts/Ghost Freight/ghost_freight_white`]
+    );
+    this.sideTexture = this.sideTexture.concat(
+      animations[`Ghosts/Ghost Freight/ghost_freight_white`]
+    );
   }
 }

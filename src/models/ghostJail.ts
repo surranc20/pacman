@@ -37,6 +37,7 @@ export default class GhostJail {
 
   sendToJail(ghost: Ghost) {
     ghost.speedModifier = 2;
+    ghost.setDefaultTexture();
     ghost.agent.targetAI = getTargetGoToJail;
     ghost.goingToJailState = GoingToJailState.TRAVELING_TO_JAIL;
   }
