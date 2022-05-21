@@ -6,7 +6,8 @@ import Ghost from "../game_objects/ghost";
 import { getTargetGoToJail } from "../utils/ghostTargetingAlgorithms";
 
 export default class GhostJail {
-  ghosts: Set<Ghost>;
+  ghosts: Map<Ghost, number>;
+  jailSlots: Map<number, Ghost | null>;
   priorityList = [Color.RED, Color.PINK, Color.BLUE, Color.ORANGE];
   ghostDotCounter: Map<Color, number>;
 
@@ -17,7 +18,13 @@ export default class GhostJail {
   timer: number;
 
   constructor(ghosts: Array<Ghost>) {
-    this.ghosts = new Set();
+    this.ghosts = new Map<Ghost, number>();
+    this.jailSlots = new Map<number, Ghost | null>([
+      [1, null],
+      [2, null],
+      [3, null],
+    ]);
+
     this.ghostDotCounter = new Map<Color, number>([
       [Color.PINK, 0],
       [Color.RED, 0],
@@ -44,15 +51,25 @@ export default class GhostJail {
 
   addGhost(ghost: Ghost) {
     // Add ghost to Maze and change its pos
-    this.ghosts.add(ghost);
+
     ghost.jailed = true;
-    const [xTile, yTile] = [10 + this.ghosts.size * 2, 14];
+
+    let jailSlot = 0;
+    for (let x = 1; x < 4; x++) {
+      if (!this.jailSlots.get(x)) {
+        this.jailSlots.set(x, ghost);
+        jailSlot = x;
+        this.ghosts.set(ghost, jailSlot);
+        break;
+      }
+    }
+    const [xTile, yTile] = [10 + jailSlot * 2, 14];
     ghost.mazeNode = ghost.mazeModel.getNode(xTile, yTile);
     ghost.x = xTile * 8;
     ghost.y = yTile * 8 + 24 + 4;
 
     // Make ghost face the correct direction
-    if (this.ghosts.size % 2) {
+    if (jailSlot % 2) {
       ghost.facing = Cardinal.SOUTH;
     } else {
       ghost.facing = Cardinal.NORTH;
@@ -63,10 +80,16 @@ export default class GhostJail {
 
     // Ghosts slow down in jail
     ghost.speedModifier = 0.5;
+
+    if (ghost.color === Color.RED) {
+      this.releaseGhost(ghost);
+    }
   }
 
   releaseGhost(ghost: Ghost) {
+    const slot = this.ghosts.get(ghost)!;
     this.ghosts.delete(ghost);
+    this.jailSlots.set(slot, null);
     ghost.jailed = false;
     ghost.releasingFromJailState = ReleasingFromJailState.Y_LEVELING;
   }
@@ -116,7 +139,7 @@ export default class GhostJail {
   }
 
   mapColorToGhost(color: Color) {
-    for (const ghost of this.ghosts) {
+    for (const ghost of this.ghosts.keys()) {
       if (ghost.color === color) {
         return ghost;
       }
@@ -124,6 +147,6 @@ export default class GhostJail {
   }
 
   clearJail() {
-    this.ghosts = new Set();
+    this.ghosts = new Map();
   }
 }
