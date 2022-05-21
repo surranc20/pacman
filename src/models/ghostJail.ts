@@ -80,6 +80,10 @@ export default class GhostJail {
 
     // Ghosts slow down in jail
     ghost.speedModifier = 0.5;
+
+    if (ghost.color === Color.RED) {
+      this.releaseGhost(ghost);
+    }
   }
 
   releaseGhost(ghost: Ghost) {
