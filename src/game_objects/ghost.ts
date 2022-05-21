@@ -30,6 +30,7 @@ export default class Ghost extends Moveable {
   eyesdownTexture: any;
   goingToJailState: GoingToJailState;
   moveFrameDelay: number;
+  ghostEatenCallback!: (ghost: Ghost) => void;
 
   constructor(x: number, y: number, mazeModel: MazeModel, color: Color) {
     const sheet = Loader.shared.resources.spritesheet.spritesheet;
@@ -68,9 +69,9 @@ export default class Ghost extends Moveable {
     if (this.mazeModel.pacman.mazeNode === this.mazeNode) {
       if (this.agent.targetAI === getTargetFreightened) {
         sound.play("eat_ghost");
+        this.ghostEatenCallback(this);
         this.mazeModel.ghostJail.sendToJail(this);
         this.mazeModel.pacman.moveFrameDelay += 30;
-
         for (const ghost of this.mazeModel.getGhosts()) {
           if (ghost !== this) {
             ghost.moveFrameDelay += 30;

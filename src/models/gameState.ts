@@ -10,7 +10,7 @@ import GhostFactory from "../utils/ghostFactory";
 import { Cardinal } from "../enums/cardinal";
 import Label from "../game_objects/label";
 import { LabelColors } from "../enums/label_colors";
-import { getTargetFreightened } from "../utils/ghostTargetingAlgorithms";
+import FreightendState from "./freightenedState";
 
 export default class GameState {
   lifeCounter: LifeCounter;
@@ -26,6 +26,7 @@ export default class GameState {
   callbackTimerActive: boolean;
   currentSirenNo: string;
   readyLabel: Label;
+  freightendState: FreightendState;
 
   constructor() {
     this.container = new Container();
@@ -39,6 +40,12 @@ export default class GameState {
     this.mazeModel = new MazeModel(pacman, this.pelletContainer);
     this.pelletsEaten = 0;
 
+    this.freightendState = new FreightendState(
+      this.mazeModel,
+      this.container,
+      this.addPointsCallback
+    );
+
     // Create Ghosts
     const ghostFactory = new GhostFactory();
     for (const color of Object.values(Color)) {
@@ -49,6 +56,7 @@ export default class GameState {
         );
         this.ghostContainer.addChild(ghost);
         this.mazeModel[color] = ghost;
+        ghost.ghostEatenCallback = this.freightendState.ghostEatenCallback;
       }
     }
 
@@ -119,21 +127,18 @@ export default class GameState {
   };
 
   pelletEatenCallback = () => {
-    this.scoreBoard.updateScoreBoard(10);
-    this.highScore.updateScoreBoard(10);
     this.mazeModel.ghostJail.dotEaten();
+    this.addPointsCallback(10);
     this.pelletsEaten += 1;
     this.adjustSiren();
   };
 
   powerPelletEatenCallback = () => {
-    this.scoreBoard.updateScoreBoard(30);
-    this.highScore.updateScoreBoard(30);
+    this.addPointsCallback(30);
     this.mazeModel.ghostJail.dotEaten();
     this.pelletsEaten += 1;
     sound.stop(`siren_${this.currentSirenNo}`);
-    sound.play("power_siren", { loop: true });
-    this._enterFreightendMode();
+    this.freightendState.enterFreightendMode();
   };
 
   resetLevel = () => {
@@ -165,57 +170,15 @@ export default class GameState {
     sound.play(`siren_${this.currentSirenNo}`, { loop: true });
   };
 
+  addPointsCallback = (points: number) => {
+    this.scoreBoard.updateScoreBoard(points);
+    this.highScore.updateScoreBoard(points);
+  };
+
   _addGhostsToJail() {
     this.mazeModel.ghostJail.clearJail();
     this.mazeModel.ghostJail.addGhost(this.mazeModel.blue);
     this.mazeModel.ghostJail.addGhost(this.mazeModel.pink);
     this.mazeModel.ghostJail.addGhost(this.mazeModel.orange);
-  }
-
-  _enterFreightendMode() {
-    for (const color of Object.values(Color)) {
-      if (isNaN(Number(color))) {
-        const ghost = this.mazeModel[color];
-        if (!ghost.jailed) {
-          ghost.agent.targetAI = getTargetFreightened;
-          ghost.speedModifier = 0.5;
-          ghost.setFreightendTexture();
-        }
-      }
-    }
-    setTimeout(() => {
-      this._freightenedAlmostDone();
-    }, 5000);
-  }
-
-  _freightenedAlmostDone() {
-    for (const color of Object.values(Color)) {
-      if (isNaN(Number(color))) {
-        const ghost = this.mazeModel[color];
-        if (!ghost.jailed && ghost.agent.targetAI === getTargetFreightened) {
-          ghost.setBlinkFreightendTexture();
-        }
-      }
-    }
-    setTimeout(() => {
-      this._endFreightened();
-    }, 1500);
-  }
-
-  _endFreightened() {
-    for (const color of Object.values(Color)) {
-      if (isNaN(Number(color))) {
-        const ghost = this.mazeModel[color];
-        if (!ghost.jailed) {
-          ghost.setDefaultTexture();
-
-          if (ghost.agent.targetAI === getTargetFreightened) {
-            ghost.speedModifier = ghost.defaultSpeedModifier;
-            ghost.agent.targetAI = ghost.agent.defaultTargetAI;
-          }
-        }
-      }
-    }
-    sound.stop("power_siren");
   }
 }
