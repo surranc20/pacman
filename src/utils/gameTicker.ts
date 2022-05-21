@@ -28,10 +28,10 @@ export default class GameTicker {
       this.then = now - (elapsedTime % this.fpsInterval);
       this.renderCallback(elapsedTime / 1000);
 
-      // const sinceStart = now - this.startTime;
-      // const currentFps =
-      //   Math.round((1000 / (sinceStart / ++this.frameCount)) * 100) / 100;
-      // console.log(`FPS: ${currentFps}`);
+      const sinceStart = now - this.startTime;
+      const currentFps =
+        Math.round((1000 / (sinceStart / ++this.frameCount)) * 100) / 100;
+      console.log(`FPS: ${currentFps}`);
     }
   };
 }
