@@ -5,12 +5,14 @@ import { GoingToJailState } from "../enums/goingToJail";
 import { ReleasingFromJailState } from "../enums/releasingFromJail";
 import Ghost from "../game_objects/ghost";
 import { getTargetGoToJail } from "../utils/ghostTargetingAlgorithms";
+import MazeModel from "./mazeModel";
 
 export default class GhostJail {
   ghosts: Map<Ghost, number>;
   jailSlots: Map<number, Ghost | null>;
   priorityList = [Color.RED, Color.PINK, Color.BLUE, Color.ORANGE];
   ghostDotCounter: Map<Color, number>;
+  mazeModel: MazeModel;
 
   globalCounter = 0;
   globalCounterActivated = false;
@@ -21,8 +23,9 @@ export default class GhostJail {
 
   resumeFrightenedSirenCallback!: () => void;
 
-  constructor(ghosts: Array<Ghost>) {
+  constructor(ghosts: Array<Ghost>, mazeModel: MazeModel) {
     this.ghosts = new Map<Ghost, number>();
+    this.mazeModel = mazeModel;
     this.jailSlots = new Map<number, Ghost | null>([
       [1, null],
       [2, null],
@@ -170,5 +173,18 @@ export default class GhostJail {
       [2, null],
       [3, null],
     ]);
+    this.ghostsRetreating = 0;
+  }
+
+  addStartingGhosts() {
+    this.clearJail();
+    for (const color of Object.values(Color)) {
+      if (isNaN(Number(color))) {
+        if (color === Color.RED) continue;
+        const ghost = this.mazeModel[color];
+        this.addGhost(ghost);
+      }
+    }
+    this.ghostsRetreating = 0;
   }
 }

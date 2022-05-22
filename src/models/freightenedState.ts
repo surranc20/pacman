@@ -36,6 +36,7 @@ export default class FreightendState {
     if (this.timeoutID) {
       clearTimeout(this.timeoutID);
       sound.stop("power_siren");
+      this.timeoutID = null;
     }
     this.active = true;
     this.ghostsEaten = 0;
@@ -111,6 +112,23 @@ export default class FreightendState {
       sound.play("power_siren", { loop: true });
     }
   };
+
+  interruptedCleanup() {
+    if (this.timeoutID) {
+      clearTimeout(this.timeoutID);
+      this.timeoutID = null;
+    }
+    this.active = false;
+    sound.stop("power_siren");
+    for (const color of Object.values(Color)) {
+      if (isNaN(Number(color))) {
+        const ghost = this.mazeModel[color];
+        ghost.setDefaultTexture();
+        ghost.speedModifier = ghost.defaultSpeedModifier;
+        ghost.agent.targetAI = ghost.agent.defaultTargetAI;
+      }
+    }
+  }
 }
 
 class GhostPointsLabel extends Drawable {}

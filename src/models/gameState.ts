@@ -11,6 +11,8 @@ import { Cardinal } from "../enums/cardinal";
 import Label from "../game_objects/label";
 import { LabelColors } from "../enums/label_colors";
 import FreightendState from "./freightenedState";
+import { GoingToJailState } from "../enums/goingToJail";
+import { ReleasingFromJailState } from "../enums/releasingFromJail";
 
 export default class GameState {
   lifeCounter: LifeCounter;
@@ -63,7 +65,7 @@ export default class GameState {
       }
     }
 
-    this._addGhostsToJail();
+    this.mazeModel.ghostJail.addStartingGhosts();
 
     this.container.addChild(pacman);
     this.container.addChild(this.pelletContainer);
@@ -114,6 +116,7 @@ export default class GameState {
   }
 
   pacmanStartDeathCallback = () => {
+    this.freightendState.interruptedCleanup();
     this.ghostContainer.visible = false;
     sound.stop(`siren_${this.currentSirenNo}`);
     sound.play("pacman_dies");
@@ -146,7 +149,7 @@ export default class GameState {
   };
 
   resetLevel = () => {
-    this._addGhostsToJail();
+    this.mazeModel.ghostJail.addStartingGhosts();
     this.mazeModel.ghostJail.globalCounterActivated = true;
     this.ghostContainer.visible = true;
     this.callbackTimerActive = false;
@@ -169,6 +172,8 @@ export default class GameState {
     const ghosts = this.mazeModel.getGhosts();
     for (const ghost of ghosts) {
       ghost.agent.targetAI = ghost.agent.defaultTargetAI;
+      ghost.goingToJailState = GoingToJailState.NOT_ACTIVE;
+      ghost.releasingFromJailState = ReleasingFromJailState.NOT_ACTIVE;
     }
     this.readyLabel.container.visible = false;
     sound.play(`siren_${this.currentSirenNo}`, { loop: true });

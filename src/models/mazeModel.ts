@@ -23,7 +23,7 @@ export default class MazeModel {
     this.setupMazeNodes();
     this.pacman = pacman;
     this.pacman.mazeNode = this.getNode(14, 23);
-    this.ghostJail = new GhostJail([]);
+    this.ghostJail = new GhostJail([], this);
   }
 
   update(elapsedTime: number) {
