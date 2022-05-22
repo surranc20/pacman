@@ -45,6 +45,8 @@ export default class GameState {
       this.container,
       this.addPointsCallback
     );
+    this.mazeModel.ghostJail.resumeFrightenedSirenCallback =
+      this.freightendState.resumeFrightenedCallback;
 
     // Create Ghosts
     const ghostFactory = new GhostFactory();
@@ -81,7 +83,6 @@ export default class GameState {
     pacman.startDeathCallback = this.pacmanStartDeathCallback;
     pacman.endDeathCallback = this.pacmanEndDeathCallback;
     sound.add("pacman_dies", "/assets/sounds/pacman_dies.mp3");
-
     this.currentSirenNo = "1";
     this.sirenThresholds = new Map([
       [48, "2"],

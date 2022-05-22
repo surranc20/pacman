@@ -12,6 +12,7 @@ export default class FreightendState {
   gameContainer: Container;
   updateScoreCallback: (points: number) => void;
   pointOptions: number[];
+  active: boolean;
 
   constructor(
     mazeModel: MazeModel,
@@ -23,9 +24,11 @@ export default class FreightendState {
     this.gameContainer = gameContainer;
     this.updateScoreCallback = updateScoreCallback;
     this.pointOptions = [200, 400, 800, 1600];
+    this.active = false;
   }
 
   enterFreightendMode() {
+    this.active = true;
     this.ghostsEaten = 0;
     for (const color of Object.values(Color)) {
       if (isNaN(Number(color))) {
@@ -71,6 +74,7 @@ export default class FreightendState {
         }
       }
     }
+    this.active = false;
     sound.stop("power_siren");
   }
 
@@ -83,12 +87,19 @@ export default class FreightendState {
         `Ghost Points/${pointsGained}.png`
       ]!
     );
+    sound.stop("power_siren");
     this.gameContainer.addChild(pointsLabel);
     this.updateScoreCallback(pointsGained);
     this.ghostsEaten += 1;
     setTimeout(() => {
       pointsLabel.visible = false;
     }, 1000);
+  };
+
+  resumeFrightenedCallback = () => {
+    if (this.active) {
+      sound.play("power_siren", { loop: true });
+    }
   };
 }
 

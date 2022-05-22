@@ -1,3 +1,4 @@
+import { sound } from "@pixi/sound";
 import { Cardinal } from "../enums/cardinal";
 import { Color } from "../enums/color";
 import { GoingToJailState } from "../enums/goingToJail";
@@ -16,6 +17,9 @@ export default class GhostJail {
   globalDotThresholds: Map<number, Color>;
   defaultTimer: number;
   timer: number;
+  ghostsRetreating: number;
+
+  resumeFrightenedSirenCallback!: () => void;
 
   constructor(ghosts: Array<Ghost>) {
     this.ghosts = new Map<Ghost, number>();
@@ -40,6 +44,9 @@ export default class GhostJail {
 
     this.defaultTimer = 5;
     this.timer = 5;
+
+    this.ghostsRetreating = 3;
+    sound.add("retreating", "assets/sounds/retreating.mp3");
   }
 
   sendToJail(ghost: Ghost) {
@@ -47,12 +54,22 @@ export default class GhostJail {
     ghost.setDefaultTexture();
     ghost.agent.targetAI = getTargetGoToJail;
     ghost.goingToJailState = GoingToJailState.TRAVELING_TO_JAIL;
+    if (this.ghostsRetreating === 0) {
+      sound.play("retreating", { loop: true });
+    }
+    this.ghostsRetreating += 1;
   }
 
   addGhost(ghost: Ghost) {
     // Add ghost to Maze and change its pos
 
     ghost.jailed = true;
+
+    this.ghostsRetreating -= 1;
+    if (this.ghostsRetreating === 0) {
+      sound.stop("retreating");
+      this.resumeFrightenedSirenCallback();
+    }
 
     let jailSlot = 0;
     for (let x = 1; x < 4; x++) {
