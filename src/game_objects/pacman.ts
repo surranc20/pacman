@@ -78,7 +78,7 @@ export default class Pacman extends Moveable {
     this.dying = true;
     this.animating = true;
     this.angle = 0;
-    this.fps = 9;
+    this.fps = 17;
     this.frames = this.deathFrames;
     this.currentFrame = 0;
     this.startDeathCallback();
