@@ -13,16 +13,19 @@ export default class FreightendState {
   updateScoreCallback: (points: number) => void;
   pointOptions: number[];
   active: boolean;
+  restartSirenCallback: () => void;
 
   constructor(
     mazeModel: MazeModel,
     gameContainer: Container,
-    updateScoreCallback: (points: number) => void
+    updateScoreCallback: (points: number) => void,
+    restartSirenCallback: () => void
   ) {
     this.ghostsEaten = 0;
     this.mazeModel = mazeModel;
     this.gameContainer = gameContainer;
     this.updateScoreCallback = updateScoreCallback;
+    this.restartSirenCallback = restartSirenCallback;
     this.pointOptions = [200, 400, 800, 1600];
     this.active = false;
   }
@@ -76,6 +79,7 @@ export default class FreightendState {
     }
     this.active = false;
     sound.stop("power_siren");
+    this.restartSirenCallback();
   }
 
   ghostEatenCallback = (ghost: Ghost) => {

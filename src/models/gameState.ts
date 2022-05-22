@@ -43,7 +43,8 @@ export default class GameState {
     this.freightendState = new FreightendState(
       this.mazeModel,
       this.container,
-      this.addPointsCallback
+      this.addPointsCallback,
+      this.restartSirenCallback
     );
     this.mazeModel.ghostJail.resumeFrightenedSirenCallback =
       this.freightendState.resumeFrightenedCallback;
@@ -131,7 +132,9 @@ export default class GameState {
     this.mazeModel.ghostJail.dotEaten();
     this.addPointsCallback(10);
     this.pelletsEaten += 1;
-    this.adjustSiren();
+    if (!this.freightendState.active) {
+      this.adjustSiren();
+    }
   };
 
   powerPelletEatenCallback = () => {
@@ -174,6 +177,10 @@ export default class GameState {
   addPointsCallback = (points: number) => {
     this.scoreBoard.updateScoreBoard(points);
     this.highScore.updateScoreBoard(points);
+  };
+
+  restartSirenCallback = () => {
+    sound.play(`siren_${this.currentSirenNo}`, { loop: true });
   };
 
   _addGhostsToJail() {
