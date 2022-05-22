@@ -12,8 +12,10 @@ export default abstract class Moveable extends Animatable implements IMoveable {
   abstract mazeNode: MazeNode;
 
   speedBoostWhenTurning = false;
+
   defaultSpeedModifier = 1;
   speedModifier = this.defaultSpeedModifier;
+  frightSpeed = 0.5;
 
   abstract _hitWall(): boolean;
 

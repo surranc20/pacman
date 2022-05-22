@@ -15,6 +15,8 @@ export default class FreightendState {
   active: boolean;
   restartSirenCallback: () => void;
   timeoutID: NodeJS.Timeout | null;
+  frightTime: number;
+  frightBlinkTime: number;
 
   constructor(
     mazeModel: MazeModel,
@@ -30,6 +32,8 @@ export default class FreightendState {
     this.pointOptions = [200, 400, 800, 1600];
     this.active = false;
     this.timeoutID = null;
+    this.frightTime = 5;
+    this.frightBlinkTime = 1.5;
   }
 
   enterFreightendMode() {
@@ -45,7 +49,7 @@ export default class FreightendState {
         const ghost = this.mazeModel[color];
         if (!ghost.jailed) {
           ghost.agent.targetAI = getTargetFreightened;
-          ghost.speedModifier = 0.5;
+          ghost.speedModifier = ghost.frightSpeed;
           ghost.setFreightendTexture();
         }
       }
@@ -53,7 +57,7 @@ export default class FreightendState {
     sound.play("power_siren", { loop: true });
     this.timeoutID = setTimeout(() => {
       this._freightenedAlmostDone();
-    }, 5000);
+    }, this.frightTime * 1000);
   }
 
   _freightenedAlmostDone() {
@@ -67,7 +71,7 @@ export default class FreightendState {
     }
     this.timeoutID = setTimeout(() => {
       this._endFreightened();
-    }, 1500);
+    }, this.frightBlinkTime * 1000);
   }
 
   _endFreightened() {
