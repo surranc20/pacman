@@ -25,7 +25,7 @@ export default class Pacman extends Moveable {
     const sheet = Loader.shared.resources.spritesheet.spritesheet;
     const eatFrames = sheet!.animations["pacman_eat/pacman_eat"];
     super(eatFrames, x, y);
-    this.fps = 15;
+    this.fps = 20;
     this.anchor.set(0.5);
 
     this.agent = new PlayerAgent();
@@ -78,7 +78,7 @@ export default class Pacman extends Moveable {
     this.dying = true;
     this.animating = true;
     this.angle = 0;
-    this.fps = 9;
+    this.fps = 17;
     this.frames = this.deathFrames;
     this.currentFrame = 0;
     this.startDeathCallback();

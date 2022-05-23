@@ -13,21 +13,35 @@ export default class FreightendState {
   updateScoreCallback: (points: number) => void;
   pointOptions: number[];
   active: boolean;
+  restartSirenCallback: () => void;
+  timeoutID: NodeJS.Timeout | null;
+  frightTime: number;
+  frightBlinkTime: number;
 
   constructor(
     mazeModel: MazeModel,
     gameContainer: Container,
-    updateScoreCallback: (points: number) => void
+    updateScoreCallback: (points: number) => void,
+    restartSirenCallback: () => void
   ) {
     this.ghostsEaten = 0;
     this.mazeModel = mazeModel;
     this.gameContainer = gameContainer;
     this.updateScoreCallback = updateScoreCallback;
+    this.restartSirenCallback = restartSirenCallback;
     this.pointOptions = [200, 400, 800, 1600];
     this.active = false;
+    this.timeoutID = null;
+    this.frightTime = 5;
+    this.frightBlinkTime = 1.5;
   }
 
   enterFreightendMode() {
+    if (this.timeoutID) {
+      clearTimeout(this.timeoutID);
+      sound.stop("power_siren");
+      this.timeoutID = null;
+    }
     this.active = true;
     this.ghostsEaten = 0;
     for (const color of Object.values(Color)) {
@@ -35,15 +49,15 @@ export default class FreightendState {
         const ghost = this.mazeModel[color];
         if (!ghost.jailed) {
           ghost.agent.targetAI = getTargetFreightened;
-          ghost.speedModifier = 0.5;
+          ghost.speedModifier = ghost.frightSpeed;
           ghost.setFreightendTexture();
         }
       }
     }
     sound.play("power_siren", { loop: true });
-    setTimeout(() => {
+    this.timeoutID = setTimeout(() => {
       this._freightenedAlmostDone();
-    }, 5000);
+    }, this.frightTime * 1000);
   }
 
   _freightenedAlmostDone() {
@@ -55,9 +69,9 @@ export default class FreightendState {
         }
       }
     }
-    setTimeout(() => {
+    this.timeoutID = setTimeout(() => {
       this._endFreightened();
-    }, 1500);
+    }, this.frightBlinkTime * 1000);
   }
 
   _endFreightened() {
@@ -76,6 +90,7 @@ export default class FreightendState {
     }
     this.active = false;
     sound.stop("power_siren");
+    this.restartSirenCallback();
   }
 
   ghostEatenCallback = (ghost: Ghost) => {
@@ -101,6 +116,23 @@ export default class FreightendState {
       sound.play("power_siren", { loop: true });
     }
   };
+
+  interruptedCleanup() {
+    if (this.timeoutID) {
+      clearTimeout(this.timeoutID);
+      this.timeoutID = null;
+    }
+    this.active = false;
+    sound.stop("power_siren");
+    for (const color of Object.values(Color)) {
+      if (isNaN(Number(color))) {
+        const ghost = this.mazeModel[color];
+        ghost.setDefaultTexture();
+        ghost.speedModifier = ghost.defaultSpeedModifier;
+        ghost.agent.targetAI = ghost.agent.defaultTargetAI;
+      }
+    }
+  }
 }
 
 class GhostPointsLabel extends Drawable {}

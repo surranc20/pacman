@@ -11,6 +11,9 @@ import { Cardinal } from "../enums/cardinal";
 import Label from "../game_objects/label";
 import { LabelColors } from "../enums/label_colors";
 import FreightendState from "./freightenedState";
+import { GoingToJailState } from "../enums/goingToJail";
+import { ReleasingFromJailState } from "../enums/releasingFromJail";
+import settingsJson from "../settings/level_info.json";
 
 export default class GameState {
   lifeCounter: LifeCounter;
@@ -27,11 +30,13 @@ export default class GameState {
   currentSirenNo: string;
   readyLabel: Label;
   freightendState: FreightendState;
+  level: number;
 
   constructor() {
     this.container = new Container();
     this.pelletContainer = new Container();
     this.ghostContainer = new Container();
+    this.level = 0;
 
     const pacman = new Pacman(114, 212);
     this.lifeCounter = new LifeCounter(3);
@@ -43,7 +48,8 @@ export default class GameState {
     this.freightendState = new FreightendState(
       this.mazeModel,
       this.container,
-      this.addPointsCallback
+      this.addPointsCallback,
+      this.restartSirenCallback
     );
     this.mazeModel.ghostJail.resumeFrightenedSirenCallback =
       this.freightendState.resumeFrightenedCallback;
@@ -61,8 +67,9 @@ export default class GameState {
         ghost.ghostEatenCallback = this.freightendState.ghostEatenCallback;
       }
     }
+    this.setLevelConfig();
 
-    this._addGhostsToJail();
+    this.mazeModel.ghostJail.addStartingGhosts();
 
     this.container.addChild(pacman);
     this.container.addChild(this.pelletContainer);
@@ -113,6 +120,7 @@ export default class GameState {
   }
 
   pacmanStartDeathCallback = () => {
+    this.freightendState.interruptedCleanup();
     this.ghostContainer.visible = false;
     sound.stop(`siren_${this.currentSirenNo}`);
     sound.play("pacman_dies");
@@ -131,7 +139,9 @@ export default class GameState {
     this.mazeModel.ghostJail.dotEaten();
     this.addPointsCallback(10);
     this.pelletsEaten += 1;
-    this.adjustSiren();
+    if (!this.freightendState.active) {
+      this.adjustSiren();
+    }
   };
 
   powerPelletEatenCallback = () => {
@@ -142,8 +152,44 @@ export default class GameState {
     this.freightendState.enterFreightendMode();
   };
 
+  setLevelConfig() {
+    const levelConfig = settingsJson["level_info"][Math.min(this.level, 20)];
+    const baseSpeed = settingsJson["base_speed"] as number;
+
+    // Set pacman speed
+    const pacman = this.mazeModel.pacman;
+    const pacSpeed = levelConfig[3] as number;
+    pacman.defaultSpeedModifier = pacSpeed * baseSpeed;
+    pacman.speedModifier = pacSpeed * baseSpeed;
+
+    // Set pacman fright speed
+    const pacFrightSpeed = levelConfig[6] as number;
+    pacman.frightSpeed = pacFrightSpeed;
+
+    // Set ghost speed and fright speed
+    const ghostSpeed = levelConfig[4] as number;
+    const ghostFrightSpeed = levelConfig[7] as number;
+
+    for (const ghost of this.mazeModel.getGhosts()) {
+      ghost.speedModifier = ghostSpeed * baseSpeed;
+      ghost.defaultSpeedModifier = ghostSpeed * baseSpeed;
+      ghost.frightSpeed = ghostFrightSpeed * baseSpeed;
+    }
+
+    // Set fright time
+    const frightTime = levelConfig[8] as number;
+    this.freightendState.frightTime = frightTime;
+
+    // Set fright blink time
+    const frightBlinkTime = levelConfig[9] as number;
+    this.freightendState.frightBlinkTime = frightBlinkTime;
+
+    // Set level fruit
+    // const levelFruit = levelConfig[1];
+  }
+
   resetLevel = () => {
-    this._addGhostsToJail();
+    this.mazeModel.ghostJail.addStartingGhosts();
     this.mazeModel.ghostJail.globalCounterActivated = true;
     this.ghostContainer.visible = true;
     this.callbackTimerActive = false;
@@ -166,6 +212,8 @@ export default class GameState {
     const ghosts = this.mazeModel.getGhosts();
     for (const ghost of ghosts) {
       ghost.agent.targetAI = ghost.agent.defaultTargetAI;
+      ghost.goingToJailState = GoingToJailState.NOT_ACTIVE;
+      ghost.releasingFromJailState = ReleasingFromJailState.NOT_ACTIVE;
     }
     this.readyLabel.container.visible = false;
     sound.play(`siren_${this.currentSirenNo}`, { loop: true });
@@ -174,6 +222,10 @@ export default class GameState {
   addPointsCallback = (points: number) => {
     this.scoreBoard.updateScoreBoard(points);
     this.highScore.updateScoreBoard(points);
+  };
+
+  restartSirenCallback = () => {
+    sound.play(`siren_${this.currentSirenNo}`, { loop: true });
   };
 
   _addGhostsToJail() {

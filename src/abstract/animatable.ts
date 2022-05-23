@@ -32,6 +32,7 @@ export default abstract class Animatable
       this.currentFrame += 1;
       this.currentFrame %= this.frames.length;
 
+      this._animationTimer %= 1 / this.fps; // Fixes bug caused when user switches tabs
       this._animationTimer -= 1 / this.fps;
       this.getTexture();
     }
