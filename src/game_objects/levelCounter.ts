@@ -9,7 +9,6 @@ export default class LevelCounter {
   constructor() {
     this.container = new Container();
     this.fruits = [];
-    this.setCounter(Fruits.CHERRIES);
   }
 
   setCounter(fruit: Fruits) {

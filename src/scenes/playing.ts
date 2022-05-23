@@ -6,13 +6,25 @@ import GameState from "../models/gameState";
 
 export default class Playing implements IScene {
   stage = new Container();
+  gameStage!: Stage;
   gameState!: GameState;
-  intro_playing = true;
+  introPlaying = true;
+  intermissionPlaying = false;
 
   update(elapsedTime: number) {
-    if (!this.intro_playing) {
+    if (!this.introPlaying && !this.intermissionPlaying) {
       this.gameState.update(elapsedTime);
+
+      if (this.gameState.level_won) {
+        this.intermissionPlaying = true;
+        this.gameStage.flashStage(() => {
+          this.intermissionPlaying = false;
+          this.gameState.loadNextLevel();
+        });
+        this.gameState.level_won = false;
+      }
     }
+    this.gameStage.update(elapsedTime);
   }
 
   addAssetsToLoader(loader: Loader) {
@@ -23,14 +35,15 @@ export default class Playing implements IScene {
 
   onDoneLoading(resources: any) {
     // Create Stage
-    const stage = new Stage(0, 24, resources.stage.texture);
-    this.stage.addChild(stage);
+    this.gameStage = new Stage([resources.stage.texture], 0, 24);
+    this.stage.addChild(this.gameStage);
     this.gameState = new GameState();
     this.stage.addChild(this.gameState.container);
     sound.play("game_start", () => {
-      this.intro_playing = false;
+      this.introPlaying = false;
       this.gameState.restartSirenCallback();
       this.gameState.readyLabel.container.visible = false;
     });
+    this.gameStage.loadWhiteStage();
   }
 }
