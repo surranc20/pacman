@@ -82,7 +82,6 @@ export default class GameState {
     this.container.addChild(this.scoreBoard.container);
     this.container.addChild(this.highScore.container);
     this.readyLabel = new Label("Ready!", LabelColors.ORANGE);
-    this.readyLabel.container.visible = false;
     this.readyLabel.container.x = 90;
     this.readyLabel.container.y = 160;
     this.container.addChild(this.readyLabel.container);
@@ -106,7 +105,6 @@ export default class GameState {
     for (let x = 1; x < 6; x++) {
       sound.add(`siren_${x}`, `/assets/sounds/siren_${x}.mp3`);
     }
-    sound.play("siren_1", { loop: true });
   }
 
   update(elapsedTime: number) {
