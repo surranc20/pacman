@@ -1,6 +1,6 @@
 {"frames": {
 
-"Fruit/apple.png":
+"Fruit/Apple.png":
 {
 	"frame": {"x":0,"y":130,"w":12,"h":12},
 	"rotated": false,
@@ -8,7 +8,7 @@
 	"spriteSourceSize": {"x":0,"y":0,"w":12,"h":12},
 	"sourceSize": {"w":12,"h":12}
 },
-"Fruit/bell.png":
+"Fruit/Bell.png":
 {
 	"frame": {"x":0,"y":144,"w":12,"h":13},
 	"rotated": false,
@@ -16,7 +16,7 @@
 	"spriteSourceSize": {"x":0,"y":0,"w":12,"h":13},
 	"sourceSize": {"w":12,"h":13}
 },
-"Fruit/cherry.png":
+"Fruit/Cherries.png":
 {
 	"frame": {"x":14,"y":130,"w":12,"h":12},
 	"rotated": false,
@@ -24,7 +24,7 @@
 	"spriteSourceSize": {"x":0,"y":0,"w":12,"h":12},
 	"sourceSize": {"w":12,"h":12}
 },
-"Fruit/galaxian.png":
+"Fruit/Galaxian.png":
 {
 	"frame": {"x":30,"y":117,"w":11,"h":11},
 	"rotated": false,
@@ -32,7 +32,7 @@
 	"spriteSourceSize": {"x":0,"y":0,"w":11,"h":11},
 	"sourceSize": {"w":11,"h":11}
 },
-"Fruit/grenade.png":
+"Fruit/Grapes.png":
 {
 	"frame": {"x":0,"y":159,"w":12,"h":14},
 	"rotated": false,
@@ -40,7 +40,7 @@
 	"spriteSourceSize": {"x":0,"y":0,"w":12,"h":14},
 	"sourceSize": {"w":12,"h":14}
 },
-"Fruit/key.png":
+"Fruit/Key.png":
 {
 	"frame": {"x":14,"y":144,"w":7,"h":13},
 	"rotated": false,
@@ -48,7 +48,7 @@
 	"spriteSourceSize": {"x":0,"y":0,"w":7,"h":13},
 	"sourceSize": {"w":7,"h":13}
 },
-"Fruit/orange.png":
+"Fruit/Orange.png":
 {
 	"frame": {"x":28,"y":130,"w":12,"h":12},
 	"rotated": false,
@@ -56,7 +56,7 @@
 	"spriteSourceSize": {"x":0,"y":0,"w":12,"h":12},
 	"sourceSize": {"w":12,"h":12}
 },
-"Fruit/strawberry.png":
+"Fruit/Strawberry.png":
 {
 	"frame": {"x":42,"y":130,"w":11,"h":12},
 	"rotated": false,
@@ -1035,6 +1035,6 @@
 	"format": "RGBA8888",
 	"size": {"w":62,"h":357},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:938e5e1a69480684425d18216ad3f051:06746abe52e3e308c567b75de0d3b6b3:729adc6043343cfda41c447ce8f464d6$"
+	"smartupdate": "$TexturePacker:SmartUpdate:95225aa1ceef70e81eb44ee03c785ed4:06746abe52e3e308c567b75de0d3b6b3:729adc6043343cfda41c447ce8f464d6$"
 }
 }

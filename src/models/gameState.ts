@@ -14,9 +14,11 @@ import FreightendState from "./freightenedState";
 import { GoingToJailState } from "../enums/goingToJail";
 import { ReleasingFromJailState } from "../enums/releasingFromJail";
 import settingsJson from "../settings/level_info.json";
+import LevelCounter from "../game_objects/levelCounter";
 
 export default class GameState {
   lifeCounter: LifeCounter;
+  levelCounter: LevelCounter;
   mazeModel: MazeModel;
   container: Container;
   pelletContainer: Container;
@@ -40,6 +42,7 @@ export default class GameState {
 
     const pacman = new Pacman(114, 212);
     this.lifeCounter = new LifeCounter(3);
+    this.levelCounter = new LevelCounter();
     this.scoreBoard = new ScoreBoard();
     this.highScore = new HighScore();
     this.mazeModel = new MazeModel(pacman, this.pelletContainer);
@@ -75,6 +78,7 @@ export default class GameState {
     this.container.addChild(this.pelletContainer);
     this.container.addChild(this.ghostContainer);
     this.container.addChild(this.lifeCounter.container);
+    this.container.addChild(this.levelCounter.container);
     this.container.addChild(this.scoreBoard.container);
     this.container.addChild(this.highScore.container);
     this.readyLabel = new Label("Ready!", LabelColors.ORANGE);
