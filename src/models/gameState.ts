@@ -15,6 +15,7 @@ import { GoingToJailState } from "../enums/goingToJail";
 import { ReleasingFromJailState } from "../enums/releasingFromJail";
 import settingsJson from "../settings/level_info.json";
 import LevelCounter from "../game_objects/levelCounter";
+import { Fruits } from "../enums/fruits";
 
 export default class GameState {
   lifeCounter: LifeCounter;
@@ -33,12 +34,14 @@ export default class GameState {
   readyLabel: Label;
   freightendState: FreightendState;
   level: number;
+  level_won: boolean;
 
   constructor() {
     this.container = new Container();
     this.pelletContainer = new Container();
     this.ghostContainer = new Container();
-    this.level = 0;
+    this.level = -1;
+    this.level_won = false;
 
     const pacman = new Pacman(114, 212);
     this.lifeCounter = new LifeCounter(3);
@@ -70,10 +73,6 @@ export default class GameState {
         ghost.ghostEatenCallback = this.freightendState.ghostEatenCallback;
       }
     }
-    this.setLevelConfig();
-
-    this.mazeModel.ghostJail.addStartingGhosts();
-
     this.container.addChild(pacman);
     this.container.addChild(this.pelletContainer);
     this.container.addChild(this.ghostContainer);
@@ -105,12 +104,17 @@ export default class GameState {
     for (let x = 1; x < 6; x++) {
       sound.add(`siren_${x}`, `/assets/sounds/siren_${x}.mp3`);
     }
+    this.loadNextLevel();
   }
 
   update(elapsedTime: number) {
     if (this.callbackTimerActive) return;
     this.mazeModel.update(elapsedTime);
     this.scoreBoard.update(elapsedTime);
+    if (this.pelletsEaten === 244) {
+      this.level_won = true;
+      sound.stopAll();
+    }
   }
 
   adjustSiren() {
@@ -154,6 +158,14 @@ export default class GameState {
     this.freightendState.enterFreightendMode();
   };
 
+  loadNextLevel = () => {
+    this.level += 1;
+    this.setLevelConfig();
+    this.resetLevel();
+    this.pelletsEaten = 0;
+    this.mazeModel.resetPellets();
+  };
+
   setLevelConfig() {
     const levelConfig = settingsJson["level_info"][Math.min(this.level, 20)];
     const baseSpeed = settingsJson["base_speed"] as number;
@@ -187,7 +199,8 @@ export default class GameState {
     this.freightendState.frightBlinkTime = frightBlinkTime;
 
     // Set level fruit
-    // const levelFruit = levelConfig[1];
+    const levelFruit = Fruits[levelConfig[1]! as keyof typeof Fruits];
+    this.levelCounter.setCounter(levelFruit);
   }
 
   resetLevel = () => {
@@ -217,8 +230,6 @@ export default class GameState {
       ghost.goingToJailState = GoingToJailState.NOT_ACTIVE;
       ghost.releasingFromJailState = ReleasingFromJailState.NOT_ACTIVE;
     }
-    this.readyLabel.container.visible = false;
-    sound.play(`siren_${this.currentSirenNo}`, { loop: true });
   };
 
   addPointsCallback = (points: number) => {

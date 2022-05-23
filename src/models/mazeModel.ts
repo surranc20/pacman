@@ -45,16 +45,10 @@ export default class MazeModel {
   setupMazeNodes() {
     // Get map valid path from json file
     const map = mapJson.map;
-    const pelletFactory = new PelletFactory();
-
     // Add maze tiles to nodes
     for (let x = 0; x < 28; x++) {
       for (let y = 0; y < 31; y++) {
         const newNode = new MazeNode(x, y, !!map[y][x]);
-        newNode.pellet = pelletFactory.createPelletForMazeNode(
-          newNode,
-          this.pelletContainer
-        );
         this.nodes.set([x, y].toString(), newNode);
       }
     }
@@ -93,6 +87,8 @@ export default class MazeModel {
 
     warpOne.warp = true;
     warpTwo.warp = true;
+
+    this.resetPellets();
   }
 
   getNode(x: number, y: number) {
@@ -102,5 +98,19 @@ export default class MazeModel {
 
   getGhosts() {
     return [this.blue, this.orange, this.red, this.pink];
+  }
+
+  resetPellets() {
+    this.pelletContainer.removeChildren();
+    const pelletFactory = new PelletFactory();
+    for (let x = 0; x < 28; x++) {
+      for (let y = 0; y < 31; y++) {
+        const node = this.getNode(x, y);
+        node.pellet = pelletFactory.createPelletForMazeNode(
+          node,
+          this.pelletContainer
+        );
+      }
+    }
   }
 }
