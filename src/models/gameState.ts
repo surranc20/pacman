@@ -164,6 +164,7 @@ export default class GameState {
     this.resetLevel();
     this.pelletsEaten = 0;
     this.mazeModel.resetPellets();
+    this.mazeModel.ghostJail.resetJailThresholds();
   };
 
   setLevelConfig() {

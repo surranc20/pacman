@@ -166,6 +166,22 @@ export default class GhostJail {
     }
   }
 
+  resetJailThresholds() {
+    this.ghostDotCounter = new Map<Color, number>([
+      [Color.PINK, 0],
+      [Color.RED, 0],
+      [Color.BLUE, 30],
+      [Color.ORANGE, 60],
+    ]);
+    this.globalDotThresholds = new Map<number, Color>([
+      [7, Color.PINK],
+      [13, Color.BLUE],
+      [32, Color.ORANGE],
+    ]);
+    this.globalCounter = 0;
+    this.globalCounterActivated = false;
+  }
+
   clearJail() {
     this.ghosts = new Map();
     this.jailSlots = new Map<number, Ghost | null>([
