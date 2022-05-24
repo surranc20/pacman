@@ -19,6 +19,7 @@ export default class FreightendState {
   timeoutID: NodeJS.Timeout | null;
   frightTime: number;
   frightBlinkTime: number;
+  ghostsFrightened: number;
 
   constructor(
     mazeModel: MazeModel,
@@ -36,6 +37,7 @@ export default class FreightendState {
     this.timeoutID = null;
     this.frightTime = 5;
     this.frightBlinkTime = 1.5;
+    this.ghostsFrightened = 0;
   }
 
   enterFreightendMode() {
@@ -46,6 +48,7 @@ export default class FreightendState {
     }
     this.active = true;
     this.ghostsEaten = 0;
+    this.ghostsFrightened = 0;
     for (const color of Object.values(Color)) {
       if (isNaN(Number(color))) {
         const ghost = this.mazeModel[color];
@@ -57,6 +60,7 @@ export default class FreightendState {
           ghost.agent.targetAI = getTargetFreightened;
           ghost.speedModifier = ghost.frightSpeed;
           ghost.setFreightendTexture();
+          this.ghostsFrightened += 1;
         }
       }
     }
@@ -80,7 +84,7 @@ export default class FreightendState {
     }, this.frightBlinkTime * 1000);
   }
 
-  _endFreightened() {
+  _endFreightened(restartSirenCallback = true) {
     for (const color of Object.values(Color)) {
       if (isNaN(Number(color))) {
         const ghost = this.mazeModel[color];
@@ -96,7 +100,9 @@ export default class FreightendState {
     }
     this.active = false;
     sound.stop("power_siren");
-    this.restartSirenCallback();
+    if (restartSirenCallback) {
+      this.restartSirenCallback();
+    }
   }
 
   ghostEatenCallback = (ghost: Ghost) => {
@@ -112,6 +118,15 @@ export default class FreightendState {
     this.gameContainer.addChild(pointsLabel);
     this.updateScoreCallback(pointsGained);
     this.ghostsEaten += 1;
+    this.ghostsFrightened -= 1;
+
+    if (this.ghostsFrightened === 0) {
+      if (this.timeoutID) {
+        clearTimeout(this.timeoutID);
+      }
+      this.timeoutID = null;
+      this._endFreightened(false);
+    }
     setTimeout(() => {
       pointsLabel.visible = false;
     }, 1000);
@@ -120,6 +135,8 @@ export default class FreightendState {
   resumeFrightenedCallback = () => {
     if (this.active) {
       sound.play("power_siren", { loop: true });
+    } else if (this.ghostsFrightened === 0) {
+      this.restartSirenCallback();
     }
   };
 
