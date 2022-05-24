@@ -104,7 +104,7 @@ export default class GameState {
     for (let x = 1; x < 6; x++) {
       sound.add(`siren_${x}`, `/assets/sounds/siren_${x}.mp3`);
     }
-    this.loadNextLevel(false);
+    this.resetLevel(false);
   }
 
   update(elapsedTime: number) {
