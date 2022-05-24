@@ -2,6 +2,8 @@ import { sound } from "@pixi/sound";
 import { Container, Loader } from "pixi.js";
 import Drawable from "../abstract/drawable";
 import { Color } from "../enums/color";
+import { GoingToJailState } from "../enums/goingToJail";
+import { ReleasingFromJailState } from "../enums/releasingFromJail";
 import Ghost from "../game_objects/ghost";
 import { getTargetFreightened } from "../utils/ghostTargetingAlgorithms";
 import MazeModel from "./mazeModel";
@@ -47,7 +49,11 @@ export default class FreightendState {
     for (const color of Object.values(Color)) {
       if (isNaN(Number(color))) {
         const ghost = this.mazeModel[color];
-        if (!ghost.jailed) {
+        if (
+          !ghost.jailed &&
+          ghost.releasingFromJailState === ReleasingFromJailState.NOT_ACTIVE &&
+          ghost.goingToJailState === GoingToJailState.NOT_ACTIVE
+        ) {
           ghost.agent.targetAI = getTargetFreightened;
           ghost.speedModifier = ghost.frightSpeed;
           ghost.setFreightendTexture();
