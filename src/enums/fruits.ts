@@ -1,6 +1,6 @@
 export enum Fruits {
   CHERRIES = "Cherries",
-  STRAWBERY = "Strawberry",
+  STRAWBERRY = "Strawberry",
   PEACH = "Peach",
   APPLE = "Apple",
   GRAPES = "Grapes",
