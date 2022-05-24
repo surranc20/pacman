@@ -199,7 +199,8 @@ export default class GameState {
     this.freightendState.frightBlinkTime = frightBlinkTime;
 
     // Set level fruit
-    const levelFruit = Fruits[levelConfig[1]! as keyof typeof Fruits];
+    const fruitString = levelConfig[1] as string;
+    const levelFruit = Fruits[fruitString.toUpperCase() as keyof typeof Fruits];
     this.levelCounter.setCounter(levelFruit);
   }
 
