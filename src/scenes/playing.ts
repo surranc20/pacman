@@ -41,8 +41,8 @@ export default class Playing implements IScene {
     this.stage.addChild(this.gameState.container);
     sound.play("game_start", () => {
       this.introPlaying = false;
-      this.gameState.restartSirenCallback();
       this.gameState.readyLabel.container.visible = false;
+      this.gameState.loadNextLevel();
     });
     this.gameStage.loadWhiteStage();
   }

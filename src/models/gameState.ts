@@ -104,7 +104,7 @@ export default class GameState {
     for (let x = 1; x < 6; x++) {
       sound.add(`siren_${x}`, `/assets/sounds/siren_${x}.mp3`);
     }
-    this.loadNextLevel();
+    this.loadNextLevel(false);
   }
 
   update(elapsedTime: number) {
@@ -158,10 +158,11 @@ export default class GameState {
     this.freightendState.enterFreightendMode();
   };
 
-  loadNextLevel = () => {
+  loadNextLevel = (siren = true) => {
     this.level += 1;
+    this.currentSirenNo = "1";
     this.setLevelConfig();
-    this.resetLevel();
+    this.resetLevel(siren);
     this.pelletsEaten = 0;
     this.mazeModel.resetPellets();
     this.mazeModel.ghostJail.resetJailThresholds();
@@ -205,7 +206,7 @@ export default class GameState {
     this.levelCounter.setCounter(levelFruit);
   }
 
-  resetLevel = () => {
+  resetLevel = (siren = true) => {
     this.mazeModel.ghostJail.addStartingGhosts();
     this.mazeModel.ghostJail.globalCounterActivated = true;
     this.ghostContainer.visible = true;
@@ -220,10 +221,13 @@ export default class GameState {
     const pacman = this.mazeModel.pacman;
     pacman.x = 114;
     pacman.y = 212;
+    pacman.facing = Cardinal.EAST;
+    pacman.queuedMove = Cardinal.EAST;
     pacman.currentFrame = 0;
     pacman.getTexture();
     pacman.frames = pacman.eatFrames;
     pacman.mazeNode = this.mazeModel.getNode(14, 23);
+
     pacman.dying = false;
 
     const ghosts = this.mazeModel.getGhosts();
@@ -231,6 +235,9 @@ export default class GameState {
       ghost.agent.targetAI = ghost.agent.defaultTargetAI;
       ghost.goingToJailState = GoingToJailState.NOT_ACTIVE;
       ghost.releasingFromJailState = ReleasingFromJailState.NOT_ACTIVE;
+    }
+    if (siren) {
+      this.restartSirenCallback();
     }
   };
 
