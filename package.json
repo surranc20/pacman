@@ -12,8 +12,8 @@
   "scripts": {
     "npm-reset": "rm -rf node_modules && npm cache verify && npm i",
     "git-reset": "git reset HEAD --hard && git clean -fd && git fetch --all --tags --prune && git pull",
-    "start": "webpack serve",
-    "build": "webpack"
+    "start": "webpack serve --open --config webpack.dev.js",
+    "build": "webpack --config webpack.prod.js"
   },
   "keywords": [
     "pixijs",
@@ -52,6 +52,7 @@
     "typescript": "4.2.4",
     "webpack": "5.37.1",
     "webpack-cli": "4.7.0",
-    "webpack-dev-server": "3.11.2"
+    "webpack-dev-server": "3.11.2",
+    "webpack-merge": "^5.8.0"
   }
 }

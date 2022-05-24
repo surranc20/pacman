@@ -9,9 +9,7 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 
 module.exports = {
-  mode: "development",
   entry: "./src/app.ts",
-  devtool: "source-map",
   output: {
     filename: "[name].js",
     path: path.resolve(__dirname, "dist"),
@@ -84,15 +82,5 @@ module.exports = {
   },
   resolve: {
     extensions: [".ts", ".js"],
-  },
-  devServer: {
-    open: true,
-    disableHostCheck: true,
-    headers: {
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
-      "Access-Control-Allow-Headers":
-        "X-Requested-With, content-type, Authorization",
-    },
   },
 };
