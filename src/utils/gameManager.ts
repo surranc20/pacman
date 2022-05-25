@@ -11,10 +11,14 @@ export default class GameManager {
 
   constructor(renderer: AbstractRenderer) {
     this.scene = new Playing();
-    this.gameTicker = new GameTicker(60, (elapsedTime: number) => {
-      renderer.render(this.scene.stage);
-      this.update(elapsedTime);
-    });
+    this.gameTicker = new GameTicker(
+      60,
+      (elapsedTime: number) => {
+        renderer.render(this.scene.stage);
+        this.update(elapsedTime);
+      },
+      this.scene.stage
+    );
     this.keyboard = Keyboard;
   }
 
