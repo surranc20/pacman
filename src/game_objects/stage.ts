@@ -30,6 +30,10 @@ export default class Stage extends Animatable {
   }
 
   loadWhiteStage() {
+    if (Loader.shared.resources.stage_white) {
+      this.frames.push(Loader.shared.resources.stage_white.texture!);
+      return;
+    }
     Loader.shared.add("stage_white", "/assets/img/stage_white.png", () => {
       this.frames.push(Loader.shared.resources.stage_white.texture!);
     });

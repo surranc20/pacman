@@ -25,6 +25,10 @@ export default class GameManager {
   update = (elapsedTime: number) => {
     this.scene.update(elapsedTime);
     this.keyboard.update();
+
+    if (this.scene.done) {
+      this.scene = this.scene.endScene();
+    }
   };
 
   loadGame() {
