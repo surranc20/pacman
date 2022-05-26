@@ -11,17 +11,19 @@ export default class GhostJail {
   ghosts: Map<Ghost, number>;
   jailSlots: Map<number, Ghost | null>;
   priorityList = [Color.RED, Color.PINK, Color.BLUE, Color.ORANGE];
-  ghostDotCounter: Map<Color, number>;
+  jailSlotFillOrder = [2, 1, 3];
+  ghostDotCounter!: Map<Color, number>;
   mazeModel: MazeModel;
 
   globalCounter = 0;
   globalCounterActivated = false;
-  globalDotThresholds: Map<number, Color>;
+  globalDotThresholds!: Map<number, Color>;
   defaultTimer: number;
   timer: number;
   ghostsRetreating: number;
 
   resumeFrightenedSirenCallback!: () => void;
+  overflowGhost: Ghost | null;
 
   constructor(ghosts: Array<Ghost>, mazeModel: MazeModel) {
     this.ghosts = new Map<Ghost, number>();
@@ -32,24 +34,15 @@ export default class GhostJail {
       [3, null],
     ]);
 
-    this.ghostDotCounter = new Map<Color, number>([
-      [Color.PINK, 0],
-      [Color.RED, 0],
-      [Color.BLUE, 30],
-      [Color.ORANGE, 60],
-    ]);
-    this.globalDotThresholds = new Map<number, Color>([
-      [7, Color.PINK],
-      [13, Color.BLUE],
-      [32, Color.ORANGE],
-    ]);
+    this.resetJailThresholds();
     ghosts.map((ghost) => this.addGhost(ghost));
 
     this.defaultTimer = 5;
-    this.timer = 5;
+    this.timer = this.defaultTimer;
 
     this.ghostsRetreating = 3;
     sound.add("retreating", "assets/sounds/retreating.mp3");
+    this.overflowGhost = null;
   }
 
   sendToJail(ghost: Ghost) {
@@ -75,7 +68,7 @@ export default class GhostJail {
     }
 
     let jailSlot = 0;
-    for (let x = 1; x < 4; x++) {
+    for (const x of this.jailSlotFillOrder) {
       if (!this.jailSlots.get(x)) {
         this.jailSlots.set(x, ghost);
         jailSlot = x;
@@ -83,6 +76,14 @@ export default class GhostJail {
         break;
       }
     }
+
+    if (jailSlot === 0) {
+      this.overflowGhost = this.jailSlots.get(2)!;
+      this.jailSlots.set(2, ghost);
+      jailSlot = 2;
+      this.ghosts.set(ghost, jailSlot);
+    }
+
     const [xTile, yTile] = [10 + jailSlot * 2, 14];
     ghost.mazeNode = ghost.mazeModel.getNode(xTile, yTile);
     ghost.x = xTile * 8;
@@ -112,6 +113,11 @@ export default class GhostJail {
     this.jailSlots.set(slot, null);
     ghost.jailed = false;
     ghost.releasingFromJailState = ReleasingFromJailState.Y_LEVELING;
+
+    if (slot === 2 && this.overflowGhost) {
+      this.jailSlots.set(2, this.overflowGhost);
+      this.overflowGhost = null;
+    }
   }
 
   update(elapsedTime: number) {

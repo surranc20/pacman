@@ -65,6 +65,9 @@ export default class Ghost extends Moveable {
   }
 
   update(elapsedTime: number) {
+    if (this.mazeNode === undefined) {
+      alert("Undefined");
+    }
     // Check to see if the ghost collide with pacman
     if (this.mazeModel.pacman.mazeNode === this.mazeNode) {
       if (this.agent.targetAI === getTargetFreightened) {
