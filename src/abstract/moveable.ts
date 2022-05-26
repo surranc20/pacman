@@ -10,6 +10,7 @@ export default abstract class Moveable extends Animatable implements IMoveable {
   abstract facing: Cardinal;
   abstract queuedMove: Cardinal;
   abstract mazeNode: MazeNode;
+  abstract previousMazeNode: MazeNode;
 
   speedBoostWhenTurning = false;
 
@@ -20,6 +21,7 @@ export default abstract class Moveable extends Animatable implements IMoveable {
   abstract _hitWall(): boolean;
 
   update(elapsedTime: number) {
+    this.previousMazeNode = this.mazeNode;
     super.update(elapsedTime);
     if (this._corneringCase()) return;
     if (this._hitWall()) return;

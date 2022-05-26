@@ -10,6 +10,7 @@ export default class Pacman extends Moveable {
   agent: PlayerAgent;
   facing: Cardinal;
   mazeNode!: MazeNode;
+  previousMazeNode!: MazeNode;
   queuedMove: Cardinal;
   moveFrameDelay: number;
   pelletEatenCallback!: () => void;

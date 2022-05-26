@@ -18,7 +18,10 @@ export default class GhostFactory {
       maze,
       color
     );
-    ghost.mazeNode = maze.getNode(XTilePos, YTilePos);
+    const mazeNode = maze.getNode(XTilePos, YTilePos);
+    ghost.mazeNode = mazeNode;
+    ghost.previousMazeNode = mazeNode;
+
     this._setGhostAgent(color, ghost);
     return ghost;
   }

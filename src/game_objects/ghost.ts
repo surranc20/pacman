@@ -18,6 +18,7 @@ export default class Ghost extends Moveable {
   facing: Cardinal;
   queuedMove: Cardinal;
   mazeNode!: mazeNode;
+  previousMazeNode!: mazeNode;
   mazeModel: MazeModel;
   upTexture: any;
   downTexture: any;
@@ -65,11 +66,11 @@ export default class Ghost extends Moveable {
   }
 
   update(elapsedTime: number) {
-    if (this.mazeNode === undefined) {
-      alert("Undefined");
-    }
     // Check to see if the ghost collide with pacman
-    if (this.mazeModel.pacman.mazeNode === this.mazeNode) {
+    if (
+      this.mazeModel.pacman.mazeNode === this.mazeNode ||
+      this.mazeModel.pacman.previousMazeNode === this.mazeNode
+    ) {
       if (this.agent.targetAI === getTargetFreightened) {
         sound.play("eat_ghost");
         this.ghostEatenCallback(this);
@@ -84,6 +85,7 @@ export default class Ghost extends Moveable {
         this.mazeModel.pacman.die();
       }
     }
+
     if (this.moveFrameDelay) {
       this.moveFrameDelay -= 1;
       return;
