@@ -16,11 +16,11 @@ export default class GameOver implements IScene {
   highScore: number;
   highScoreLabel: Label;
   restartLabel: Label;
-  globalData: GlobalGameStats | null;
+  globalData: GlobalGameStats;
   pelletsEaten: any;
 
   constructor(score: number, highScore: number, pelletsEaten: number) {
-    this.globalData = null;
+    this.globalData = new GlobalGameStats(highScore, score, pelletsEaten);
     this.score = score;
     this.highScore = highScore;
     this.pelletsEaten = pelletsEaten;
@@ -52,6 +52,9 @@ export default class GameOver implements IScene {
 
   endScene = () => {
     const scene = new Playing();
+    if (this.globalData) {
+      scene.globalDataLoaded(this.globalData);
+    }
     scene.onDoneLoading(Loader.shared.resources);
     return scene;
   };
@@ -59,11 +62,13 @@ export default class GameOver implements IScene {
   globalDataLoaded = (_globalData: GlobalGameStats) => {};
 
   updateGlobalData = async () => {
-    this.globalData = await updateGlobalData(
+    const updateGlobalDataResponse = await updateGlobalData(
       this.pelletsEaten,
       this.highScore,
       this.score
     );
-    console.log(this.globalData);
+    if (updateGlobalDataResponse) {
+      this.globalData = updateGlobalDataResponse;
+    }
   };
 }
