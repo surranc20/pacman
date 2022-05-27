@@ -5,6 +5,7 @@ import PelletFactory from "../utils/pelletFactory";
 import { Container } from "pixi.js";
 import Ghost from "../game_objects/ghost";
 import GhostJail from "./ghostJail";
+import powerPelletJson from "../utils/powerPellets.json";
 import Keyboard from "pixi.js-keyboard";
 
 export default class MazeModel {
@@ -37,6 +38,11 @@ export default class MazeModel {
     this.blue.update(elapsedTime);
     this.orange.update(elapsedTime);
     this.pink.update(elapsedTime);
+
+    // update power pellet tiles
+    for (const [x, y] of powerPelletJson.powerPellets) {
+      this.getNode(x, y).update(elapsedTime);
+    }
 
     this.ghostJail.update(elapsedTime);
 

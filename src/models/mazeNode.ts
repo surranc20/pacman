@@ -44,6 +44,12 @@ export default class MazeNode {
     return true;
   }
 
+  update(elapsedTime: number) {
+    if (this.pellet?.powerPellet) {
+      this.pellet.update(elapsedTime);
+    }
+  }
+
   get center() {
     return [this.x * 8 + 3, this.y * 8 + 28];
   }
