@@ -58,10 +58,15 @@ export const updateGlobalData = async (
         highScore: newHighScore,
         totalScore: newTotalScore,
       });
-      return newHighScore;
+      return new GlobalGameStats(
+        newHighScore,
+        newTotalScore,
+        newTotalDotsEaten
+      );
     });
-    console.log(newGlobalData);
+    return newGlobalData;
   } catch (error) {
     console.log(error);
   }
+  return null;
 };

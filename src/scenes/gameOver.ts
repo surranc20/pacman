@@ -16,11 +16,14 @@ export default class GameOver implements IScene {
   highScore: number;
   highScoreLabel: Label;
   restartLabel: Label;
-  globalData = null;
+  globalData: GlobalGameStats | null;
+  pelletsEaten: any;
 
-  constructor(score: number, highScore: number) {
+  constructor(score: number, highScore: number, pelletsEaten: number) {
+    this.globalData = null;
     this.score = score;
     this.highScore = highScore;
+    this.pelletsEaten = pelletsEaten;
     this.gameOverLabel = new Label("Game Over!");
     this.scoreLabel = new Label(`Score        ${this.score}`);
     this.scoreLabel.container.y += 16;
@@ -34,7 +37,7 @@ export default class GameOver implements IScene {
       this.highScoreLabel.container,
       this.restartLabel.container
     );
-    updateGlobalData(30, this.highScore, this.score);
+    this.updateGlobalData();
   }
 
   update(_elapsedTime: number) {
@@ -54,4 +57,13 @@ export default class GameOver implements IScene {
   };
 
   globalDataLoaded = (_globalData: GlobalGameStats) => {};
+
+  updateGlobalData = async () => {
+    this.globalData = await updateGlobalData(
+      this.pelletsEaten,
+      this.highScore,
+      this.score
+    );
+    console.log(this.globalData);
+  };
 }

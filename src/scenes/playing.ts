@@ -64,7 +64,8 @@ export default class Playing implements IScene {
   endScene = () => {
     return new GameOver(
       this.gameState.scoreBoard.score,
-      this.gameState.highScore.highScore
+      this.gameState.highScore.highScore,
+      this.gameState.pelletsEaten
     );
   };
 
