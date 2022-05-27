@@ -49,7 +49,7 @@ export default class GameState {
     const pacman = new Pacman(114, 212);
     this.lifeCounter = new LifeCounter(3);
     this.levelCounter = new LevelCounter();
-    this.scoreBoard = new ScoreBoard();
+    this.scoreBoard = new ScoreBoard(this.oneUpCallback);
     this.highScore = new HighScore();
     this.mazeModel = new MazeModel(pacman, this.pelletContainer);
     this.pelletsEaten = 0;
@@ -95,6 +95,7 @@ export default class GameState {
     pacman.startDeathCallback = this.pacmanStartDeathCallback;
     pacman.endDeathCallback = this.pacmanEndDeathCallback;
     sound.add("pacman_dies", "/assets/sounds/pacman_dies.mp3");
+    sound.add("1up", "/assets/sounds/1up.mp3");
     this.currentSirenNo = "1";
     this.sirenThresholds = new Map([
       [48, "2"],
@@ -259,6 +260,11 @@ export default class GameState {
 
   stopSoundsCallback = () => {
     sound.stopAll();
+  };
+
+  oneUpCallback = () => {
+    this.lifeCounter.setLives(this.lifeCounter.lives + 1);
+    sound.play("1up");
   };
 
   _addGhostsToJail() {

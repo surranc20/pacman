@@ -10,8 +10,11 @@ export default class ScoreBoard {
   fps: number;
   private _blinkTimer: number;
   blinking: boolean;
+  canOneUp = true;
+  oneUpCallback: () => void;
 
-  constructor() {
+  constructor(oneUpCallback: () => void) {
+    this.oneUpCallback = oneUpCallback;
     this.container = new Container();
     this.scoreDisplayer = new ScoreDisplayer();
     this.oneUpContainer = new Label("1UP").container;
@@ -43,5 +46,9 @@ export default class ScoreBoard {
   updateScoreBoard(points: number) {
     this.score += points;
     this.scoreDisplayer.displayScore(this.score);
+    if (this.canOneUp && this.score >= 200) {
+      this.canOneUp = false;
+      this.oneUpCallback();
+    }
   }
 }
