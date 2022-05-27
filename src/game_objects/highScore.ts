@@ -4,9 +4,10 @@ import ScoreDisplayer from "./scoreDisplayer";
 
 export default class HighScore {
   container: Container;
-  score: number;
   titleContainer: Container;
   scoreDisplayer: ScoreDisplayer;
+  currentScore: number;
+  highScore: number;
 
   constructor(score = 0) {
     this.scoreDisplayer = new ScoreDisplayer();
@@ -19,12 +20,14 @@ export default class HighScore {
     this.scoreDisplayer.container.position.set(8, 8);
     this.titleContainer.position.set(0, 0);
 
-    this.score = score;
-    this.updateScoreBoard(score);
+    this.currentScore = 0;
+    this.highScore = score;
+    this.scoreDisplayer.displayScore(this.highScore);
   }
 
   updateScoreBoard(points: number) {
-    this.score += points;
-    this.scoreDisplayer.displayScore(this.score);
+    this.currentScore += points;
+    this.highScore = Math.max(this.currentScore, this.highScore);
+    this.scoreDisplayer.displayScore(this.highScore);
   }
 }

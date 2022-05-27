@@ -64,7 +64,7 @@ export default class Playing implements IScene {
   endScene = () => {
     return new GameOver(
       this.gameState.scoreBoard.score,
-      this.gameState.highScore.score
+      this.gameState.highScore.highScore
     );
   };
 
@@ -72,9 +72,12 @@ export default class Playing implements IScene {
     this.globalData = globalData;
     if (
       this.gameState &&
-      this.globalData.highScore > this.gameState.highScore.score
+      this.globalData.highScore > this.gameState.highScore.highScore
     ) {
-      this.gameState.highScore.updateScoreBoard(this.globalData.highScore);
+      this.gameState.highScore.highScore = this.globalData.highScore;
+      this.gameState.highScore.scoreDisplayer.displayScore(
+        this.gameState.highScore.highScore
+      );
     }
   };
 }
