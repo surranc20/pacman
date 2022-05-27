@@ -31,7 +31,7 @@ export default class GameManager {
 
     if (this.scene.done) {
       this.scene = this.scene.endScene();
-      this.scene.stage.scale.set(2);
+      this.scene.stage.scale.set(this.scale);
     }
   };
 
