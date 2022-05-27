@@ -46,7 +46,7 @@ export default class ScoreBoard {
   updateScoreBoard(points: number) {
     this.score += points;
     this.scoreDisplayer.displayScore(this.score);
-    if (this.canOneUp && this.score >= 200) {
+    if (this.canOneUp && this.score >= 10000) {
       this.canOneUp = false;
       this.oneUpCallback();
     }
