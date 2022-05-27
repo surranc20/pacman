@@ -1,6 +1,12 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, getDocs } from "firebase/firestore/lite";
+import {
+  getFirestore,
+  collection,
+  getDocs,
+  doc,
+  runTransaction,
+} from "firebase/firestore/lite";
 import GlobalGameStats from "../models/globalGameStats";
 
 // This firebase info is actually fine to include like this
@@ -27,4 +33,35 @@ export const getGlobalData = async () => {
     globalGameData.totalScore,
     globalGameData.totalDotsEaten
   );
+};
+
+export const updateGlobalData = async (
+  totalDotsEaten: number,
+  highScore: number,
+  score: number
+) => {
+  const globalDataDocRef = doc(db, "gameInfo", "gameInfo");
+  try {
+    const newGlobalData = await runTransaction(db, async (transaction) => {
+      const globalDataDoc = await transaction.get(globalDataDocRef);
+      if (!globalDataDoc.exists()) {
+        throw "Document does not exist";
+      }
+
+      const globalData = globalDataDoc.data();
+      const newTotalDotsEaten = globalData.totalDotsEaten + totalDotsEaten;
+      const newHighScore = Math.max(highScore, globalData.highScore);
+      const newTotalScore = (globalData.totalScore += score);
+
+      transaction.update(globalDataDocRef, {
+        totalDotsEaten: newTotalDotsEaten,
+        highScore: newHighScore,
+        totalScore: newTotalScore,
+      });
+      return newHighScore;
+    });
+    console.log(newGlobalData);
+  } catch (error) {
+    console.log(error);
+  }
 };

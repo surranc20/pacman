@@ -4,6 +4,7 @@ import Keyboard from "pixi.js-keyboard";
 import Playing from "./playing";
 import Label from "../game_objects/label";
 import GlobalGameStats from "../models/globalGameStats";
+import { updateGlobalData } from "../utils/firestore";
 
 export default class GameOver implements IScene {
   stage = new Container();
@@ -33,6 +34,7 @@ export default class GameOver implements IScene {
       this.highScoreLabel.container,
       this.restartLabel.container
     );
+    updateGlobalData(30, this.highScore, this.score);
   }
 
   update(_elapsedTime: number) {
