@@ -3,6 +3,7 @@ import IScene from "../interfaces/iScene";
 import Keyboard from "pixi.js-keyboard";
 import Playing from "./playing";
 import Label from "../game_objects/label";
+import GlobalGameStats from "../models/globalGameStats";
 
 export default class GameOver implements IScene {
   stage = new Container();
@@ -14,6 +15,7 @@ export default class GameOver implements IScene {
   highScore: number;
   highScoreLabel: Label;
   restartLabel: Label;
+  globalData = null;
 
   constructor(score: number, highScore: number) {
     this.score = score;
@@ -42,9 +44,12 @@ export default class GameOver implements IScene {
   onDoneLoading(_resources: any) {
     alert("bang");
   }
+
   endScene = () => {
     const scene = new Playing();
     scene.onDoneLoading(Loader.shared.resources);
     return scene;
   };
+
+  globalDataLoaded = (_globalData: GlobalGameStats) => {};
 }

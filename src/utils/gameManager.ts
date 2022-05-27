@@ -3,12 +3,14 @@ import Keyboard from "pixi.js-keyboard";
 import GameTicker from "./gameTicker";
 import Playing from "../scenes/playing";
 import IScene from "../interfaces/iScene";
+import { getGlobalData } from "./firestore";
 
 export default class GameManager {
   scene: IScene;
   gameTicker: GameTicker;
   keyboard: any;
   scale: number;
+  globalData: any;
 
   constructor(renderer: AbstractRenderer, scale: number) {
     this.scale = scale;
@@ -23,6 +25,7 @@ export default class GameManager {
       this.scene.stage
     );
     this.keyboard = Keyboard;
+    this.loadGlobalData();
   }
 
   update = (elapsedTime: number) => {
@@ -43,5 +46,16 @@ export default class GameManager {
       this.scene.onDoneLoading(resources);
       this.gameTicker.startTicking();
     });
+  }
+
+  async loadGlobalData() {
+    const globalData = await getGlobalData();
+    console.log(globalData);
+    this.scene.globalData = globalData;
+
+    if (Loader.shared.progress === 100) {
+      this.scene.globalDataLoaded(globalData);
+    }
+    console.log(Loader.shared.progress);
   }
 }

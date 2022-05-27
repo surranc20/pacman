@@ -8,7 +8,7 @@ export default class HighScore {
   titleContainer: Container;
   scoreDisplayer: ScoreDisplayer;
 
-  constructor() {
+  constructor(score = 0) {
     this.scoreDisplayer = new ScoreDisplayer();
 
     this.container = new Container();
@@ -19,8 +19,8 @@ export default class HighScore {
     this.scoreDisplayer.container.position.set(8, 8);
     this.titleContainer.position.set(0, 0);
 
-    this.score = 0;
-    this.updateScoreBoard(0);
+    this.score = score;
+    this.updateScoreBoard(score);
   }
 
   updateScoreBoard(points: number) {

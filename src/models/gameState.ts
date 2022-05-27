@@ -37,7 +37,7 @@ export default class GameState {
   level_won: boolean;
   outOfLivesCallback: () => void;
 
-  constructor(outOfLivesCallback: () => void) {
+  constructor(outOfLivesCallback: () => void, highScore: number) {
     this.outOfLivesCallback = outOfLivesCallback;
 
     this.container = new Container();
@@ -50,7 +50,7 @@ export default class GameState {
     this.lifeCounter = new LifeCounter(3);
     this.levelCounter = new LevelCounter();
     this.scoreBoard = new ScoreBoard(this.oneUpCallback);
-    this.highScore = new HighScore();
+    this.highScore = new HighScore(highScore);
     this.mazeModel = new MazeModel(pacman, this.pelletContainer);
     this.pelletsEaten = 0;
 

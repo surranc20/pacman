@@ -3,6 +3,7 @@ import { Container, Loader } from "pixi.js";
 import Stage from "../game_objects/stage";
 import IScene from "../interfaces/iScene";
 import GameState from "../models/gameState";
+import GlobalGameStats from "../models/globalGameStats";
 import GameOver from "./gameOver";
 
 export default class Playing implements IScene {
@@ -12,6 +13,11 @@ export default class Playing implements IScene {
   introPlaying = true;
   intermissionPlaying = false;
   done = false;
+  globalData: GlobalGameStats | null;
+
+  constructor() {
+    this.globalData = null;
+  }
 
   update(elapsedTime: number) {
     if (!this.introPlaying && !this.intermissionPlaying) {
@@ -39,7 +45,9 @@ export default class Playing implements IScene {
     // Create Stage
     this.gameStage = new Stage([resources.stage.texture], 0, 24);
     this.stage.addChild(this.gameStage);
-    this.gameState = new GameState(this.outOfLivesCallback);
+
+    const highScore = this.globalData ? this.globalData.highScore : 0;
+    this.gameState = new GameState(this.outOfLivesCallback, highScore);
     this.stage.addChild(this.gameState.container);
     sound.play("game_start", () => {
       this.introPlaying = false;
@@ -58,5 +66,15 @@ export default class Playing implements IScene {
       this.gameState.scoreBoard.score,
       this.gameState.highScore.score
     );
+  };
+
+  globalDataLoaded = (globalData: GlobalGameStats) => {
+    this.globalData = globalData;
+    if (
+      this.gameState &&
+      this.globalData.highScore > this.gameState.highScore.score
+    ) {
+      this.gameState.highScore.updateScoreBoard(this.globalData.highScore);
+    }
   };
 }
