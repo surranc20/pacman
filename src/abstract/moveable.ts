@@ -94,11 +94,11 @@ export default abstract class Moveable extends Animatable implements IMoveable {
     switch (this.queuedMove) {
       case Cardinal.NORTH:
         if (this.facing === Cardinal.SOUTH) break;
-        this.x = this.mazeNode.center[0];
+        this.x = this.mazeNode.center[0] + 1;
         break;
       case Cardinal.SOUTH:
         if (this.facing === Cardinal.NORTH) break;
-        this.x = this.mazeNode.center[0];
+        this.x = this.mazeNode.center[0] + 1;
         break;
       case Cardinal.EAST:
         if (this.facing === Cardinal.WEST) break;
