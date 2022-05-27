@@ -23,7 +23,7 @@ export default class ScoreBoard {
 
     this.blinking = true;
     this._blinkTimer = 0;
-    this.fps = 2.5;
+    this.fps = 6;
 
     this.score = 0;
     this.updateScoreBoard(0);
@@ -34,6 +34,7 @@ export default class ScoreBoard {
 
     this._blinkTimer += elapsedTime;
     if (this._blinkTimer > 1 / this.fps) {
+      this._blinkTimer %= 1 / this.fps;
       this._blinkTimer -= 1 / this.fps;
       this.oneUpContainer.visible = !this.oneUpContainer.visible;
     }
