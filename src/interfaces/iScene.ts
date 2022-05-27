@@ -5,4 +5,6 @@ export default interface iScene {
   update: (elapsedTime: number) => void;
   addAssetsToLoader: (loader: Loader) => void;
   onDoneLoading: (resources: any) => void;
+  done: boolean;
+  endScene: () => iScene;
 }

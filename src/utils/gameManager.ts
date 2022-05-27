@@ -8,9 +8,12 @@ export default class GameManager {
   scene: IScene;
   gameTicker: GameTicker;
   keyboard: any;
+  scale: number;
 
-  constructor(renderer: AbstractRenderer) {
+  constructor(renderer: AbstractRenderer, scale: number) {
+    this.scale = scale;
     this.scene = new Playing();
+    this.scene.stage.scale.set(this.scale);
     this.gameTicker = new GameTicker(
       60,
       (elapsedTime: number) => {
@@ -25,6 +28,11 @@ export default class GameManager {
   update = (elapsedTime: number) => {
     this.scene.update(elapsedTime);
     this.keyboard.update();
+
+    if (this.scene.done) {
+      this.scene = this.scene.endScene();
+      this.scene.stage.scale.set(this.scale);
+    }
   };
 
   loadGame() {

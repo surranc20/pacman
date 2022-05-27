@@ -35,8 +35,11 @@ export default class GameState {
   freightendState: FreightendState;
   level: number;
   level_won: boolean;
+  outOfLivesCallback: () => void;
 
-  constructor() {
+  constructor(outOfLivesCallback: () => void) {
+    this.outOfLivesCallback = outOfLivesCallback;
+
     this.container = new Container();
     this.pelletContainer = new Container();
     this.ghostContainer = new Container();
@@ -137,7 +140,11 @@ export default class GameState {
     this.mazeModel.pacman.animating = false;
     this.callbackTimerActive = true;
     setTimeout(() => {
-      this.resetLevel();
+      if (this.lifeCounter.lives > 0) {
+        this.resetLevel();
+      } else {
+        this.outOfLivesCallback();
+      }
     }, 1000);
   };
 
@@ -248,6 +255,10 @@ export default class GameState {
 
   restartSirenCallback = () => {
     sound.play(`siren_${this.currentSirenNo}`, { loop: true });
+  };
+
+  stopSoundsCallback = () => {
+    sound.stopAll();
   };
 
   _addGhostsToJail() {

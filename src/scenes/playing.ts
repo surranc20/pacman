@@ -3,6 +3,7 @@ import { Container, Loader } from "pixi.js";
 import Stage from "../game_objects/stage";
 import IScene from "../interfaces/iScene";
 import GameState from "../models/gameState";
+import GameOver from "./gameOver";
 
 export default class Playing implements IScene {
   stage = new Container();
@@ -10,6 +11,7 @@ export default class Playing implements IScene {
   gameState!: GameState;
   introPlaying = true;
   intermissionPlaying = false;
+  done = false;
 
   update(elapsedTime: number) {
     if (!this.introPlaying && !this.intermissionPlaying) {
@@ -37,7 +39,7 @@ export default class Playing implements IScene {
     // Create Stage
     this.gameStage = new Stage([resources.stage.texture], 0, 24);
     this.stage.addChild(this.gameStage);
-    this.gameState = new GameState();
+    this.gameState = new GameState(this.outOfLivesCallback);
     this.stage.addChild(this.gameState.container);
     sound.play("game_start", () => {
       this.introPlaying = false;
@@ -46,4 +48,15 @@ export default class Playing implements IScene {
     });
     this.gameStage.loadWhiteStage();
   }
+
+  outOfLivesCallback = () => {
+    this.done = true;
+  };
+
+  endScene = () => {
+    return new GameOver(
+      this.gameState.scoreBoard.score,
+      this.gameState.highScore.score
+    );
+  };
 }
