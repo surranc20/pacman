@@ -1,4 +1,5 @@
 import { Cardinal } from "../enums/cardinal";
+import { Constants } from "../enums/constants";
 import iAgent from "../interfaces/iAgent";
 import IMoveable from "../interfaces/iMoveable";
 import MazeModel from "../models/mazeModel";
@@ -13,7 +14,6 @@ export default abstract class Moveable extends Animatable implements IMoveable {
   abstract previousMazeNode: MazeNode;
 
   speedBoostWhenTurning = false;
-
   defaultSpeedModifier = 1;
   speedModifier = this.defaultSpeedModifier;
   frightSpeed = 0.5;
@@ -125,7 +125,7 @@ export default abstract class Moveable extends Animatable implements IMoveable {
     if (old_node.warp && this.mazeNode.warp && old_node !== this.mazeNode) {
       switch (this.facing) {
         case Cardinal.WEST:
-          this.x = 224;
+          this.x = Constants.RESOLUTION_X;
           break;
         default:
           this.x = 0;
