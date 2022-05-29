@@ -50,7 +50,6 @@ export default class GameManager {
 
   async loadGlobalData() {
     const globalData = await getGlobalData();
-    console.log(globalData);
     this.scene.globalData = globalData;
 
     if (Loader.shared.progress === 100) {

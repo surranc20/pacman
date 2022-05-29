@@ -23,6 +23,7 @@ export default class PelletFactory {
     }
 
     let newPellet = null;
+    // -1 is neccessary to center pellet in tile
     if (
       PelletFactory.powerPelletTilesSet.has([mazeNode.x, mazeNode.y].toString())
     ) {

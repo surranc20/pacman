@@ -1,23 +1,24 @@
 import Moveable from "../abstract/moveable";
 import { Cardinal } from "../enums/cardinal";
+import { Constants } from "../enums/constants";
 import { GoingToJailState } from "../enums/goingToJail";
+import { ScatterTargets } from "../enums/scatterTargets";
 import Ghost from "../game_objects/ghost";
 import MazeModel from "../models/mazeModel";
 import MazeNode from "../models/mazeNode";
 
 export function getTargetFreightened(_maze: MazeModel, gameObj: Moveable) {
   const possibleNodes = gameObj.mazeNode.connections;
-  return possibleNodes[
-    Math.floor(Math.random() * (possibleNodes.length - 1 + 1))
-  ];
+  return possibleNodes[Math.floor(Math.random() * possibleNodes.length)];
 }
 
 export function getTargetGoToJail(maze: MazeModel, gameObj: Moveable) {
-  if (gameObj.mazeNode.x === 13 && gameObj.mazeNode.y === 11) {
+  const [jailX, jailY] = maze.ghostJail.jailEntryTile;
+  if (gameObj.mazeNode.x === jailX && gameObj.mazeNode.y === jailY) {
     const ghost = gameObj as Ghost;
     ghost.goingToJailState = GoingToJailState.X_CENTERING;
   }
-  return maze.getNode(13, 11);
+  return maze.getNode(jailX, jailY);
 }
 
 export function getTargetBlinky(maze: MazeModel, _gameObj: Moveable) {
@@ -26,7 +27,12 @@ export function getTargetBlinky(maze: MazeModel, _gameObj: Moveable) {
 
 export function getTargetPinky(maze: MazeModel, _gameObj: Moveable) {
   let [x, y] = [maze.pacman.mazeNode.x, maze.pacman.mazeNode.y];
-  [x, y] = getGhostOffset(x, y, 4, maze.pacman.facing);
+  [x, y] = getGhostOffset(
+    x,
+    y,
+    Constants.PINKY_TARGET_OFFSET,
+    maze.pacman.facing
+  );
   return maze.getNode(x, y);
 }
 
@@ -36,10 +42,11 @@ export function getTargetClyde(maze: MazeModel, gameObj: Moveable) {
   const [x2, y2] = [maze.pacman.mazeNode.x, maze.pacman.mazeNode.y];
   const distanceToPacman = euclideanDistance(x1, x2, y1, y2);
 
-  if (distanceToPacman >= 8) {
+  if (distanceToPacman >= Constants.CLYDE_RUN_AWAY_THRESHOLD) {
     return maze.pacman.mazeNode;
   }
-  return maze.getNode(0, 27);
+  const [x, y] = [ScatterTargets.CLYDE_X, ScatterTargets.CLYDE_Y];
+  return maze.getNode(x, y);
 }
 
 export function getTargetInky(maze: MazeModel, _gameObj: Moveable) {
@@ -49,7 +56,7 @@ export function getTargetInky(maze: MazeModel, _gameObj: Moveable) {
   const [offsetX, offsetY] = getGhostOffset(
     pacmanNode.x,
     pacmanNode.y,
-    2,
+    Constants.INKY_PACMAN_TARGET_OFFSET,
     maze.pacman.facing
   );
 
@@ -59,12 +66,7 @@ export function getTargetInky(maze: MazeModel, _gameObj: Moveable) {
   );
 
   let [x, y] = [offsetX + vectorX, offsetY + vectorY];
-
-  if (x < 0) x = 0;
-  if (x > 27) x = 27;
-  if (y < 0) y = 0;
-  if (y > 30) y = 30;
-
+  [x, y] = normalizeCoords(x, y);
   return maze.getNode(x, y);
 }
 
@@ -94,11 +96,7 @@ function getGhostOffset(x: number, y: number, offset: number, dir: Cardinal) {
       break;
   }
 
-  if (x < 0) x = 0;
-  if (x > 27) x = 27;
-  if (y < 0) y = 0;
-  if (y > 30) y = 30;
-
+  [x, y] = normalizeCoords(x, y);
   return [x, y];
 }
 
@@ -107,5 +105,13 @@ function getVectorBetweenTwoNodes(node1: MazeNode, node2: MazeNode) {
   const x = node2.x - node1.x;
   const y = node2.y - node1.y;
 
+  return [x, y];
+}
+
+function normalizeCoords(x: number, y: number) {
+  if (x < 0) x = 0;
+  if (x > Constants.MAZE_X_SIZE) x = Constants.MAZE_X_SIZE;
+  if (y < 0) y = 0;
+  if (y > Constants.MAZE_Y_SIZE) y = Constants.MAZE_Y_SIZE;
   return [x, y];
 }

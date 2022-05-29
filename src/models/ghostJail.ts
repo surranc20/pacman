@@ -12,6 +12,7 @@ export default class GhostJail {
   jailSlots: Map<number, Ghost | null>;
   priorityList = [Color.RED, Color.PINK, Color.BLUE, Color.ORANGE];
   jailSlotFillOrder = [2, 1, 3];
+  jailEntryTile = [13, 11];
   ghostDotCounter!: Map<Color, number>;
   mazeModel: MazeModel;
 
