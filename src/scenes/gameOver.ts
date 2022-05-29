@@ -3,6 +3,8 @@ import IScene from "../interfaces/iScene";
 import Keyboard from "pixi.js-keyboard";
 import Playing from "./playing";
 import Label from "../game_objects/label";
+import GlobalGameStats from "../models/globalGameStats";
+import { updateGlobalData } from "../utils/firestore";
 
 export default class GameOver implements IScene {
   stage = new Container();
@@ -14,10 +16,14 @@ export default class GameOver implements IScene {
   highScore: number;
   highScoreLabel: Label;
   restartLabel: Label;
+  globalData: GlobalGameStats;
+  pelletsEaten: any;
 
-  constructor(score: number, highScore: number) {
+  constructor(score: number, highScore: number, pelletsEaten: number) {
+    this.globalData = new GlobalGameStats(highScore, score, pelletsEaten);
     this.score = score;
     this.highScore = highScore;
+    this.pelletsEaten = pelletsEaten;
     this.gameOverLabel = new Label("Game Over!");
     this.scoreLabel = new Label(`Score        ${this.score}`);
     this.scoreLabel.container.y += 16;
@@ -31,20 +37,34 @@ export default class GameOver implements IScene {
       this.highScoreLabel.container,
       this.restartLabel.container
     );
+    this.updateGlobalData();
   }
 
   update(_elapsedTime: number) {
     if (this.keyboard.isKeyDown("KeyN")) this.done = true;
   }
-  addAssetsToLoader(_loader: Loader) {
-    alert("bang");
-  }
-  onDoneLoading(_resources: any) {
-    alert("bang");
-  }
+  addAssetsToLoader(_loader: Loader) {}
+  onDoneLoading(_resources: any) {}
+
   endScene = () => {
     const scene = new Playing();
+    if (this.globalData) {
+      scene.globalDataLoaded(this.globalData);
+    }
     scene.onDoneLoading(Loader.shared.resources);
     return scene;
+  };
+
+  globalDataLoaded = (_globalData: GlobalGameStats) => {};
+
+  updateGlobalData = async () => {
+    const updateGlobalDataResponse = await updateGlobalData(
+      this.pelletsEaten,
+      this.highScore,
+      this.score
+    );
+    if (updateGlobalDataResponse) {
+      this.globalData = updateGlobalDataResponse;
+    }
   };
 }

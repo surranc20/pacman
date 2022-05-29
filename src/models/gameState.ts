@@ -16,6 +16,11 @@ import { ReleasingFromJailState } from "../enums/releasingFromJail";
 import settingsJson from "../settings/level_info.json";
 import LevelCounter from "../game_objects/levelCounter";
 import { Fruits } from "../enums/fruits";
+import { positions } from "../enums/positions";
+import { Sounds } from "../enums/sounds";
+import { Constants } from "../enums/constants";
+import { GhostStartingPos } from "../enums/ghostStartingPos";
+import { getGhostStartingPosFromTiles } from "../utils/helpers";
 
 export default class GameState {
   lifeCounter: LifeCounter;
@@ -37,20 +42,24 @@ export default class GameState {
   level_won: boolean;
   outOfLivesCallback: () => void;
 
-  constructor(outOfLivesCallback: () => void) {
+  constructor(outOfLivesCallback: () => void, highScore: number) {
     this.outOfLivesCallback = outOfLivesCallback;
 
     this.container = new Container();
     this.pelletContainer = new Container();
     this.ghostContainer = new Container();
-    this.level = -1;
+    this.level = -1; // Start at -1 as reset level later in constructor will increment
     this.level_won = false;
 
-    const pacman = new Pacman(114, 212);
+    const pacman = new Pacman(
+      positions.startingPacman[0],
+      positions.startingPacman[1]
+    );
+
     this.lifeCounter = new LifeCounter(3);
     this.levelCounter = new LevelCounter();
-    this.scoreBoard = new ScoreBoard();
-    this.highScore = new HighScore();
+    this.scoreBoard = new ScoreBoard(this.oneUpCallback);
+    this.highScore = new HighScore(highScore);
     this.mazeModel = new MazeModel(pacman, this.pelletContainer);
     this.pelletsEaten = 0;
 
@@ -83,9 +92,10 @@ export default class GameState {
     this.container.addChild(this.levelCounter.container);
     this.container.addChild(this.scoreBoard.container);
     this.container.addChild(this.highScore.container);
+
     this.readyLabel = new Label("Ready!", LabelColors.ORANGE);
-    this.readyLabel.container.x = 90;
-    this.readyLabel.container.y = 160;
+    [this.readyLabel.container.x, this.readyLabel.container.y] =
+      positions.readyLabel;
     this.container.addChild(this.readyLabel.container);
 
     pacman.pelletEatenCallback = this.pelletEatenCallback;
@@ -94,7 +104,8 @@ export default class GameState {
     this.callbackTimerActive = false;
     pacman.startDeathCallback = this.pacmanStartDeathCallback;
     pacman.endDeathCallback = this.pacmanEndDeathCallback;
-    sound.add("pacman_dies", "/assets/sounds/pacman_dies.mp3");
+    sound.add(Sounds.PACMAN_DIES, "/assets/sounds/pacman_dies.mp3");
+    sound.add(Sounds.ONE_UP, "/assets/sounds/1up.mp3");
     this.currentSirenNo = "1";
     this.sirenThresholds = new Map([
       [48, "2"],
@@ -103,7 +114,7 @@ export default class GameState {
       [196, "5"],
     ]);
 
-    sound.add("power_siren", "/assets/sounds/power_siren.mp3");
+    sound.add(Sounds.POWER_SIREN, "/assets/sounds/power_siren.mp3");
     for (let x = 1; x < 6; x++) {
       sound.add(`siren_${x}`, `/assets/sounds/siren_${x}.mp3`);
     }
@@ -114,7 +125,7 @@ export default class GameState {
     if (this.callbackTimerActive) return;
     this.mazeModel.update(elapsedTime);
     this.scoreBoard.update(elapsedTime);
-    if (this.pelletsEaten === 244) {
+    if (this.pelletsEaten === Constants.NUM_PELLETS) {
       this.level_won = true;
       sound.stopAll();
     }
@@ -132,7 +143,7 @@ export default class GameState {
     this.freightendState.interruptedCleanup();
     this.ghostContainer.visible = false;
     sound.stop(`siren_${this.currentSirenNo}`);
-    sound.play("pacman_dies");
+    sound.play(Sounds.PACMAN_DIES);
   };
 
   pacmanEndDeathCallback = () => {
@@ -145,12 +156,12 @@ export default class GameState {
       } else {
         this.outOfLivesCallback();
       }
-    }, 1000);
+    }, Constants.MILLISECS_IN_A_SEC);
   };
 
   pelletEatenCallback = () => {
     this.mazeModel.ghostJail.dotEaten();
-    this.addPointsCallback(10);
+    this.addPointsCallback(Constants.EAT_PELLET_POINTS);
     this.pelletsEaten += 1;
     if (!this.freightendState.active) {
       this.adjustSiren();
@@ -158,7 +169,7 @@ export default class GameState {
   };
 
   powerPelletEatenCallback = () => {
-    this.addPointsCallback(30);
+    this.addPointsCallback(Constants.EAT_POWER_PELLET_POINTS);
     this.mazeModel.ghostJail.dotEaten();
     this.pelletsEaten += 1;
     sound.stop(`siren_${this.currentSirenNo}`);
@@ -220,21 +231,26 @@ export default class GameState {
     this.callbackTimerActive = false;
 
     const redGhost = this.mazeModel.red;
-    redGhost.x = 13 * 8 + 4;
-    redGhost.y = 11 * 8 + 24 + 4;
-    redGhost.mazeNode = this.mazeModel.getNode(13, 11);
+    const redGhostXTile = GhostStartingPos.BLINKY_X;
+    const redGhostYTile = GhostStartingPos.BLINKY_Y;
+    [redGhost.x, redGhost.y] = getGhostStartingPosFromTiles(
+      redGhostXTile,
+      redGhostYTile
+    );
+    redGhost.mazeNode = this.mazeModel.getNode(redGhostXTile, redGhostYTile);
     redGhost.queuedMove = Cardinal.EAST;
 
     const pacman = this.mazeModel.pacman;
-    pacman.x = 114;
-    pacman.y = 212;
+    [pacman.x, pacman.y] = positions.startingPacman;
     pacman.facing = Cardinal.EAST;
     pacman.queuedMove = Cardinal.EAST;
     pacman.currentFrame = 0;
     pacman.getTexture();
     pacman.frames = pacman.eatFrames;
-    pacman.mazeNode = this.mazeModel.getNode(14, 23);
-
+    pacman.mazeNode = this.mazeModel.getNode(
+      positions.startingPacmanTiles[0],
+      positions.startingPacmanTiles[1]
+    );
     pacman.dying = false;
 
     const ghosts = this.mazeModel.getGhosts();
@@ -259,6 +275,11 @@ export default class GameState {
 
   stopSoundsCallback = () => {
     sound.stopAll();
+  };
+
+  oneUpCallback = () => {
+    this.lifeCounter.setLives(this.lifeCounter.lives + 1);
+    sound.play(Sounds.ONE_UP);
   };
 
   _addGhostsToJail() {

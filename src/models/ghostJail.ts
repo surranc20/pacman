@@ -3,6 +3,7 @@ import { Cardinal } from "../enums/cardinal";
 import { Color } from "../enums/color";
 import { GoingToJailState } from "../enums/goingToJail";
 import { ReleasingFromJailState } from "../enums/releasingFromJail";
+import { Sounds } from "../enums/sounds";
 import Ghost from "../game_objects/ghost";
 import { getTargetGoToJail } from "../utils/ghostTargetingAlgorithms";
 import MazeModel from "./mazeModel";
@@ -12,6 +13,7 @@ export default class GhostJail {
   jailSlots: Map<number, Ghost | null>;
   priorityList = [Color.RED, Color.PINK, Color.BLUE, Color.ORANGE];
   jailSlotFillOrder = [2, 1, 3];
+  jailEntryTile = [13, 11];
   ghostDotCounter!: Map<Color, number>;
   mazeModel: MazeModel;
 
@@ -37,11 +39,12 @@ export default class GhostJail {
     this.resetJailThresholds();
     ghosts.map((ghost) => this.addGhost(ghost));
 
+    // Time in seconds pacman can go without eating a dot without a ghost releasing
     this.defaultTimer = 5;
     this.timer = this.defaultTimer;
 
     this.ghostsRetreating = 3;
-    sound.add("retreating", "assets/sounds/retreating.mp3");
+    sound.add(Sounds.RETREATING, "assets/sounds/retreating.mp3");
     this.overflowGhost = null;
   }
 
@@ -51,19 +54,17 @@ export default class GhostJail {
     ghost.agent.targetAI = getTargetGoToJail;
     ghost.goingToJailState = GoingToJailState.TRAVELING_TO_JAIL;
     if (this.ghostsRetreating === 0) {
-      sound.play("retreating", { loop: true });
+      sound.play(Sounds.RETREATING, { loop: true });
     }
     this.ghostsRetreating += 1;
   }
 
   addGhost(ghost: Ghost) {
     // Add ghost to Maze and change its pos
-
     ghost.jailed = true;
-
     this.ghostsRetreating -= 1;
     if (this.ghostsRetreating === 0) {
-      sound.stop("retreating");
+      sound.stop(Sounds.RETREATING);
       this.resumeFrightenedSirenCallback();
     }
 

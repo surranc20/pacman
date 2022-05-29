@@ -2,8 +2,10 @@ import { sound } from "@pixi/sound";
 import { Container, Loader } from "pixi.js";
 import Drawable from "../abstract/drawable";
 import { Color } from "../enums/color";
+import { Constants } from "../enums/constants";
 import { GoingToJailState } from "../enums/goingToJail";
 import { ReleasingFromJailState } from "../enums/releasingFromJail";
+import { Sounds } from "../enums/sounds";
 import Ghost from "../game_objects/ghost";
 import { getTargetFreightened } from "../utils/ghostTargetingAlgorithms";
 import MazeModel from "./mazeModel";
@@ -35,15 +37,15 @@ export default class FreightendState {
     this.pointOptions = [200, 400, 800, 1600];
     this.active = false;
     this.timeoutID = null;
-    this.frightTime = 5;
-    this.frightBlinkTime = 1.5;
+    this.frightTime = 5; // seconds
+    this.frightBlinkTime = 1.5; // seconds
     this.ghostsFrightened = 0;
   }
 
   enterFreightendMode() {
     if (this.timeoutID) {
       clearTimeout(this.timeoutID);
-      sound.stop("power_siren");
+      sound.stop(Sounds.POWER_SIREN);
       this.timeoutID = null;
     }
     this.active = true;
@@ -64,7 +66,7 @@ export default class FreightendState {
         }
       }
     }
-    sound.play("power_siren", { loop: true });
+    sound.play(Sounds.POWER_SIREN, { loop: true });
     this.timeoutID = setTimeout(() => {
       this._freightenedAlmostDone();
     }, this.frightTime * 1000);
@@ -81,7 +83,7 @@ export default class FreightendState {
     }
     this.timeoutID = setTimeout(() => {
       this._endFreightened();
-    }, this.frightBlinkTime * 1000);
+    }, this.frightBlinkTime * Constants.MILLISECS_IN_A_SEC);
   }
 
   _endFreightened(restartSirenCallback = true) {
@@ -99,7 +101,7 @@ export default class FreightendState {
       }
     }
     this.active = false;
-    sound.stop("power_siren");
+    sound.stop(Sounds.POWER_SIREN);
     if (restartSirenCallback) {
       this.restartSirenCallback();
     }
@@ -114,7 +116,7 @@ export default class FreightendState {
         `Ghost Points/${pointsGained}.png`
       ]!
     );
-    sound.stop("power_siren");
+    sound.stop(Sounds.POWER_SIREN);
     this.gameContainer.addChild(pointsLabel);
     this.updateScoreCallback(pointsGained);
     this.ghostsEaten += 1;
@@ -134,7 +136,7 @@ export default class FreightendState {
 
   resumeFrightenedCallback = () => {
     if (this.active) {
-      sound.play("power_siren", { loop: true });
+      sound.play(Sounds.POWER_SIREN, { loop: true });
     } else if (this.ghostsFrightened === 0) {
       this.restartSirenCallback();
     }
@@ -146,7 +148,7 @@ export default class FreightendState {
       this.timeoutID = null;
     }
     this.active = false;
-    sound.stop("power_siren");
+    sound.stop(Sounds.POWER_SIREN);
     for (const color of Object.values(Color)) {
       if (isNaN(Number(color))) {
         const ghost = this.mazeModel[color];

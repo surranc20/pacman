@@ -1,5 +1,6 @@
 import { Container, Loader } from "pixi.js";
 import Drawable from "../abstract/drawable";
+import { Constants } from "../enums/constants";
 
 export default class LifeCounter {
   container: Container;
@@ -23,7 +24,11 @@ export default class LifeCounter {
         this.container.addChild(new PacmanLifeDrawable(x * 16, 0, lifeTexture));
       }
     }
-    this.container.position.set(19, 275);
+    const lifePicOffset = 3;
+    this.container.position.set(
+      Constants.TILE_SIZE * 2 + lifePicOffset,
+      Constants.TILE_SIZE * 34 + lifePicOffset
+    );
   }
 }
 

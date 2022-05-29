@@ -1,4 +1,5 @@
 import { Container } from "pixi.js";
+import { Constants } from "../enums/constants";
 import Label from "../game_objects/label";
 
 export default class GameTicker {
@@ -18,7 +19,7 @@ export default class GameTicker {
     sceneContainer: Container
   ) {
     this.fps = fps;
-    this.fpsInterval = 1000 / this.fps;
+    this.fpsInterval = Constants.MILLISECS_IN_A_SEC / this.fps;
     this.renderCallback = renderCallback;
     this.sceneContainer = sceneContainer;
     this.fpsContainer = new Container();
@@ -42,10 +43,13 @@ export default class GameTicker {
 
       const sinceStart = now - this.startTime;
       const currentFps =
-        Math.round((1000 / (sinceStart / ++this.frameCount)) * 100) / 100;
+        Math.round(
+          (Constants.MILLISECS_IN_A_SEC / (sinceStart / ++this.frameCount)) *
+            100
+        ) / 100;
       this.fpsContainer.removeChildren();
       const fpsLabel = new Label(Math.ceil(currentFps).toString());
-      fpsLabel.container.x = 200;
+      fpsLabel.container.x = Constants.FPS_TICKER_X_POS;
       this.fpsContainer.addChild(fpsLabel.container);
     }
   };

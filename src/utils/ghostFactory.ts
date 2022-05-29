@@ -8,16 +8,15 @@ import {
   getTargetPinky,
 } from "./ghostTargetingAlgorithms";
 import GhostAgent from "../agents/ghostAgent";
+import { GhostStartingPos } from "../enums/ghostStartingPos";
+import { getGhostStartingPosFromTiles } from "./helpers";
 
 export default class GhostFactory {
   createGhostFromColor(color: Color, maze: MazeModel) {
     const [XTilePos, YTilePos] = this._getStartingPos(color);
-    const ghost = new Ghost(
-      XTilePos * 8 + 4,
-      YTilePos * 8 + 24 + 4,
-      maze,
-      color
-    );
+    const [x, y] = getGhostStartingPosFromTiles(XTilePos, YTilePos);
+
+    const ghost = new Ghost(x, y, maze, color);
     const mazeNode = maze.getNode(XTilePos, YTilePos);
     ghost.mazeNode = mazeNode;
     ghost.previousMazeNode = mazeNode;
@@ -27,15 +26,25 @@ export default class GhostFactory {
   }
 
   _getStartingPos(color: Color) {
+    let x;
+    let y;
     switch (color) {
       case Color.RED:
-        return [13, 11];
+        x = GhostStartingPos.BLINKY_X;
+        y = GhostStartingPos.BLINKY_Y;
+        return [x, y];
       case Color.BLUE:
-        return [1, 14];
+        x = GhostStartingPos.INKY_X;
+        y = GhostStartingPos.INKY_Y;
+        return [x, y];
       case Color.PINK:
-        return [11, 1];
+        x = GhostStartingPos.PINKY_X;
+        y = GhostStartingPos.PINKY_Y;
+        return [x, y];
       default:
-        return [18, 1];
+        x = GhostStartingPos.CLYDE_X;
+        y = GhostStartingPos.CLYDE_Y;
+        return [x, y];
     }
   }
 
