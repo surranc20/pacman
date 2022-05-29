@@ -1,4 +1,5 @@
 import { Container } from "pixi.js";
+import { Constants } from "../enums/constants";
 import Label from "./label";
 import ScoreDisplayer from "./scoreDisplayer";
 
@@ -21,13 +22,12 @@ export default class ScoreBoard {
     this.container.addChild(this.oneUpContainer);
     this.container.addChild(this.scoreDisplayer.container);
     this.container.position.set(0, 0);
-    this.scoreDisplayer.container.position.set(0, 8);
-    this.oneUpContainer.position.set(24, 0);
+    this.scoreDisplayer.container.position.set(0, Constants.TILE_SIZE);
+    this.oneUpContainer.position.set(Constants.TILE_SIZE * 3, 0);
 
     this.blinking = true;
     this._blinkTimer = 0;
     this.fps = 6;
-
     this.score = 0;
     this.updateScoreBoard(0);
   }
@@ -46,7 +46,7 @@ export default class ScoreBoard {
   updateScoreBoard(points: number) {
     this.score += points;
     this.scoreDisplayer.displayScore(this.score);
-    if (this.canOneUp && this.score >= 10000) {
+    if (this.canOneUp && this.score >= Constants.ONE_UP_THRESHOLD) {
       this.canOneUp = false;
       this.oneUpCallback();
     }

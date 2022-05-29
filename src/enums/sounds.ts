@@ -4,4 +4,5 @@ export enum Sounds {
   PACMAN_DIES = "pacman_dies",
   ONE_UP = "1up",
   RETREATING = "retreating",
+  EAT_GHOST = "eat_ghost",
 }

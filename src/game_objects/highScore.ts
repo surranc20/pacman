@@ -1,4 +1,5 @@
 import { Container } from "pixi.js";
+import { Constants } from "../enums/constants";
 import Label from "./label";
 import ScoreDisplayer from "./scoreDisplayer";
 
@@ -16,8 +17,11 @@ export default class HighScore {
     this.titleContainer = new Label("High Score").container;
     this.container.addChild(this.titleContainer);
     this.container.addChild(this.scoreDisplayer.container);
-    this.container.position.set(80, 0);
-    this.scoreDisplayer.container.position.set(8, 8);
+    this.container.position.set(Constants.TILE_SIZE * 10, 0);
+    this.scoreDisplayer.container.position.set(
+      Constants.TILE_SIZE,
+      Constants.TILE_SIZE
+    );
     this.titleContainer.position.set(0, 0);
 
     this.currentScore = 0;

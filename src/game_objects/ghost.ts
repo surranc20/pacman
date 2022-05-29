@@ -12,6 +12,8 @@ import {
   getTargetFreightened,
   getTargetGoToJail,
 } from "../utils/ghostTargetingAlgorithms";
+import { Sounds } from "../enums/sounds";
+import { Constants } from "../enums/constants";
 
 export default class Ghost extends Moveable {
   agent!: IGhostAgent;
@@ -41,7 +43,7 @@ export default class Ghost extends Moveable {
       y
     );
     this.fps = 10;
-    this.defaultSpeedModifier = 0.8;
+    this.defaultSpeedModifier = 0.8; // Will be overwritten at start of game
     this.speedModifier = 0.8;
     this.moveFrameDelay = 0;
     this.anchor.set(0.5);
@@ -62,7 +64,7 @@ export default class Ghost extends Moveable {
     this.releasingFromJailState = ReleasingFromJailState.NOT_ACTIVE;
     this.goingToJailState = GoingToJailState.NOT_ACTIVE;
 
-    sound.add("eat_ghost", "/assets/sounds/eat_ghost.mp3");
+    sound.add(Sounds.EAT_GHOST, "/assets/sounds/eat_ghost.mp3");
   }
 
   update(elapsedTime: number) {
@@ -72,7 +74,7 @@ export default class Ghost extends Moveable {
       this.mazeModel.pacman.previousMazeNode === this.mazeNode
     ) {
       if (this.agent.targetAI === getTargetFreightened) {
-        sound.play("eat_ghost");
+        sound.play(Sounds.EAT_GHOST);
         this.ghostEatenCallback(this);
         this.mazeModel.ghostJail.sendToJail(this);
         this.mazeModel.pacman.moveFrameDelay += 30;
@@ -173,6 +175,8 @@ export default class Ghost extends Moveable {
   }
 
   _jailedInputMove() {
+    // 13 and 15 are the top and bottom half of the jail.
+    // Ghosts needs to turn around if they are there.
     if ([13, 15].includes(this.mazeNode.y)) {
       this.queuedMove = CardinalOpposites.get(this.facing)!;
     }
@@ -194,7 +198,11 @@ export default class Ghost extends Moveable {
   }
 
   _releasingFromJailUpdateYLeveling() {
-    const targetY = 14 * 8 + 8 * 3 + 4;
+    // Center of node is 4 pixels down
+    const targetY =
+      Constants.JAIL_CENTER_TILE_Y * Constants.TILE_SIZE +
+      Constants.TILE_SIZE * Constants.BLANK_Y_TILES +
+      4;
     if (this.y < targetY) {
       this.queuedMove = Cardinal.SOUTH;
     } else if (this.y > targetY) {
@@ -205,7 +213,7 @@ export default class Ghost extends Moveable {
   }
 
   _releasingFromJailUpdateXLeveling() {
-    const targetX = 14 * 8;
+    const targetX = Constants.JAIL_ENTRY_TILE_X * Constants.TILE_SIZE;
     if (this.x < targetX) {
       this.queuedMove = Cardinal.EAST;
     } else if (this.x > targetX) {
@@ -218,7 +226,13 @@ export default class Ghost extends Moveable {
   }
 
   _releasingFromJailUpdateLeaving() {
-    if (this.y === 11 * 8 + 24 + 4) {
+    // Center of tile is 4 pixels down
+    const targetY =
+      Constants.JAIL_ENTRY_TILE_Y * Constants.TILE_SIZE +
+      Constants.BLANK_Y_TILES * Constants.TILE_SIZE +
+      4;
+
+    if (this.y === targetY) {
       this.releasingFromJailState = ReleasingFromJailState.NOT_ACTIVE;
       this.inputMove(this.mazeModel);
       this.speedModifier = this.defaultSpeedModifier;
@@ -228,7 +242,7 @@ export default class Ghost extends Moveable {
   _goingToJailUpdate() {
     switch (this.goingToJailState) {
       case GoingToJailState.X_CENTERING:
-        const targetX = 14 * 8;
+        const targetX = Constants.JAIL_ENTRY_TILE_X * Constants.TILE_SIZE;
         if (this.x < targetX - 1) {
           this.queuedMove = Cardinal.EAST;
         } else if (this.x > targetX + 1) {
@@ -242,7 +256,11 @@ export default class Ghost extends Moveable {
         break;
 
       case GoingToJailState.Y_CETERING:
-        const targetY = 14 * 8 + 8 * 3 - 2;
+        // - 2 is to necessary since jail has thinner walls than normal
+        const targetY =
+          Constants.JAIL_CENTER_TILE_Y * Constants.TILE_SIZE +
+          Constants.TILE_SIZE * Constants.BLANK_Y_TILES -
+          2;
         if (this.y < targetY) {
           this.queuedMove = Cardinal.SOUTH;
         } else {
@@ -255,8 +273,6 @@ export default class Ghost extends Moveable {
         break;
     }
   }
-
-  // x == center - 1 center center + 1
 
   _getUpdatedMazeNode() {
     // Need this so ghost can faze through jail door when leaving jail
@@ -273,7 +289,10 @@ export default class Ghost extends Moveable {
           this.releasingFromJailState === ReleasingFromJailState.LEAVING
             ? -1
             : 1;
-        this.mazeNode = this.mazeModel.getNode(14, this.mazeNode.y + delta);
+        this.mazeNode = this.mazeModel.getNode(
+          Constants.JAIL_ENTRY_TILE_X,
+          this.mazeNode.y + delta
+        );
       }
       return;
     }

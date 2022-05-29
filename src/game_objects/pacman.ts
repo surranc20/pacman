@@ -109,6 +109,7 @@ export default class Pacman extends Moveable {
       case Cardinal.WEST:
         return this.x < this.mazeNode.center[0];
       case Cardinal.NORTH:
+        // Necessary to stop big gap from forming when pacman hits wall
         return this.y < this.mazeNode.center[1] - 2;
       default:
         return this.y > this.mazeNode.center[1];

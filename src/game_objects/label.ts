@@ -1,5 +1,6 @@
 import { Container, Loader } from "pixi.js";
 import Drawable from "../abstract/drawable";
+import { Constants } from "../enums/constants";
 import { LabelColors } from "../enums/label_colors";
 
 export default class Label {
@@ -29,7 +30,7 @@ export default class Label {
           ]!;
         this.container.addChild(new CharDrawable(xPos, 0, charTexture));
       }
-      xPos += 8;
+      xPos += Constants.TILE_SIZE;
     }
   }
 }

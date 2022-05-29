@@ -9,7 +9,12 @@ export default class PowerPellet extends Animatable implements IPellet {
       Loader.shared.resources.spritesheet.spritesheet?.textures[
         "pellets/power_pellet.png"
       ]!;
-    super([pelletTexture, Texture.EMPTY], x - 3, y - 3);
+    const centerPelletOffset = 3;
+    super(
+      [pelletTexture, Texture.EMPTY],
+      x - centerPelletOffset,
+      y - centerPelletOffset
+    );
     this.powerPellet = true;
     this.fps = 4;
   }
