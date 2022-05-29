@@ -5,6 +5,7 @@ import { Cardinal } from "../enums/cardinal";
 import MazeNode from "../models/mazeNode";
 import Moveable from "../abstract/moveable";
 import Animatable from "../abstract/animatable";
+import { Constants } from "../enums/constants";
 
 export default class Pacman extends Moveable {
   agent: PlayerAgent;
@@ -26,7 +27,7 @@ export default class Pacman extends Moveable {
     const sheet = Loader.shared.resources.spritesheet.spritesheet;
     const eatFrames = sheet!.animations["pacman_eat/pacman_eat"];
     super(eatFrames, x, y);
-    this.fps = 30;
+    this.fps = Constants.PACMAN_FPS;
     this.anchor.set(0.5);
 
     this.agent = new PlayerAgent();

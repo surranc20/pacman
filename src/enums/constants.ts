@@ -19,4 +19,5 @@ export enum Constants {
   ONE_UP_THRESHOLD = 10000,
   RESOLUTION_X = 224,
   RESOLUTION_Y = 288,
+  PACMAN_FPS = 30,
 }
