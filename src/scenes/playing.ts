@@ -1,5 +1,7 @@
 import { sound } from "@pixi/sound";
 import { Container, Loader } from "pixi.js";
+import { Constants } from "../enums/constants";
+import { Sounds } from "../enums/sounds";
 import Stage from "../game_objects/stage";
 import IScene from "../interfaces/iScene";
 import GameState from "../models/gameState";
@@ -38,18 +40,20 @@ export default class Playing implements IScene {
   addAssetsToLoader(loader: Loader) {
     loader.add("spritesheet", "/assets/spritesheet.json");
     loader.add("stage", "/assets/img/stage.png");
-    sound.add("game_start", "/assets/sounds/game_start.mp3");
+    sound.add(Sounds.GAME_START, "/assets/sounds/game_start.mp3");
   }
 
   onDoneLoading(resources: any) {
     // Create Stage
-    this.gameStage = new Stage([resources.stage.texture], 0, 24);
+    const stageX = 0;
+    const stageY = Constants.BLANK_Y_TILES * Constants.TILE_SIZE;
+    this.gameStage = new Stage([resources.stage.texture], stageX, stageY);
     this.stage.addChild(this.gameStage);
 
     const highScore = this.globalData ? this.globalData.highScore : 0;
     this.gameState = new GameState(this.outOfLivesCallback, highScore);
     this.stage.addChild(this.gameState.container);
-    sound.play("game_start", () => {
+    sound.play(Sounds.GAME_START, () => {
       this.introPlaying = false;
       this.gameState.readyLabel.container.visible = false;
       this.gameState.loadNextLevel();

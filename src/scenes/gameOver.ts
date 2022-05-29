@@ -43,12 +43,8 @@ export default class GameOver implements IScene {
   update(_elapsedTime: number) {
     if (this.keyboard.isKeyDown("KeyN")) this.done = true;
   }
-  addAssetsToLoader(_loader: Loader) {
-    alert("bang");
-  }
-  onDoneLoading(_resources: any) {
-    alert("bang");
-  }
+  addAssetsToLoader(_loader: Loader) {}
+  onDoneLoading(_resources: any) {}
 
   endScene = () => {
     const scene = new Playing();

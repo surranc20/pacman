@@ -1,3 +1,4 @@
+import { Constants } from "../enums/constants";
 import Pacman from "../game_objects/pacman";
 import Pellet from "../game_objects/pellet";
 
@@ -32,7 +33,10 @@ export default class MazeNode {
   }
 
   centerInNode(centerX: number, centerY: number) {
-    const [minX, minY] = [this.x * 8, this.y * 8 + 24];
+    const minX = this.x * Constants.TILE_SIZE;
+    const minY =
+      this.y * Constants.TILE_SIZE +
+      Constants.TILE_SIZE * Constants.BLANK_Y_TILES;
     const [maxX, maxY] = [minX + 7, minY + 7];
 
     if (!(minX <= centerX && centerX <= maxX)) {
@@ -50,7 +54,13 @@ export default class MazeNode {
     }
   }
 
+  // Center of tile is 3 pixels in and 4 pixels down
   get center() {
-    return [this.x * 8 + 3, this.y * 8 + 28];
+    const x = this.x * Constants.TILE_SIZE + 3;
+    const y =
+      this.y * Constants.TILE_SIZE +
+      Constants.TILE_SIZE * Constants.BLANK_Y_TILES +
+      4;
+    return [x, y];
   }
 }

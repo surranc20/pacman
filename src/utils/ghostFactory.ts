@@ -9,16 +9,12 @@ import {
 } from "./ghostTargetingAlgorithms";
 import GhostAgent from "../agents/ghostAgent";
 import { GhostStartingPos } from "../enums/ghostStartingPos";
-import { Constants } from "../enums/constants";
+import { getGhostStartingPosFromTiles } from "./helpers";
 
 export default class GhostFactory {
   createGhostFromColor(color: Color, maze: MazeModel) {
     const [XTilePos, YTilePos] = this._getStartingPos(color);
-    const x = XTilePos * Constants.TILE_SIZE + Constants.MAZE_OBJ_OFFSET;
-    const y =
-      YTilePos * Constants.TILE_SIZE +
-      Constants.TILE_SIZE * Constants.BLANK_Y_TILES +
-      Constants.MAZE_OBJ_OFFSET;
+    const [x, y] = getGhostStartingPosFromTiles(XTilePos, YTilePos);
 
     const ghost = new Ghost(x, y, maze, color);
     const mazeNode = maze.getNode(XTilePos, YTilePos);
