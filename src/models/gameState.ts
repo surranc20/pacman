@@ -251,6 +251,7 @@ export default class GameState {
       positions.startingPacmanTiles[0],
       positions.startingPacmanTiles[1]
     );
+    pacman.fps = Constants.PACMAN_FPS;
     pacman.dying = false;
 
     const ghosts = this.mazeModel.getGhosts();
