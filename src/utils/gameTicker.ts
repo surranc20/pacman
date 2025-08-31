@@ -8,6 +8,7 @@ export default class GameTicker {
   fps: number;
   fpsInterval: number;
   then!: number;
+  accumulator: number;
   startTime!: number;
   renderCallback: Function;
   sceneContainer: Container;
@@ -23,12 +24,14 @@ export default class GameTicker {
     this.renderCallback = renderCallback;
     this.sceneContainer = sceneContainer;
     this.fpsContainer = new Container();
+    this.accumulator = 0;
     this.sceneContainer.addChild(this.fpsContainer);
   }
 
   startTicking() {
     this.then = Date.now();
     this.startTime = this.then;
+    this.accumulator = 0;
     this.tick();
   }
 
@@ -36,10 +39,12 @@ export default class GameTicker {
     requestAnimationFrame(this.tick);
     const now = Date.now();
     const elapsedTime = now - this.then;
+    this.accumulator += elapsedTime;
 
-    if (elapsedTime > this.fpsInterval) {
-      this.then = now - (elapsedTime % this.fpsInterval);
-      this.renderCallback(elapsedTime / 1000);
+    while (this.accumulator > this.fpsInterval) {
+      this.accumulator -= this.fpsInterval;
+      this.renderCallback(this.fpsInterval);
+      console.log(this.fpsInterval);
 
       const sinceStart = now - this.startTime;
       const currentFps =
@@ -52,5 +57,6 @@ export default class GameTicker {
       fpsLabel.container.x = Constants.FPS_TICKER_X_POS;
       this.fpsContainer.addChild(fpsLabel.container);
     }
+    this.then = now;
   };
 }
