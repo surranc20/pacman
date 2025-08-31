@@ -44,7 +44,6 @@ export default class GameTicker {
     while (this.accumulator > this.fpsInterval) {
       this.accumulator -= this.fpsInterval;
       this.renderCallback(this.fpsInterval);
-      console.log(this.fpsInterval);
 
       const sinceStart = now - this.startTime;
       const currentFps =

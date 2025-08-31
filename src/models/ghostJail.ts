@@ -39,8 +39,8 @@ export default class GhostJail {
     this.resetJailThresholds();
     ghosts.map((ghost) => this.addGhost(ghost));
 
-    // Time in seconds pacman can go without eating a dot without a ghost releasing
-    this.defaultTimer = 5;
+    // Time in milliseconds pacman can go without eating a dot without a ghost releasing
+    this.defaultTimer = 5000;
     this.timer = this.defaultTimer;
 
     this.ghostsRetreating = 3;
@@ -109,6 +109,7 @@ export default class GhostJail {
   }
 
   releaseGhost(ghost: Ghost) {
+    this.timer = this.defaultTimer;
     const slot = this.ghosts.get(ghost)!;
     this.ghosts.delete(ghost);
     this.jailSlots.set(slot, null);
@@ -122,13 +123,17 @@ export default class GhostJail {
   }
 
   update(elapsedTime: number) {
+    const isGhostJailed = this.isGhostJailed();
+    if (!isGhostJailed) {
+      return;
+    }
+
     this.timer -= elapsedTime;
     if (this.timer < 0) {
       for (const color of this.priorityList) {
         const ghost = this.mapColorToGhost(color);
         if (ghost) {
           this.releaseGhost(ghost);
-          this.timer = this.defaultTimer;
           return;
         }
       }
@@ -209,5 +214,13 @@ export default class GhostJail {
       }
     }
     this.ghostsRetreating = 0;
+  }
+
+  isGhostJailed(): boolean {
+    return (
+      this.jailSlots.get(0) instanceof Ghost ||
+      this.jailSlots.get(1) instanceof Ghost ||
+      this.jailSlots.get(2) instanceof Ghost
+    );
   }
 }

@@ -1,6 +1,7 @@
 import { Loader, Texture } from "pixi.js";
 import Animatable from "../abstract/animatable";
 import IPellet from "../interfaces/iPellet";
+import { Constants } from "../enums/constants";
 
 export default class PowerPellet extends Animatable implements IPellet {
   powerPellet: boolean;
@@ -13,9 +14,9 @@ export default class PowerPellet extends Animatable implements IPellet {
     super(
       [pelletTexture, Texture.EMPTY],
       x - centerPelletOffset,
-      y - centerPelletOffset
+      y - centerPelletOffset,
+      Constants.POWER_PELLET_FPS
     );
     this.powerPellet = true;
-    this.fps = 4;
   }
 }

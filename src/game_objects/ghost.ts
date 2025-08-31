@@ -40,9 +40,9 @@ export default class Ghost extends Moveable {
     super(
       sheet!.animations[`Ghosts/${color}_ghost_east/${color}_ghost_east`],
       x,
-      y
+      y,
+      Constants.GHOST_FPS
     );
-    this.fps = 10;
     this.defaultSpeedModifier = 0.8; // Will be overwritten at start of game
     this.speedModifier = 0.8;
     this.moveFrameDelay = 0;

@@ -1,6 +1,7 @@
 import { Texture } from "pixi.js";
 import IAnimatable from "../interfaces/iAnimatable";
 import Drawable from "./drawable";
+import { Constants } from "../enums/constants";
 
 export default abstract class Animatable
   extends Drawable
@@ -9,6 +10,7 @@ export default abstract class Animatable
   frames: Texture[];
   currentFrame = 0;
   _animationTimer = 0;
+  _ticksPerFrame: number;
   animating = true;
   fps;
 
@@ -16,6 +18,7 @@ export default abstract class Animatable
     super(x, y, textures[0]);
     this.frames = textures;
     this.fps = fps;
+    this._ticksPerFrame = Constants.MILLISECS_IN_A_SEC / this.fps;
   }
 
   startAnimation() {
@@ -28,12 +31,11 @@ export default abstract class Animatable
     if (!this.animating) return;
 
     this._animationTimer += elapsedTime;
-    if (this._animationTimer > 1 / this.fps) {
+    while (this._animationTimer > this._ticksPerFrame) {
       this.currentFrame += 1;
       this.currentFrame %= this.frames.length;
 
-      this._animationTimer %= 1 / this.fps; // Fixes bug caused when user switches tabs
-      this._animationTimer -= 1 / this.fps;
+      this._animationTimer -= this._ticksPerFrame;
       this.getTexture();
     }
   }

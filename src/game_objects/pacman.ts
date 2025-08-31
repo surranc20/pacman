@@ -26,8 +26,7 @@ export default class Pacman extends Moveable {
   constructor(x: number, y: number) {
     const sheet = Loader.shared.resources.spritesheet.spritesheet;
     const eatFrames = sheet!.animations["pacman_eat/pacman_eat"];
-    super(eatFrames, x, y);
-    this.fps = Constants.PACMAN_FPS;
+    super(eatFrames, x, y, Constants.PACMAN_FPS);
     this.anchor.set(0.5);
 
     this.agent = new PlayerAgent();
@@ -54,6 +53,7 @@ export default class Pacman extends Moveable {
 
       return;
     }
+
     if (this.moveFrameDelay) {
       this.moveFrameDelay -= 1;
       return;
