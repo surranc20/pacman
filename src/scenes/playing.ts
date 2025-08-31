@@ -47,7 +47,12 @@ export default class Playing implements IScene {
     // Create Stage
     const stageX = 0;
     const stageY = Constants.BLANK_Y_TILES * Constants.TILE_SIZE;
-    this.gameStage = new Stage([resources.stage.texture], stageX, stageY);
+    this.gameStage = new Stage(
+      [resources.stage.texture],
+      stageX,
+      stageY,
+      Constants.STAGE_FLASH_FPS
+    );
     this.stage.addChild(this.gameStage);
 
     const highScore = this.globalData ? this.globalData.highScore : 0;

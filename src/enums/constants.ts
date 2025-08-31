@@ -22,4 +22,5 @@ export enum Constants {
   PACMAN_FPS = 10,
   GHOST_FPS = 10,
   POWER_PELLET_FPS = 4,
+  STAGE_FLASH_FPS = 4,
 }

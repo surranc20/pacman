@@ -5,7 +5,6 @@ export default class Stage extends Animatable {
   flashing = false;
   doneFlashingCallback: any;
   flashes = 0;
-  fps = 4;
   maxFlashes = 3;
 
   update(elapsedTime: number) {
