@@ -23,4 +23,5 @@ export enum Constants {
   GHOST_FPS = 10,
   POWER_PELLET_FPS = 4,
   STAGE_FLASH_FPS = 4,
+  MINIMUM_SWIPE_DISTANCE = 30
 }
