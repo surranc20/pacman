@@ -19,7 +19,6 @@ export default class PlayerAgent implements IAgent {
 
     if (this.queuedSwipeMove) {
       move = this.queuedSwipeMove
-      this.queuedSwipeMove = undefined
       return move
     }
 
@@ -49,7 +48,7 @@ export default class PlayerAgent implements IAgent {
       if (this.touchStartCoords) return;
 
       this.touchStartCoords = [event.touches[0].clientX, event.touches[0].clientY]
-    })
+    });
 
     document.addEventListener("touchend", (event: TouchEvent) => {  
       event.preventDefault()
@@ -76,6 +75,6 @@ export default class PlayerAgent implements IAgent {
           this.queuedSwipeMove = Cardinal.NORTH
         }
       }
-    }
+    })
   }
 }

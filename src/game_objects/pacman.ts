@@ -45,6 +45,11 @@ export default class Pacman extends Moveable {
   }
 
   update(elapsedTime: number) {
+    // This kinda sucks
+    if (this.agent.queuedSwipeMove == this.facing) {
+      this.agent.queuedSwipeMove = undefined;
+    }
+
     if (this.dying) {
       Animatable.prototype.update.call(this, elapsedTime);
       if (this.currentFrame === this.frames.length - 1) {
