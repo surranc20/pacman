@@ -13,3 +13,14 @@ export function getGhostStartingPosFromTiles(xTile: number, yTile: number) {
 
   return [x, y];
 }
+
+
+export function debouncedResize() {
+  let scale = Math.min(
+    Math.floor(window.innerWidth / Constants.RESOLUTION_X),
+    Math.floor(window.innerHeight / Constants.RESOLUTION_Y)
+  );
+
+  scale = Math.max(scale - 1, 0.5);
+  document.getElementById("main-body")!.style.transform = `scale(${scale})`;
+}
