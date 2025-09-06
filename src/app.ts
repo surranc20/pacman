@@ -1,10 +1,10 @@
 import { autoDetectRenderer } from "pixi.js";
 import { Constants } from "./enums/constants";
 import GameManager from "./utils/gameManager";
-import { debouncedResize } from "./utils/helpers";
+import { calculateScale, debouncedResize } from "./utils/helpers";
 
 // Setup Pixi
-const scale = 2;
+const scale = calculateScale();
 
 const renderer = autoDetectRenderer({
   width: Constants.RESOLUTION_X,

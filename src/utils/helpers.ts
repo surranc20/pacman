@@ -16,11 +16,16 @@ export function getGhostStartingPosFromTiles(xTile: number, yTile: number) {
 
 
 export function debouncedResize() {
-  let scale = Math.min(
-    Math.floor(window.innerWidth / Constants.RESOLUTION_X),
-    Math.floor(window.innerHeight / Constants.RESOLUTION_Y)
-  );
-
-  scale = Math.max(scale - 1, 0.5);
+  const scale = calculateScale()
   document.getElementById("main-body")!.style.transform = `scale(${scale})`;
+}
+
+export function calculateScale(): number {
+  const buffer = 10;
+  let scale = Math.min(
+    Math.floor((window.innerWidth - buffer) / Constants.RESOLUTION_X),
+    Math.floor((window.innerHeight - buffer) / Constants.RESOLUTION_Y)
+  );
+  alert(scale)
+  return scale;
 }
