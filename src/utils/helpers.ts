@@ -26,6 +26,5 @@ export function calculateScale(): number {
     Math.floor((window.innerWidth - buffer) / Constants.RESOLUTION_X),
     Math.floor((window.innerHeight - buffer) / Constants.RESOLUTION_Y)
   );
-  alert(scale)
   return scale;
 }
