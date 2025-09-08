@@ -25,3 +25,10 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: "us-east-1"
+      - name: Invalidate Cloudfront
+        uses: ./github/actions/invalidate-cloudfront
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: "us-east-1"
+          distribution-id: ${{ vars.CLOUDFRONT_DISTRIBUTION_ID }}
