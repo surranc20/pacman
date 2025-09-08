@@ -18,7 +18,7 @@ jobs:
           npm install
           npm run build
       - name: Deploy to S3
-        uses: ./.github/actions/s3-deploy
+        uses: ./.github/actions/deploy-to-s3
         with:
           build-directory: "./dist"
           bucket-name: ${{ vars.S3_BUCKET_NAME }}
