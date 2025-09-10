@@ -1,4 +1,5 @@
 import { Constants } from "../enums/constants";
+import GameManager from "./gameManager";
 
 export function convertPosToScaledPos(x: number, y: number, scale: number) {
   return [x * scale, y * scale];
@@ -15,16 +16,19 @@ export function getGhostStartingPosFromTiles(xTile: number, yTile: number) {
 }
 
 
-export function debouncedResize() {
-  const scale = calculateScale()
-  document.getElementById("main-body")!.style.transform = `scale(${scale})`;
+export function debouncedResize(gameManager: GameManager) {
+  const body = document.getElementById("main-body")!;
+  const scale = calculateScale(body);
+  gameManager.setScale(scale)
+  gameManager.renderer.resize(Constants.RESOLUTION_X * scale, Constants.RESOLUTION_Y * scale);
+  
 }
 
-export function calculateScale(): number {
+export function calculateScale(body: HTMLElement): number {
   const buffer = 10;
   let scale = Math.min(
-    Math.floor((window.innerWidth - buffer) / Constants.RESOLUTION_X),
-    Math.floor((window.innerHeight - buffer) / Constants.RESOLUTION_Y)
+    Math.floor((body.offsetWidth - buffer) / Constants.RESOLUTION_X),
+    Math.floor((body.offsetHeight - buffer) / Constants.RESOLUTION_Y)
   );
-  return scale;
+  return Math.max(scale, 0.5);
 }

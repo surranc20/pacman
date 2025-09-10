@@ -9,23 +9,26 @@ export default class GameManager {
   scene: IScene;
   gameTicker: GameTicker;
   keyboard: any;
-  scale: number;
   globalData: any;
 
-  constructor(renderer: AbstractRenderer, scale: number) {
-    this.scale = scale;
+  constructor(public renderer: AbstractRenderer, public scale: number) {
     this.scene = new Playing();
     this.scene.stage.scale.set(this.scale);
     this.gameTicker = new GameTicker(
       60,
       (elapsedTime: number) => {
-        renderer.render(this.scene.stage);
+        this.renderer.render(this.scene.stage);
         this.update(elapsedTime);
       },
       this.scene.stage
     );
     this.keyboard = Keyboard;
     this.loadGlobalData();
+  }
+
+  setScale = (scale: number) => {
+    this.scale = scale;
+    this.scene.stage.scale.set(this.scale);
   }
 
   update = (elapsedTime: number) => {
