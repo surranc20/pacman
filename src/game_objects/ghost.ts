@@ -249,13 +249,13 @@ export default class Ghost extends Moveable {
           this.queuedMove = Cardinal.WEST;
         } else {
           this.x = targetX;
-          this.goingToJailState = GoingToJailState.Y_CETERING;
+          this.goingToJailState = GoingToJailState.Y_CENTERING;
           this.facing = Cardinal.SOUTH;
           this.queuedMove = Cardinal.SOUTH;
         }
         break;
 
-      case GoingToJailState.Y_CETERING:
+      case GoingToJailState.Y_CENTERING:
         // - 2 is to necessary since jail has thinner walls than normal
         const targetY =
           Constants.JAIL_CENTER_TILE_Y * Constants.TILE_SIZE +
@@ -269,6 +269,7 @@ export default class Ghost extends Moveable {
           this.agent.targetAI = this.agent.defaultTargetAI;
           this.mazeModel.ghostJail.addGhost(this);
         }
+        break;
       default:
         break;
     }
@@ -278,7 +279,7 @@ export default class Ghost extends Moveable {
     // Need this so ghost can faze through jail door when leaving jail
     if (
       this.releasingFromJailState === ReleasingFromJailState.LEAVING ||
-      this.goingToJailState === GoingToJailState.Y_CETERING
+      this.goingToJailState === GoingToJailState.Y_CENTERING
     ) {
       const newNode = !this.mazeNode.centerInNode(
         Math.floor(this.x),

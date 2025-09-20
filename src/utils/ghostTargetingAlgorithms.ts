@@ -82,7 +82,6 @@ export function euclideanDistance(
 function getGhostOffset(x: number, y: number, offset: number, dir: Cardinal) {
   switch (dir) {
     case Cardinal.NORTH:
-      x -= offset;
       y -= offset;
       break;
     case Cardinal.SOUTH:

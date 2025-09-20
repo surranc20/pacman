@@ -218,9 +218,9 @@ export default class GhostJail {
 
   isGhostJailed(): boolean {
     return (
-      this.jailSlots.get(0) instanceof Ghost ||
       this.jailSlots.get(1) instanceof Ghost ||
-      this.jailSlots.get(2) instanceof Ghost
+      this.jailSlots.get(2) instanceof Ghost ||
+      this.jailSlots.get(3) instanceof Ghost
     );
   }
 }

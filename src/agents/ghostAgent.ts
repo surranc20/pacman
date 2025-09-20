@@ -72,9 +72,9 @@ export default class GhostAgent implements IAgent {
     return this._handleTies(bestDir);
   }
 
-  _handleTies(directions: any) {
-    if (directions.length === 1) {
-      return directions[0];
+  _handleTies(directions: Set<Cardinal>) {
+    if (directions.size === 1) {
+      return [...directions][0];
     }
     if (directions.has(Cardinal.NORTH)) return Cardinal.NORTH;
     if (directions.has(Cardinal.WEST)) return Cardinal.WEST;

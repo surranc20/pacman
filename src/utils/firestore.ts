@@ -51,7 +51,7 @@ export const updateGlobalData = async (
       const globalData = globalDataDoc.data();
       const newTotalDotsEaten = globalData.totalDotsEaten + totalDotsEaten;
       const newHighScore = Math.max(highScore, globalData.highScore);
-      const newTotalScore = (globalData.totalScore += score);
+      const newTotalScore = globalData.totalScore + score;
 
       transaction.update(globalDataDocRef, {
         totalDotsEaten: newTotalDotsEaten,
